@@ -23,6 +23,7 @@ import com.example.corda.ui.screen.inspirations.InspirationsScreen
 import com.example.corda.ui.screen.metronome.MetronomeScreen
 import com.example.corda.ui.screen.metronome.settings.MetronomeSettingsScreen
 import com.example.corda.ui.screen.settings.SettingsScreen
+import com.example.corda.ui.screen.settings.SettingsViewModel
 import com.example.corda.ui.screen.tuner.TunerScreen
 import com.example.corda.ui.screen.tuner.TunerViewModel
 import com.example.corda.ui.screen.tuner.settings.TunerSettingsScreen
@@ -40,8 +41,7 @@ import kotlinx.coroutines.launch
 fun CordaApp(
     modifier: Modifier = Modifier,
     tunerViewModel: TunerViewModel = viewModel(),
-    isDarkMode: Boolean,
-    onToggleDarkMode: (Boolean) -> Unit
+    settingsViewModel: SettingsViewModel = viewModel()
 ) {
     // The default screen could be set in settings and later read from shared preferences
     // or something like that, so the user can choose which screen to start with
@@ -179,8 +179,7 @@ fun CordaApp(
                 // and i don't want to implement it right now
                 entry<Screen.Settings> {
                     SettingsScreen(
-                        isDarkMode = isDarkMode,
-                        onToggleDarkMode = onToggleDarkMode,
+                        viewModel = settingsViewModel,
                         onBack = navigateBack
                     )
                 }
