@@ -21,6 +21,7 @@ class MainActivity : ComponentActivity() {
 
         enableEdgeToEdge()
         setContent {
+            // WithLifecycle ensures the app wont waste battery refreshing settings when screen is off
             val isDark by settingsViewModel.isDarkMode.collectAsStateWithLifecycle()
 
             CordaTheme(darkTheme = isDark) {
