@@ -34,7 +34,7 @@ fun InspirationsScreen(
         modifier = modifier,
         topBar = {
             TopAppBar( // TODO add search bar
-                title = { Text(stringResource(R.string.inspiration_title) ) },
+                title = { Text(stringResource(R.string.inspirations) ) },
                 navigationIcon = {
                     IconButton(
                         onClick = openDrawer

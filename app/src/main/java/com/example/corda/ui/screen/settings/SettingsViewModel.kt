@@ -14,8 +14,8 @@ import kotlinx.coroutines.launch
 class SettingsViewModel(private val settingsManager: SettingsManager) : ViewModel() {
     val isDarkMode = settingsManager.isDarkMode.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), false)
     val keepFocus = settingsManager.keepFocus.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), true)
-    val language = settingsManager.language.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "English")
-    val notation = settingsManager.notation.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), "European")
+    val language = settingsManager.language.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), settingsManager.defaultLanguage)
+    val notation = settingsManager.notation.stateIn(viewModelScope, SharingStarted.WhileSubscribed(5000), settingsManager.defaultNotation)
 
     var frequencyInput by mutableStateOf("")
         private set

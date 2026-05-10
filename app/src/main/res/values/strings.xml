@@ -2,6 +2,30 @@
     <!-- General -->
     <string name="app_name">Corda</string>
 
+    <!-- COMPONENTS -->
+    <string name="tuner">Tuner</string>
+    <string name="metronome">Metronome</string>
+    <string name="inspirations">Inspirations</string>
+    <string name="settings">Settings</string>
+    <string name="help_feedback">Help &amp; feedback</string>
+    <string name="tools">Tools</string>
+
+    <!-- FAB Menu -->
+    <string name="toggle_menu">Toggle menu</string>
+    <string name="close_menu">Close menu</string>
+    <string name="expanded">Expanded</string>
+    <string name="collapsed">Collapsed</string>
+
+    <!-- PitchArc -->
+    <string name="play_something">Play something</string>
+    <string name="tune_higher">Tune higher</string>
+    <string name="tune_lower">Tune lower</string>
+    <string name="perfect">Perfect</string>
+
+    <!-- Tuning list item -->
+    <string name="selected_text">Selected</string>
+
+    <!-- SCREENS -->
     <!-- Descriptions -->
     <string name="open_drawer">Open drawer</string>
     <string name="disable_ear_mode">Disable ear mode</string>
@@ -9,10 +33,9 @@
     <string name="back">Back</string>
     <string name="error">Error</string>
     <string name="clear_search">Clear search</string>
+    <string name="all">All</string>
 
     <!-- Settings -->
-    <string name="settings_title">App settings</string>
-
     <string name="settings_display">Display</string>
     <string name="dark_mode">Dark mode</string>
     <string name="keep_focus">Keep focus</string>
@@ -23,15 +46,15 @@
 
     <string name="settings_localisation">Localisation</string>
     <string name="language">Language</string>
+    <string name="language_english">English</string>
+    <string name="language_polish">Polski</string>
     <string name="notation">Notation</string>
     <string name="european">European</string>
     <string name="american">American</string>
 
     <!-- Inspirtaion -->
-    <string name="inspiration_title">Inspirations</string>
 
     <!-- Metronome -->
-    <string name="metronome_title">Metronome</string>
     <string name="metronome_settings">Metronome settings</string>
 
     <!-- Tuner -->
@@ -52,5 +75,6 @@
     <string name="no_tunings">No tunings found.</string>
     <string name="chromatic_description">Chromatic mode detects the note automatically.</string>
     <string name="dont_select_tuning">No need to select a tuning.</string>
+
 
 </resources>

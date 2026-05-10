@@ -14,6 +14,8 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import com.example.corda.R
 
 /**
  * Screen for the help and feedback (currently a skeleton).
@@ -30,7 +32,7 @@ fun HelpAndFeedbackScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { Text("Help & feedback") },
+                title = { stringResource(R.string.help_feedback) },
                 navigationIcon = {
                     IconButton(
                         onClick = onBack

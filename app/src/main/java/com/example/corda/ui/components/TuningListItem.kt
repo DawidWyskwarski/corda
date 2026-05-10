@@ -21,8 +21,10 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.example.corda.R
 import com.example.corda.ui.screen.tuner.DummyTuning
 
 /**
@@ -87,7 +89,7 @@ fun TuningListItem(
             ) {
                 Icon(
                     imageVector = Icons.Rounded.CheckCircle,
-                    contentDescription = "Selected",
+                    contentDescription = stringResource(R.string.selected_text),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }

@@ -1,5 +1,6 @@
 package com.example.corda.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -37,6 +38,7 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.customActions
@@ -45,9 +47,11 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.traversalIndex
 
+import com.example.corda.R
+
 data class FABMenuItem(
     val icon: ImageVector,
-    val label: String,
+    @StringRes val labelRes: Int,
     val onClick: () -> Unit,
 )
 
@@ -78,6 +82,11 @@ fun FABMenu(
     }
     val focusRequester = remember { FocusRequester() }
 
+    val toggleMenuDescription = stringResource(R.string.toggle_menu)
+    val expandedDescription = stringResource(R.string.expanded)
+    val collapsedDescription = stringResource(R.string.collapsed)
+    val closeMenuDescription = stringResource(R.string.close_menu)
+
     Box(
         modifier = modifier.fillMaxSize()
     ) {
@@ -105,7 +114,7 @@ fun FABMenu(
                                 TooltipAnchorPosition.Above
                             }
                         ),
-                    tooltip = { PlainTooltip { Text("Toggle menu") } },
+                    tooltip = { PlainTooltip { Text(toggleMenuDescription) } },
                     state = rememberTooltipState()
                 ) {
                     ToggleFloatingActionButton(
@@ -113,8 +122,12 @@ fun FABMenu(
                             .semantics {
                                 traversalIndex = -1f
                                 stateDescription =
-                                    if (isExpanded) "Expanded" else "Collapsed"
-                                contentDescription = "Toggle menu"
+                                    if (isExpanded) {
+                                        expandedDescription
+                                    } else {
+                                        collapsedDescription
+                                    }
+                                contentDescription = toggleMenuDescription
                             }
                             .animateFloatingActionButton(
                                 visible = fabVisible || isExpanded,
@@ -150,7 +163,7 @@ fun FABMenu(
                                 customActions =
                                     listOf(
                                         CustomAccessibilityAction(
-                                            label = "Close menu",
+                                            label = closeMenuDescription,
                                             action = {
                                                 onExpandedChange(false)
                                                 true
@@ -180,7 +193,7 @@ fun FABMenu(
                         ),
                     onClick = item.onClick,
                     icon = { Icon(item.icon, contentDescription = null) },
-                    text = { Text(text = item.label) },
+                    text = { Text(text = stringResource(item.labelRes)) },
                 )
             }
         }

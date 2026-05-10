@@ -41,7 +41,7 @@ fun MetronomeScreen(
                             .clickable(
                                 onClick = openSettings
                             ),
-                        text = stringResource(R.string.metronome_title)
+                        text = stringResource(R.string.metronome)
                     )
                 },
                 navigationIcon = {

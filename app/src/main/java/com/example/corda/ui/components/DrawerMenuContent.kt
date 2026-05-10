@@ -1,5 +1,6 @@
 package com.example.corda.ui.components
 
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -23,12 +24,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 import com.example.corda.ui.navigation.Screen
 
 private data class NavigationItem(
     val icon: ImageVector,
-    val label: String,
+    @StringRes val labelRes: Int,
     val screen: Screen
 )
 
@@ -48,32 +51,32 @@ fun DrawerMenuContent(
         listOf(
             NavigationItem(
                 icon = Icons.Rounded.MusicNote,
-                label = "Tuner",
+                labelRes = R.string.tuner,
                 screen = Screen.Tuner
             ),
             NavigationItem(
                 icon = Icons.Rounded.Speed,
-                label = "Metronome",
+                labelRes = R.string.metronome,
                 screen = Screen.Metronome
             ),
             NavigationItem(
                 icon = Icons.AutoMirrored.Rounded.QueueMusic,
-                label = "Inspirations",
+                labelRes = R.string.inspirations,
                 screen = Screen.Inspirations
             )
         )
     }
 
-    val utilities = remember{
+    val utilities = remember {
         listOf(
             NavigationItem(
                 icon = Icons.Rounded.Settings,
-                label = "Settings",
+                labelRes = R.string.settings,
                 screen = Screen.Settings
             ),
             NavigationItem(
                 icon = Icons.AutoMirrored.Rounded.Help,
-                label = "Help & feedback",
+                labelRes = R.string.help_feedback,
                 screen = Screen.Help
             )
         )
@@ -96,17 +99,16 @@ fun DrawerMenuContent(
             Text(
                 modifier = Modifier
                     .padding(16.dp),
-                text = "Corda",
+                text = stringResource(R.string.app_name),
                 style = MaterialTheme.typography.headlineMedium
             )
 
             // TOOLS SECTION
             Text(
-                text = "Tools",
+                text = stringResource(R.string.tools),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                color = MaterialTheme.colorScheme.scrim.copy(alpha = 0.7f)
-
+                color = MaterialTheme.colorScheme.onBackground
             )
 
             tools.forEach { tool ->
@@ -117,7 +119,7 @@ fun DrawerMenuContent(
                             contentDescription = null
                         )
                     },
-                    label = { Text(tool.label) },
+                    label = { Text(stringResource(tool.labelRes)) },
                     selected = currentScreen == tool.screen,
                     onClick = {
                         onScreenSelected(tool.screen)
@@ -138,7 +140,7 @@ fun DrawerMenuContent(
                             contentDescription = null
                         )
                     },
-                    label = { Text(utility.label) },
+                    label = { Text(stringResource(utility.labelRes)) },
                     selected = currentScreen == utility.screen,
                     onClick = {
                         onScreenSelected(utility.screen)

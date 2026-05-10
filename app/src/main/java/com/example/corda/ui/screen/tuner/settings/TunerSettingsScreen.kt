@@ -107,16 +107,18 @@ fun TunerSettingsScreen(
     // FAB menu state
     var isFabMenuOpen by remember { mutableStateOf(false) }
 
-    val fabMenuItems = listOf(
-        FABMenuItem(
-            Icons.AutoMirrored.Rounded.QueueMusic,
-            stringResource(R.string.new_custom_tuning)
-        ) { isFabMenuOpen = false },
-        FABMenuItem(
-            Icons.Rounded.Piano,
-            stringResource(R.string.manage_instruments)
-        ) { isFabMenuOpen = false }
-    )
+    val fabMenuItems = remember {
+        listOf(
+            FABMenuItem(
+                Icons.AutoMirrored.Rounded.QueueMusic,
+                R.string.new_custom_tuning
+            ) { isFabMenuOpen = false },
+            FABMenuItem(
+                Icons.Rounded.Piano,
+                R.string.manage_instruments
+            ) { isFabMenuOpen = false }
+        )
+    }
 
     // Close FAB menu on back press when open
     BackHandler(isFabMenuOpen) { isFabMenuOpen = false }
@@ -229,7 +231,7 @@ fun TunerSettingsScreen(
                                     FilterChip(
                                         selected = isAllSelected,
                                         onClick = { selectedInstrument = null },
-                                        label = { Text("All") },
+                                        label = { Text(stringResource(R.string.all)) },
                                         colors = FilterChipDefaults.filterChipColors(
                                             selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                                             selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,

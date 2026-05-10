@@ -6,6 +6,7 @@ import androidx.datastore.preferences.core.edit
 import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import com.example.corda.R
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 
@@ -16,6 +17,9 @@ class SettingsManager(context: Context) {
     * Class responsible for storing user preferences
     * */
     private val settingsDataStore = context.dataStore
+
+    val defaultLanguage = context.getString(R.string.language_english)
+    val defaultNotation = context.getString(R.string.european)
 
     private object Keys {
         val DARK_MODE = booleanPreferencesKey("dark_mode")
@@ -28,8 +32,8 @@ class SettingsManager(context: Context) {
     val isDarkMode: Flow<Boolean> = settingsDataStore.data.map { it[Keys.DARK_MODE] ?: false }
     val keepFocus: Flow<Boolean> = settingsDataStore.data.map { it[Keys.KEEP_FOCUS] ?: true }
     val baseFrequency: Flow<Int> = settingsDataStore.data.map { it[Keys.BASE_FREQUENCY] ?: 440 }
-    val language: Flow<String> = settingsDataStore.data.map { it[Keys.LANGUAGE] ?: "English" }
-    val notation: Flow<String> = settingsDataStore.data.map { it[Keys.NOTATION] ?: "European" }
+    val language: Flow<String> = settingsDataStore.data.map { it[Keys.LANGUAGE] ?: defaultLanguage }
+    val notation: Flow<String> = settingsDataStore.data.map { it[Keys.NOTATION] ?: defaultNotation }
 
     suspend fun saveDarkMode(enabled: Boolean) = settingsDataStore.edit { it[Keys.DARK_MODE] = enabled }
     suspend fun saveKeepFocus(enabled: Boolean) = settingsDataStore.edit { it[Keys.KEEP_FOCUS] = enabled }

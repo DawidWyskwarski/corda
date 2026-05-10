@@ -3,15 +3,23 @@
     <string name="app_name">Corda</string>
 
     <!-- Descriptions / labels -->
+    <string name="selected_text">Wybrane</string>
     <string name="open_drawer">Otwórz menu?</string>
     <string name="disable_ear_mode">Wyłącz tryb ucha?</string>
     <string name="enable_ear_mode">Włącz tryb ucha</string>
     <string name="back">Powrót</string>
     <string name="error">Błąd</string>
 
+    <!-- FAB Menu -->
+    <string name="tools">Narzędzia</string>
+    <string name="toggle_menu">Przełącz menu</string>
+    <string name="close_menu">Zamknij menu</string>
+    <string name="expanded">Rozwinięte</string>
+    <string name="collapsed">Zwinięte</string>
+
     <!-- Settings -->
     <string name="clear_search">Wyczyść wyszukiwania</string>
-    <string name="settings_title">Ustawienia aplikacji</string>
+    <string name="all">Wszystkie</string>
 
     <string name="settings_display">Wyświetlanie</string>
     <string name="dark_mode">Tryb nocny</string>
@@ -23,16 +31,16 @@
 
     <string name="settings_localisation">Lokalizacja</string>
     <string name="language">Język</string>
+    <string name="language_english">English</string>
+    <string name="language_polish">Polski</string>
 
     <string name="notation">Notacja</string>
     <string name="european">Europejska</string>
     <string name="american">Amerykańska</string>
 
     <!-- Inspirtaion -->
-    <string name="inspiration_title">Inspiracja</string>
 
     <!-- Metronome -->
-    <string name="metronome_title">Metronom</string>
     <string name="metronome_settings">Ustawienia metronomu</string>
 
     <!-- Tuner -->
@@ -51,5 +59,14 @@
     <string name="chromatic_description">Tryb chromatyczny automatycznie wykrywa nutę.</string>
     <string name="dont_select_tuning">Nie ma potrzeby wybierać stroju.</string>
     <string name="new_custom_tuning">Nowy własny strój</string>
+    <string name="tuner">Stroik</string>
+    <string name="metronome">Metronom</string>
+    <string name="inspirations">Inspiracje</string>
+    <string name="settings">Ustawienia</string>
+    <string name="help_feedback">Pomoc i feedback</string>
+    <string name="play_something">Zagraj coś</string>
+    <string name="tune_higher">Stroj wyżej?</string>
+    <string name="tune_lower">Stroj niżej?</string>
+    <string name="perfect">Idealnie</string>
 
 </resources>
