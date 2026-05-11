@@ -59,16 +59,19 @@ import com.example.corda.ui.screen.tuner.TunerViewModel
  * ### TODO
  * - Make the FAB menu do something
  *
+ * @param sharedViewModel shared ViewModel scoped to the tuner feature (selected tuning, mode)
+ * @param settingsViewModel screen-specific ViewModel for search, filter, and instrument list
  * @param onBack lambda reporting an event to `CordaApp` to go back
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TunerSettingsScreen(
-    viewModel: TunerViewModel,
+    sharedViewModel: TunerViewModel,
+    settingsViewModel: TunerSettingsViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
 ) {
-    val selectedMode by viewModel.selectedMode.collectAsStateWithLifecycle()
+    val selectedMode by sharedViewModel.selectedMode.collectAsStateWithLifecycle()
     val modes = remember { TuningMode.entries.toList() }
     var isFabMenuOpen by remember { mutableStateOf(false) }
 
@@ -82,7 +85,7 @@ fun TunerSettingsScreen(
     }
 
     val navigateBack = {
-        viewModel.updateSelectedTuningLastUsed()
+        sharedViewModel.updateSelectedTuningLastUsed()
         onBack()
     }
 
@@ -132,7 +135,7 @@ fun TunerSettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 selectedItem = selectedMode,
                 items = modes,
-                onItemSelected = { viewModel.selectMode(it) }
+                onItemSelected = { sharedViewModel.selectMode(it) }
             )
 
             AnimatedContent(
@@ -148,7 +151,10 @@ fun TunerSettingsScreen(
                 label = "Mode Animation"
             ) { mode ->
                 when (mode) {
-                    TuningMode.STANDARD -> TuningsContent(viewModel)
+                    TuningMode.STANDARD -> TuningsContent(
+                        sharedViewModel = sharedViewModel,
+                        settingsViewModel = settingsViewModel
+                    )
                     TuningMode.CHROMATIC -> ChromaticContent()
                 }
             }
@@ -159,14 +165,15 @@ fun TunerSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun TuningsContent(
-    viewModel: TunerViewModel,
+    sharedViewModel: TunerViewModel,
+    settingsViewModel: TunerSettingsViewModel,
     modifier: Modifier = Modifier,
 ) {
-    val filteredTunings by viewModel.filteredTunings.collectAsStateWithLifecycle()
-    val selectedTuning by viewModel.selectedTuning.collectAsStateWithLifecycle()
-    val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-    val instruments by viewModel.instruments.collectAsStateWithLifecycle()
-    val selectedInstrument by viewModel.selectedInstrument.collectAsStateWithLifecycle()
+    val filteredTunings by settingsViewModel.filteredTunings.collectAsStateWithLifecycle()
+    val selectedTuning by sharedViewModel.selectedTuning.collectAsStateWithLifecycle()
+    val searchQuery by settingsViewModel.searchQuery.collectAsStateWithLifecycle()
+    val instruments by settingsViewModel.instruments.collectAsStateWithLifecycle()
+    val selectedInstrument by settingsViewModel.selectedInstrument.collectAsStateWithLifecycle()
 
     val count by remember { derivedStateOf { filteredTunings.size } }
 
@@ -196,7 +203,7 @@ private fun TuningsContent(
                 inputField = {
                     SearchBarDefaults.InputField(
                         query = searchQuery,
-                        onQueryChange = { viewModel.setSearchQuery(it) },
+                        onQueryChange = { settingsViewModel.setSearchQuery(it) },
                         onSearch = { },
                         expanded = false,
                         onExpandedChange = { },
@@ -206,7 +213,7 @@ private fun TuningsContent(
                         },
                         trailingIcon = {
                             if (searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { viewModel.setSearchQuery("") }) {
+                                IconButton(onClick = { settingsViewModel.setSearchQuery("") }) {
                                     Icon(Icons.Rounded.Close, contentDescription = "Clear search")
                                 }
                             }
@@ -222,7 +229,7 @@ private fun TuningsContent(
             FilterChipGroup(
                 items = instruments.map { it.name },
                 selectedItem = selectedInstrument,
-                onItemSelected = { viewModel.setSelectedInstrument(it) }
+                onItemSelected = { settingsViewModel.setSelectedInstrument(it) }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -244,7 +251,7 @@ private fun TuningsContent(
                             count = count
                         ),
                         isSelected = tuning.tuningId == selectedTuning?.tuningId,
-                        onClick = { viewModel.selectTuning(tuning) },
+                        onClick = { sharedViewModel.selectTuning(tuning) },
                     )
                 }
             }

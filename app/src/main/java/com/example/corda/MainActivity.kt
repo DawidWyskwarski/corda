@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import com.example.corda.ui.CordaApp
 import com.example.corda.ui.screen.tuner.TunerViewModelFactory
+import com.example.corda.ui.screen.tuner.settings.TunerSettingsViewModelFactory
 import com.example.corda.ui.theme.CordaTheme
 
 class MainActivity : ComponentActivity() {
@@ -13,14 +14,15 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
 
-        val tunerViewModelFactory = TunerViewModelFactory(
-            (application as CordaApplication).tunerRepository
-        )
+        val repository = (application as CordaApplication).tunerRepository
+        val tunerViewModelFactory = TunerViewModelFactory(repository)
+        val tunerSettingsViewModelFactory = TunerSettingsViewModelFactory(repository)
 
         setContent {
             CordaTheme {
                 CordaApp(
-                    tunerViewModelFactory = tunerViewModelFactory
+                    tunerViewModelFactory = tunerViewModelFactory,
+                    tunerSettingsViewModelFactory = tunerSettingsViewModelFactory
                 )
             }
         }

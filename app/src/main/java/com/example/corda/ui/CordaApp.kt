@@ -18,15 +18,13 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.corda.ui.components.DrawerMenuContent
 import com.example.corda.ui.navigation.Screen
-import com.example.corda.ui.screen.help.HelpAndFeedbackScreen
-import com.example.corda.ui.screen.inspirations.InspirationsScreen
-import com.example.corda.ui.screen.metronome.MetronomeScreen
-import com.example.corda.ui.screen.metronome.settings.MetronomeSettingsScreen
-import com.example.corda.ui.screen.settings.SettingsScreen
-import com.example.corda.ui.screen.tuner.TunerScreen
+import com.example.corda.ui.navigation.inspirationsEntries
+import com.example.corda.ui.navigation.metronomeEntries
+import com.example.corda.ui.navigation.tunerEntries
+import com.example.corda.ui.navigation.utilityEntries
 import com.example.corda.ui.screen.tuner.TunerViewModel
 import com.example.corda.ui.screen.tuner.TunerViewModelFactory
-import com.example.corda.ui.screen.tuner.settings.TunerSettingsScreen
+import com.example.corda.ui.screen.tuner.settings.TunerSettingsViewModelFactory
 import kotlinx.coroutines.launch
 
 /**
@@ -40,7 +38,8 @@ import kotlinx.coroutines.launch
 @Composable
 fun CordaApp(
     modifier: Modifier = Modifier,
-    tunerViewModelFactory: TunerViewModelFactory
+    tunerViewModelFactory: TunerViewModelFactory,
+    tunerSettingsViewModelFactory: TunerSettingsViewModelFactory,
 ) {
     val tunerViewModel: TunerViewModel = viewModel(factory = tunerViewModelFactory)
 
@@ -145,49 +144,24 @@ fun CordaApp(
                 rememberViewModelStoreNavEntryDecorator()
             ),
             entryProvider = entryProvider {
-                entry<Screen.Tuner> {
-                    TunerScreen(
-                        viewModel = tunerViewModel,
-                        openDrawer = openDrawer,
-                        openSettings = { navigateTo(Screen.TunerSettings) }
-                    )
-                }
-                entry<Screen.TunerSettings> {
-                    TunerSettingsScreen(
-                        viewModel = tunerViewModel,
-                        onBack = navigateBack
-                    )
-                }
-                entry<Screen.Metronome> {
-                    MetronomeScreen(
-                        openDrawer = openDrawer,
-                        openSettings = { navigateTo(Screen.MetronomeSettings) }
-                    )
-                }
-                entry<Screen.MetronomeSettings> {
-                    MetronomeSettingsScreen(
-                        onBack = navigateBack
-                    )
-                }
-                entry<Screen.Inspirations> {
-                    InspirationsScreen(
-                        openDrawer = openDrawer
-                    )
-                }
-                //TODO add inspiration details/edit/add screen,
-                // it will be a little more complicated
-                // they all will share the same layout
-                // and i don't want to implement it right now
-                entry<Screen.Settings> {
-                    SettingsScreen(
-                        onBack = navigateBack
-                    )
-                }
-                entry<Screen.Help> {
-                    HelpAndFeedbackScreen(
-                        onBack = navigateBack
-                    )
-                }
+                tunerEntries(
+                    tunerViewModel = tunerViewModel,
+                    tunerSettingsViewModelFactory = tunerSettingsViewModelFactory,
+                    openDrawer = openDrawer,
+                    navigateTo = navigateTo,
+                    navigateBack = navigateBack
+                )
+                metronomeEntries(
+                    openDrawer = openDrawer,
+                    navigateTo = navigateTo,
+                    navigateBack = navigateBack
+                )
+                inspirationsEntries(
+                    openDrawer = openDrawer
+                )
+                utilityEntries(
+                    navigateBack = navigateBack
+                )
             }
         )
     }
