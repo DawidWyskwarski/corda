@@ -32,7 +32,7 @@ fun HelpAndFeedbackScreen(
         modifier = modifier,
         topBar = {
             TopAppBar(
-                title = { stringResource(R.string.help_feedback) },
+                title = { Text(stringResource(R.string.help_feedback)) },
                 navigationIcon = {
                     IconButton(
                         onClick = onBack
