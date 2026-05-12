@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 
 class TunerSettingsViewModel(
     private val repository: TunerRepository
@@ -45,6 +46,12 @@ class TunerSettingsViewModel(
 
     fun setSelectedInstrument(instrument: String?) {
         _selectedInstrument.value = instrument
+    }
+
+    fun deleteTuning(tuningId: Int) {
+        viewModelScope.launch {
+            repository.deleteTuningById(tuningId)
+        }
     }
 
     val filteredTunings: StateFlow<List<TuningWithInstrumentAndSounds>> = combine(

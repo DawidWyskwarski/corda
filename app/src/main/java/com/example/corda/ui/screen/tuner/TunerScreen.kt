@@ -96,7 +96,7 @@ fun TunerScreen(
                     IconToggleButton(
                         checked = isEarModeEnabled,
                         onCheckedChange = { isEarModeEnabled = it },
-                        enabled = !( selectedMode == TuningMode.STANDARD && selectedTuning == null )
+                        enabled = !(selectedMode == TuningMode.STANDARD && selectedTuning == null)
                     ) {
                         Icon(
                             imageVector = if (isEarModeEnabled) Icons.AutoMirrored.Rounded.VolumeUp
@@ -125,6 +125,7 @@ fun TunerScreen(
                         supportingText = "Please select or add a tuning"
                     )
                 }
+
                 else -> {
                     AnimatedVisibility(
                         visible = !isEarModeEnabled,
@@ -144,7 +145,10 @@ fun TunerScreen(
                                     targetValue = 50f,
                                     label = "Cents Animation",
                                     animationSpec = infiniteRepeatable(
-                                        animation = tween(durationMillis = 5000, easing = LinearEasing),
+                                        animation = tween(
+                                            durationMillis = 5000,
+                                            easing = LinearEasing
+                                        ),
                                         repeatMode = RepeatMode.Reverse
                                     )
                                 )
@@ -167,9 +171,10 @@ fun TunerScreen(
 
                     if (selectedMode == TuningMode.STANDARD && selectedTuning != null) {
                         TuningSoundGrid(
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 16.dp),
                             sounds = selectedTuning!!.sounds,
-                            onNoteSelected = { },
                         )
                     }
                 }

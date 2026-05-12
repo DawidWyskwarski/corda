@@ -25,6 +25,7 @@ import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Piano
 import androidx.compose.material.icons.rounded.Search
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -35,6 +36,7 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
@@ -56,12 +58,11 @@ import com.example.corda.ui.screen.tuner.TunerViewModel
 /**
  * Screen for the tuner settings.
  *
- * ### TODO
- * - Make the FAB menu do something
- *
  * @param sharedViewModel shared ViewModel scoped to the tuner feature (selected tuning, mode)
  * @param settingsViewModel screen-specific ViewModel for search, filter, and instrument list
  * @param onBack lambda reporting an event to `CordaApp` to go back
+ * @param onAddTuning lambda to navigate to the Add Tuning screen
+ * @param onEditTuning lambda to navigate to the Edit Tuning screen with the tuning ID
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -70,15 +71,18 @@ fun TunerSettingsScreen(
     settingsViewModel: TunerSettingsViewModel,
     modifier: Modifier = Modifier,
     onBack: () -> Unit,
+    onAddTuning: () -> Unit,
+    onEditTuning: (Int) -> Unit,
 ) {
     val selectedMode by sharedViewModel.selectedMode.collectAsStateWithLifecycle()
     val modes = remember { TuningMode.entries.toList() }
     var isFabMenuOpen by remember { mutableStateOf(false) }
 
-    val fabMenuItems = remember {
+    val fabMenuItems = remember(onAddTuning) {
         listOf(
             FABMenuItem(Icons.AutoMirrored.Rounded.QueueMusic, "New custom tuning") {
                 isFabMenuOpen = false
+                onAddTuning()
             },
             FABMenuItem(Icons.Rounded.Piano, "Manage Instruments") { isFabMenuOpen = false }
         )
@@ -153,7 +157,8 @@ fun TunerSettingsScreen(
                 when (mode) {
                     TuningMode.STANDARD -> TuningsContent(
                         sharedViewModel = sharedViewModel,
-                        settingsViewModel = settingsViewModel
+                        settingsViewModel = settingsViewModel,
+                        onEditTuning = onEditTuning,
                     )
                     TuningMode.CHROMATIC -> ChromaticContent()
                 }
@@ -167,6 +172,7 @@ fun TunerSettingsScreen(
 private fun TuningsContent(
     sharedViewModel: TunerViewModel,
     settingsViewModel: TunerSettingsViewModel,
+    onEditTuning: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val filteredTunings by settingsViewModel.filteredTunings.collectAsStateWithLifecycle()
@@ -176,6 +182,8 @@ private fun TuningsContent(
     val selectedInstrument by settingsViewModel.selectedInstrument.collectAsStateWithLifecycle()
 
     val count by remember { derivedStateOf { filteredTunings.size } }
+
+    var deleteTuningId by remember { mutableStateOf<Int?>(null) }
 
     Column(modifier = modifier.fillMaxSize()) {
 
@@ -252,10 +260,41 @@ private fun TuningsContent(
                         ),
                         isSelected = tuning.tuningId == selectedTuning?.tuningId,
                         onClick = { sharedViewModel.selectTuning(tuning) },
+                        onEdit = { onEditTuning(tuning.tuningId) },
+                        onDelete = { deleteTuningId = tuning.tuningId },
                     )
                 }
             }
         }
+    }
+
+    if (deleteTuningId != null) {
+        val tuningToDelete = filteredTunings.find { it.tuningId == deleteTuningId }
+        AlertDialog(
+            onDismissRequest = { deleteTuningId = null },
+            title = { Text("Delete tuning") },
+            text = {
+                Text(
+                    "Are you sure you want to delete \"${tuningToDelete?.tuningName ?: ""}\"? " +
+                            "This action cannot be undone."
+                )
+            },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        deleteTuningId?.let { settingsViewModel.deleteTuning(it) }
+                        deleteTuningId = null
+                    }
+                ) {
+                    Text("Delete")
+                }
+            },
+            dismissButton = {
+                TextButton(onClick = { deleteTuningId = null }) {
+                    Text("Cancel")
+                }
+            },
+        )
     }
 }
 

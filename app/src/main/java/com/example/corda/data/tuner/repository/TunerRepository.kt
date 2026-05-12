@@ -57,9 +57,17 @@ class TunerRepository(
         runCatching { dao.deleteTuning(*tuning) }
     }
 
+    suspend fun deleteTuningById(tuningId: Int): Result<Unit> = withContext(dispatcher) {
+        runCatching { dao.deleteTuningById(tuningId) }
+    }
+
     // Sound
     suspend fun getReferencePitch(): Sound = withContext(dispatcher) {
         dao.getReferencePitch()
+    }
+
+    suspend fun getAllSounds(): List<Sound> = withContext(dispatcher) {
+        dao.getAllSounds()
     }
 
     suspend fun updateSound(vararg sound: Sound): Result<Unit> = withContext(dispatcher) {
@@ -78,5 +86,18 @@ class TunerRepository(
                 sounds = sounds
             )
         }
+    }
+
+    suspend fun getTuningWithSoundsById(tuningId: Int): TuningWithInstrumentAndSounds? =
+        withContext(dispatcher) {
+            dao.getTuningWithSoundsById(tuningId)
+        }
+
+    suspend fun updateTuningWithSounds(
+        tuningId: Int,
+        name: String,
+        sounds: List<Sound>
+    ): Result<Unit> = withContext(dispatcher) {
+        runCatching { dao.updateTuningWithSounds(tuningId, name, sounds) }
     }
 }

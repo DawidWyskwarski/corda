@@ -32,7 +32,8 @@ class TunerViewModel(
         _selectedTuning,
         tunings
     ) { selected, tuningList ->
-        selected ?: tuningList.firstOrNull()
+        val stillExists = selected != null && tuningList.any { it.tuningId == selected.tuningId }
+        if (stillExists) selected else tuningList.firstOrNull()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),

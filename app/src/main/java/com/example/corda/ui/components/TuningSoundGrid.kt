@@ -5,41 +5,51 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.corda.data.tuner.local.entities.Sound
 
+/**
+ * 2-column grid of [TuningNoteChip]s with index-based selection.
+ *
+ * @param selectedIndex externally controlled selected index, or `null` for no selection.
+ *   When `null` is passed, the grid manages its own internal selection state.
+ * @param onIndexSelected called with the selected index (or `null` on deselect)
+ */
 @Composable
 fun TuningSoundGrid(
     sounds: List<Sound>,
-    onNoteSelected: (Sound?) -> Unit,
     modifier: Modifier = Modifier,
+    selectedIndex: Int? = null,
+    onIndexSelected: (Int?) -> Unit = {},
 ) {
-    var selectedNote by remember { mutableStateOf<Sound?>(null) }
+    var internalIndex by remember { mutableIntStateOf(-1) }
+    val activeIndex = selectedIndex ?: internalIndex.takeIf { it >= 0 }
 
     LazyVerticalGrid(
         columns = GridCells.Fixed(2),
-        modifier = modifier.padding(horizontal = 16.dp),
+        modifier = modifier,
         contentPadding = PaddingValues(top = 32.dp, bottom = 16.dp),
         verticalArrangement = Arrangement.spacedBy(16.dp),
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
-        items(
+        itemsIndexed(
             items = sounds,
-            key = { it.soundId },
-        ) { sound ->
+            key = { index, _ -> index },
+        ) { index, sound ->
             TuningNoteChip(
                 note = sound.name,
-                isSelected = selectedNote == sound,
+                isSelected = activeIndex == index,
                 onClick = {
-                    selectedNote = if (selectedNote == sound) null else sound
-                    onNoteSelected(selectedNote)
+                    val newIndex = if (activeIndex == index) null else index
+                    internalIndex = newIndex ?: -1
+                    onIndexSelected(newIndex)
                 },
             )
         }

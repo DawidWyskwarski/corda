@@ -86,13 +86,48 @@ interface TunerDao {
         """)
     suspend fun getReferencePitch(): Sound
 
+    @Query("SELECT * FROM Sound ORDER BY sound_id ASC")
+    suspend fun getAllSounds(): List<Sound>
+
+    @Transaction
+    @Query("""
+        SELECT 
+            Tuning.tuning_id,
+            Tuning.name AS tuningName,
+            Instrument.name AS instrumentName,
+            Tuning.last_used
+        FROM Tuning
+        INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
+        WHERE Tuning.tuning_id = :tuningId
+    """)
+    suspend fun getTuningWithSoundsById(tuningId: Int): TuningWithInstrumentAndSounds?
+
+    @Query("UPDATE Tuning SET name = :name WHERE tuning_id = :tuningId")
+    suspend fun updateTuningName(tuningId: Int, name: String)
+
+    @Query("DELETE FROM Tuning WHERE tuning_id = :tuningId")
+    suspend fun deleteTuningById(tuningId: Int)
+
+    @Query("DELETE FROM TuningSoundCrossRef WHERE tuning_id = :tuningId")
+    suspend fun deleteCrossRefsForTuning(tuningId: Int)
+
     @Transaction
     suspend fun insertTuningWithSounds(tuning: Tuning, sounds: List<Sound>) {
         val tuningId = insertTuning(tuning)
         sounds.forEach { sound ->
-            val soundId = insertSound(sound)
             insertTuningSoundCrossRef(
-                TuningSoundCrossRef(tuningId = tuningId.toInt(), soundId = soundId.toInt())
+                TuningSoundCrossRef(tuningId = tuningId.toInt(), soundId = sound.soundId)
+            )
+        }
+    }
+
+    @Transaction
+    suspend fun updateTuningWithSounds(tuningId: Int, name: String, sounds: List<Sound>) {
+        updateTuningName(tuningId, name)
+        deleteCrossRefsForTuning(tuningId)
+        sounds.forEach { sound ->
+            insertTuningSoundCrossRef(
+                TuningSoundCrossRef(tuningId = tuningId, soundId = sound.soundId)
             )
         }
     }
