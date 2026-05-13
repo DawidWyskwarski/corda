@@ -2,7 +2,6 @@ package com.example.corda.ui.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.itemsIndexed
@@ -21,6 +20,7 @@ import com.example.corda.data.tuner.local.entities.Sound
  * @param selectedIndex externally controlled selected index, or `null` for no selection.
  *   When `null` is passed, the grid manages its own internal selection state.
  * @param onIndexSelected called with the selected index (or `null` on deselect)
+ * @param tunedIndices set of indices that have been successfully tuned
  */
 @Composable
 fun TuningSoundGrid(
@@ -28,6 +28,7 @@ fun TuningSoundGrid(
     modifier: Modifier = Modifier,
     selectedIndex: Int? = null,
     onIndexSelected: (Int?) -> Unit = {},
+    tunedIndices: Set<Int> = emptySet(),
 ) {
     var internalIndex by remember { mutableIntStateOf(-1) }
     val activeIndex = selectedIndex ?: internalIndex.takeIf { it >= 0 }
@@ -46,6 +47,7 @@ fun TuningSoundGrid(
             TuningNoteChip(
                 note = sound.name,
                 isSelected = activeIndex == index,
+                isTuned = index in tunedIndices,
                 onClick = {
                     val newIndex = if (activeIndex == index) null else index
                     internalIndex = newIndex ?: -1

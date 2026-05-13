@@ -2,22 +2,17 @@ package com.example.corda.ui
 
 import androidx.compose.material3.ModalNavigationDrawer
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
+import com.example.corda.data.tuner.repository.TunerRepository
 import com.example.corda.ui.components.DrawerMenuContent
 import com.example.corda.ui.navigation.inspirationsEntries
 import com.example.corda.ui.navigation.metronomeEntries
 import com.example.corda.ui.navigation.tunerEntries
 import com.example.corda.ui.navigation.utilityEntries
-import com.example.corda.data.tuner.repository.TunerRepository
-import com.example.corda.ui.screen.tuner.TunerViewModel
-import com.example.corda.ui.screen.tuner.TunerViewModelFactory
-import com.example.corda.ui.screen.tuner.settings.TunerSettingsViewModelFactory
 
 /**
  * `CordaApp` - the root UI component of the app

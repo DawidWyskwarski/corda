@@ -1,12 +1,10 @@
 package com.example.corda.ui.screen.tuner
 
+import android.Manifest
+import android.content.pm.PackageManager
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.RepeatMode
-import androidx.compose.animation.core.animateFloat
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.rememberInfiniteTransition
-import androidx.compose.animation.core.tween
 import androidx.compose.animation.expandVertically
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -31,32 +29,25 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.ui.components.NavigationPill
 import com.example.corda.ui.components.PitchArc
 import com.example.corda.ui.components.TuningSoundGrid
 import com.example.corda.ui.components.UserInfo
 import com.example.corda.ui.screen.tuner.settings.TuningMode
+import java.util.Locale
 
-/**
- * Screen for the tuner.
- *
- * This screen serves as a "Reference Screen" for our UI architecture.
- *
- * ### TODO:
- * - Implement real-time frequency analysis and pitch detection.
- * - Add visual feedback for "In Tune" vs "Out of Tune" states.
- *
- * @param openDrawer lambda reporting an event to `CordaApp` to open a drawer
- * @param openSettings lambda reporting an event to `CordaApp` to open the settings
- */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TunerScreen(
@@ -67,7 +58,34 @@ fun TunerScreen(
 ) {
     val selectedTuning by viewModel.selectedTuning.collectAsStateWithLifecycle()
     val selectedMode by viewModel.selectedMode.collectAsStateWithLifecycle()
+    val tunerState by viewModel.tunerUiState.collectAsStateWithLifecycle()
     var isEarModeEnabled by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    var hasPermission by remember {
+        mutableStateOf(
+            ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
+                    == PackageManager.PERMISSION_GRANTED
+        )
+    }
+
+    val permissionLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { granted ->
+        hasPermission = granted
+        if (granted) viewModel.startListening()
+    }
+
+    LaunchedEffect(hasPermission) {
+        if (!hasPermission) {
+            permissionLauncher.launch(Manifest.permission.RECORD_AUDIO)
+        }
+    }
+
+    DisposableEffect(Unit) {
+        if (hasPermission) viewModel.startListening()
+        onDispose { viewModel.stopListening() }
+    }
 
     Scaffold(
         modifier = modifier,
@@ -119,8 +137,7 @@ fun TunerScreen(
             when {
                 selectedMode == TuningMode.STANDARD && selectedTuning == null -> {
                     UserInfo(
-                        modifier = Modifier
-                            .fillMaxSize(),
+                        modifier = Modifier.fillMaxSize(),
                         mainText = "No tunings found",
                         supportingText = "Please select or add a tuning"
                     )
@@ -134,35 +151,22 @@ fun TunerScreen(
                     ) {
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             Text(
-                                text = "82,41 Hz", // placeholder
+                                text = tunerState.detectedFrequency?.let {
+                                    String.format(Locale.getDefault(), "%.2f Hz", it)
+                                } ?: "",
                                 style = MaterialTheme.typography.labelMedium,
                             )
                             Box {
-
-                                val infiniteTransition = rememberInfiniteTransition()
-                                val cents by infiniteTransition.animateFloat(
-                                    initialValue = -50f,
-                                    targetValue = 50f,
-                                    label = "Cents Animation",
-                                    animationSpec = infiniteRepeatable(
-                                        animation = tween(
-                                            durationMillis = 5000,
-                                            easing = LinearEasing
-                                        ),
-                                        repeatMode = RepeatMode.Reverse
-                                    )
-                                )
-
                                 PitchArc(
                                     modifier = Modifier
                                         .fillMaxWidth()
                                         .padding(horizontal = 16.dp, vertical = 8.dp),
-                                    centsOff = cents
+                                    centsOff = tunerState.centsOff
                                 )
 
                                 Text(
                                     modifier = Modifier.align(Alignment.Center),
-                                    text = "E₂", // placeholder
+                                    text = tunerState.detectedNote ?: "",
                                     style = MaterialTheme.typography.displayLargeEmphasized,
                                 )
                             }
@@ -170,11 +174,17 @@ fun TunerScreen(
                     }
 
                     if (selectedMode == TuningMode.STANDARD && selectedTuning != null) {
+                        val highlightedIndex = tunerState.focusedSoundIndex
+                            ?: tunerState.autoSelectedSoundIndex
+
                         TuningSoundGrid(
                             modifier = Modifier
                                 .weight(1f)
                                 .padding(horizontal = 16.dp),
                             sounds = selectedTuning!!.sounds,
+                            selectedIndex = highlightedIndex,
+                            onIndexSelected = { viewModel.onNoteChipClicked(it) },
+                            tunedIndices = tunerState.tunedSoundIndices,
                         )
                     }
                 }
