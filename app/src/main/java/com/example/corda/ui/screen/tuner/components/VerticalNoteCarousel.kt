@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.foundation.gestures.snapping.rememberSnapFlingBehavior
 import androidx.compose.foundation.layout.Box
@@ -11,14 +11,12 @@ import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.corda.data.tuner.local.entities.Sound
 
@@ -66,16 +64,16 @@ fun VerticalNoteCarousel(
                 modifier = Modifier.height(ITEM_HEIGHT).fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
                 color = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                        else MaterialTheme.colorScheme.surface,
+                else MaterialTheme.colorScheme.surface,
             ) {
                 Box(contentAlignment = Alignment.Center) {
-                    Text(
-                        text = sound.name,
+                    NoteLabel(
+                        sound = sound,
                         style = if (isSelected) MaterialTheme.typography.headlineMedium
-                                else MaterialTheme.typography.titleLarge,
-                        fontWeight = if (isSelected) FontWeight.Bold else FontWeight.Normal,
+                        else MaterialTheme.typography.titleLarge,
                         color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                                else MaterialTheme.colorScheme.onSurface,
+                        else MaterialTheme.colorScheme.onSurface,
+                        subscriptScale = if (isSelected) 0.6f else 0.65f,
                     )
                 }
             }

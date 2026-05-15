@@ -41,13 +41,14 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.corda.ui.components.EarModeChromaticContent
-import com.example.corda.ui.components.EarModeStandardContent
 import com.example.corda.ui.components.NavigationPill
-import com.example.corda.ui.components.PitchArc
-import com.example.corda.ui.components.TuningSoundGrid
 import com.example.corda.ui.components.UserInfo
-import com.example.corda.ui.screen.tuner.settings.TuningMode
+import com.example.corda.ui.screen.tuner.components.EarModeChromaticContent
+import com.example.corda.ui.screen.tuner.components.EarModeStandardContent
+import com.example.corda.ui.screen.tuner.components.PitchArc
+import com.example.corda.ui.screen.tuner.components.TuningSoundGrid
+import com.example.corda.domain.tuner.TuningMode
+import com.example.corda.ui.screen.tuner.components.NoteLabel
 import java.util.Locale
 
 @OptIn(ExperimentalMaterial3Api::class)

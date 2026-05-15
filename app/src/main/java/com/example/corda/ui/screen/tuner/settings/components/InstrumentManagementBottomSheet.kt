@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.settings.components
 
 import android.widget.Toast
 import androidx.compose.foundation.layout.Column
@@ -73,7 +73,7 @@ fun InstrumentManagementBottomSheet(
             LazyColumn(modifier = Modifier.fillMaxWidth()) {
                 items(
                     items = instrumentRows,
-                    key = { it.instrument.instrumentId }
+                    key = { it.instrument.instrumentId },
                 ) { row ->
                     InstrumentListItem(
                         instrument = row.instrument,
@@ -139,7 +139,7 @@ fun InstrumentManagementBottomSheet(
             text = {
                 Text(
                     "Are you sure you want to delete \"${target.instrument.name}\"? " +
-                            "This action cannot be undone."
+                        "This action cannot be undone.",
                 )
             },
             confirmButton = {
@@ -147,7 +147,7 @@ fun InstrumentManagementBottomSheet(
                     onClick = {
                         settingsViewModel.deleteInstrument(target.instrument)
                         deleteTarget = null
-                    }
+                    },
                 ) {
                     Text("Delete")
                 }

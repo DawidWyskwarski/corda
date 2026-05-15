@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -45,7 +45,8 @@ fun TuningSoundGrid(
             key = { index, _ -> index },
         ) { index, sound ->
             TuningNoteChip(
-                note = sound.name,
+                pitchClass = sound.name,
+                octave = sound.octave,
                 isSelected = activeIndex == index,
                 isTuned = index in tunedIndices,
                 onClick = {

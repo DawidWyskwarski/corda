@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
@@ -34,7 +34,8 @@ fun EarModeStandardContent(
             key = { _, sound -> sound.soundId },
         ) { index, sound ->
             TuningNoteChip(
-                note = sound.name,
+                pitchClass = sound.name,
+                octave = sound.octave,
                 isSelected = playingIndex == index,
                 isTuned = false,
                 onClick = { onNoteToggle(index) },

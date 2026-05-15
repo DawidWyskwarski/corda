@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.Box
@@ -22,7 +22,7 @@ import kotlin.math.abs
 @Composable
 fun PitchArc(
     modifier: Modifier = Modifier,
-    centsOff: Float?
+    centsOff: Float?,
 ) {
     val trackColor = MaterialTheme.colorScheme.primaryContainer
     val targetZoneColor = if (abs(centsOff ?: 6f) > 5) {
@@ -50,7 +50,7 @@ fun PitchArc(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .aspectRatio(2f)
+                .aspectRatio(2f),
         ) {
 
             val strokeWidthPx = strokeWidth.toPx()
@@ -66,7 +66,7 @@ fun PitchArc(
                 startAngle = 180f,
                 sweepAngle = 180f,
                 useCenter = false,
-                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
 
             // Target zone at top-center
@@ -77,7 +77,7 @@ fun PitchArc(
                 startAngle = 265f,
                 sweepAngle = 10f,
                 useCenter = false,
-                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
             )
 
             // Indicator dot
@@ -92,7 +92,7 @@ fun PitchArc(
                     startAngle = angle,
                     sweepAngle = 0.1f,
                     useCenter = false,
-                    style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round)
+                    style = Stroke(width = strokeWidthPx, cap = StrokeCap.Round),
                 )
             }
         }
@@ -115,7 +115,7 @@ fun PitchArc(
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(top=64.dp),
+                    .padding(top = 64.dp),
                 text = if (centsOff == null) "Play something"
                 else if (centsOff < -5f) "Tune higher"
                 else if (centsOff > 5f) "Tune lower"

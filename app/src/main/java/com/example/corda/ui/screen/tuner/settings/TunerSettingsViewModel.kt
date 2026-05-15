@@ -1,11 +1,11 @@
 package com.example.corda.ui.screen.tuner.settings
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.corda.data.tuner.local.entities.Instrument
 import com.example.corda.data.tuner.local.entities.relations.TuningWithInstrumentAndSounds
 import com.example.corda.data.tuner.repository.TunerRepository
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -13,14 +13,16 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 data class InstrumentRow(
     val instrument: Instrument,
     val tuningCount: Int,
 )
 
-class TunerSettingsViewModel(
-    private val repository: TunerRepository
+@HiltViewModel
+class TunerSettingsViewModel @Inject constructor(
+    private val repository: TunerRepository,
 ) : ViewModel() {
 
     val instruments: StateFlow<List<Instrument>> = repository
@@ -131,18 +133,5 @@ class TunerSettingsViewModel(
                 _selectedInstrument.value = null
             }
         }
-    }
-}
-
-class TunerSettingsViewModelFactory(
-    private val repository: TunerRepository
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TunerSettingsViewModel::class.java)) {
-            return TunerSettingsViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

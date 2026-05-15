@@ -50,10 +50,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
-import com.example.corda.ui.components.InstrumentManagementBottomSheet
 import com.example.corda.ui.components.SimpleSingleChoiceButtonGroup
-import com.example.corda.ui.components.TuningListItem
 import com.example.corda.ui.components.UserInfo
+import com.example.corda.ui.screen.tuner.settings.components.InstrumentManagementBottomSheet
+import com.example.corda.ui.screen.tuner.settings.components.TuningListItem
+import com.example.corda.domain.tuner.TuningMode
 import com.example.corda.ui.screen.tuner.TunerViewModel
 
 /**

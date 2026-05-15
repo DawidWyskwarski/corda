@@ -1,4 +1,4 @@
-package com.example.corda.data.tuner.audio
+package com.example.corda.domain.tuner.pitch
 
 import kotlin.math.abs
 import kotlin.math.exp
@@ -9,7 +9,7 @@ import kotlin.math.roundToInt
 class PitchSmoother(
     private val emaAlpha: Float = 0.2f,
     private val silenceFrames: Int = 32,
-    private val maxConsecutiveSnaps: Int = 16
+    private val maxConsecutiveSnaps: Int = 16,
 ) {
 
     private var smoothedLogFreq: Double = 0.0
@@ -46,7 +46,7 @@ class PitchSmoother(
 
         if (wasSnapped) {
             consecutiveSnapCount++
-            
+
             if (consecutiveSnapCount >= maxConsecutiveSnaps) {
                 lockedFrequency = rawFrequency
                 consecutiveSnapCount = 0

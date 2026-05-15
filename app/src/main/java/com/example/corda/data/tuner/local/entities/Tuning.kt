@@ -18,7 +18,7 @@ data class Tuning(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "tuning_id")
     val tuningId: Int = 0,
-    var name: String,
+    val name: String,
     @ColumnInfo(name = "instrument_id")
     val instrumentId: Int,
     @ColumnInfo(name = "last_used")

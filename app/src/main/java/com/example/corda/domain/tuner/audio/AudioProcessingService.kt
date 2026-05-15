@@ -1,4 +1,4 @@
-package com.example.corda.data.tuner.audio
+package com.example.corda.domain.tuner.audio
 
 import android.annotation.SuppressLint
 import android.media.AudioFormat
@@ -20,26 +20,26 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 
-class AudioProcessingService {
+class AudioProcessingService : PitchDetector {
 
     companion object {
-        const val SAMPLE_RATE = 44100
+        val SAMPLE_RATE: Int get() = TUNER_SAMPLE_RATE
         const val BUFFER_SIZE = 5120
         const val OVERLAP = 4096
         private const val PROBABILITY_THRESHOLD = 0.75f
     }
 
     private val _pitchFlow = MutableSharedFlow<Float?>(extraBufferCapacity = 16)
-    val pitchFlow: SharedFlow<Float?> = _pitchFlow.asSharedFlow()
+    override val pitchFlow: SharedFlow<Float?> = _pitchFlow.asSharedFlow()
 
     private val _isListening = MutableStateFlow(false)
-    val isListening: StateFlow<Boolean> = _isListening.asStateFlow()
+    override val isListening: StateFlow<Boolean> = _isListening.asStateFlow()
 
     private var recordingJob: Job? = null
     private var audioRecord: AudioRecord? = null
 
     @SuppressLint("MissingPermission")
-    fun start(scope: CoroutineScope) {
+    override fun start(scope: CoroutineScope) {
         if (_isListening.value) return
 
         recordingJob = scope.launch(Dispatchers.IO) {
@@ -77,7 +77,7 @@ class AudioProcessingService {
             ) { result, _ ->
                 val pitch = result.pitch
                 val probability = result.probability
-                
+
                 if (pitch > 0 && probability > PROBABILITY_THRESHOLD) {
                     _pitchFlow.tryEmit(pitch)
                 } else {
@@ -117,7 +117,7 @@ class AudioProcessingService {
         }
     }
 
-    fun stop() {
+    override fun stop() {
         recordingJob?.cancel()
         recordingJob = null
     }

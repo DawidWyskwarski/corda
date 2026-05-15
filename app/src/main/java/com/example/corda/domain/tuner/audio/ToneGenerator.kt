@@ -1,4 +1,4 @@
-package com.example.corda.data.tuner.audio
+package com.example.corda.domain.tuner.audio
 
 import android.media.AudioAttributes
 import android.media.AudioFormat
@@ -18,8 +18,8 @@ import kotlin.math.sin
  * [play] updates the frequency while already playing without restarting the coroutine.
  */
 class ToneGenerator(
-    private val sampleRate: Int = AudioProcessingService.SAMPLE_RATE,
-) {
+    private val sampleRate: Int = TUNER_SAMPLE_RATE,
+) : TonePlayer {
 
     private var audioTrack: AudioTrack? = null
     private var playbackJob: Job? = null
@@ -33,7 +33,7 @@ class ToneGenerator(
     /**
      * Starts playback at [frequencyHz], or updates the frequency if already playing.
      */
-    fun play(frequencyHz: Float, scope: CoroutineScope) {
+    override fun play(frequencyHz: Float, scope: CoroutineScope) {
         require(frequencyHz > 0f && frequencyHz < sampleRate / 2f) {
             "frequencyHz must be in (0, ${sampleRate / 2f})"
         }
@@ -97,7 +97,7 @@ class ToneGenerator(
      * Stops playback (coroutine cancellation flushes the pipeline).
      * Releases the underlying [AudioTrack] so the next [play] creates a fresh instance.
      */
-    fun stop() {
+    override fun stop() {
         running = false
         playbackJob?.cancel()
         playbackJob = null
@@ -111,10 +111,6 @@ class ToneGenerator(
             track.release()
         }
         audioTrack = null
-    }
-
-    fun release() {
-        stop()
     }
 
     private fun obtainTrack(): AudioTrack {

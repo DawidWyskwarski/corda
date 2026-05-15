@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -19,7 +19,8 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun TuningNoteChip(
-    note: String,
+    pitchClass: String,
+    octave: Int,
     isSelected: Boolean,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
@@ -34,10 +35,11 @@ fun TuningNoteChip(
         selected = isSelected,
         onClick = onClick,
         label = {
-            Text(
+            NoteLabel(
+                pitchClass = pitchClass,
+                octave = octave,
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
-                text = note,
-                style = MaterialTheme.typography.titleMedium
+                style = MaterialTheme.typography.titleMedium,
             )
         },
         trailingIcon = if (isTuned) {
@@ -46,9 +48,11 @@ fun TuningNoteChip(
                     imageVector = Icons.Rounded.Check,
                     contentDescription = "Tuned",
                     modifier = Modifier.size(18.dp),
-                    tint = MaterialTheme.colorScheme.primary
+                    tint = MaterialTheme.colorScheme.primary,
                 )
             }
-        } else null
+        } else {
+            null
+        },
     )
 }

@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.settings.components
 
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.animateColorAsState
@@ -41,6 +41,7 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import com.example.corda.data.tuner.local.entities.relations.TuningWithInstrumentAndSounds
+import com.example.corda.ui.screen.tuner.components.soundsPreviewAnnotated
 
 /**
  * A single row in the tunings list.
@@ -66,15 +67,17 @@ fun TuningListItem(
     onDelete: () -> Unit,
 ) {
     val containerColor by animateColorAsState(
-        targetValue = if (isSelected)
+        targetValue = if (isSelected) {
             MaterialTheme.colorScheme.secondaryContainer
-        else
-            MaterialTheme.colorScheme.surfaceContainer,
+        } else {
+            MaterialTheme.colorScheme.surfaceContainer
+        },
         label = "TuningListItem container color",
     )
 
-    val notesText = remember(tuning.sounds) {
-        tuning.sounds.joinToString(" ") { it.name }
+    val bodyStyle = MaterialTheme.typography.bodyMedium
+    val notesPreview = remember(tuning.sounds, bodyStyle) {
+        soundsPreviewAnnotated(sounds = tuning.sounds, baseStyle = bodyStyle)
     }
 
     var showMenu by remember { mutableStateOf(false) }
@@ -94,7 +97,7 @@ fun TuningListItem(
                             menuOffset = with(density) {
                                 DpOffset(
                                     x = longPress.position.x.toDp(),
-                                    y = longPress.position.y.toDp()
+                                    y = longPress.position.y.toDp(),
                                 )
                             }
                             showMenu = true
@@ -113,7 +116,7 @@ fun TuningListItem(
             },
             supportingContent = {
                 Text(
-                    text = notesText,
+                    text = notesPreview,
                     style = MaterialTheme.typography.bodyMedium,
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                     maxLines = 1,
@@ -127,7 +130,7 @@ fun TuningListItem(
                         animationSpec = spring(
                             dampingRatio = Spring.DampingRatioLowBouncy,
                             stiffness = Spring.StiffnessMedium,
-                        )
+                        ),
                     ) + fadeIn(),
                     exit = scaleOut() + fadeOut(),
                 ) {
@@ -154,7 +157,7 @@ fun TuningListItem(
                     x = menuOffset.x,
                     y = menuOffset.y,
                 )
-                .size(0.dp)
+                .size(0.dp),
         ) {
             DropdownMenu(
                 modifier = Modifier.width(192.dp),
@@ -176,13 +179,13 @@ fun TuningListItem(
                     text = {
                         Text(
                             text = "Edit",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Edit,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     onClick = {
@@ -194,13 +197,13 @@ fun TuningListItem(
                     text = {
                         Text(
                             text = "Delete",
-                            style = MaterialTheme.typography.bodyLarge
+                            style = MaterialTheme.typography.bodyLarge,
                         )
                     },
                     trailingIcon = {
                         Icon(
                             imageVector = Icons.Rounded.Delete,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     onClick = {

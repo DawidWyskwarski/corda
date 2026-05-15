@@ -3,11 +3,14 @@ package com.example.corda.ui.screen.tuner.addtuning
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.snapshotFlow
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.example.corda.data.tuner.local.entities.Instrument
 import com.example.corda.data.tuner.local.entities.Sound
 import com.example.corda.data.tuner.repository.TunerRepository
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -17,10 +20,16 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
 
-class AddEditTuningViewModel(
+@HiltViewModel(assistedFactory = AddEditTuningViewModel.Factory::class)
+class AddEditTuningViewModel @AssistedInject constructor(
     private val repository: TunerRepository,
-    private val tuningId: Int?,
+    @Assisted private val tuningId: Int?,
 ) : ViewModel() {
+
+    @AssistedFactory
+    interface Factory {
+        fun create(tuningId: Int?): AddEditTuningViewModel
+    }
 
     val isEditMode: Boolean = tuningId != null
 
@@ -70,7 +79,7 @@ class AddEditTuningViewModel(
     private suspend fun loadExistingTuning(id: Int) {
         val tuning = repository.getTuningWithSoundsById(id) ?: return
         val instrument = _instruments.value.find { it.instrumentId == tuning.instrumentId }
-        
+
         _selectedInstrument.value = instrument
         _tuningName.value = tuning.tuningName
 
@@ -93,7 +102,7 @@ class AddEditTuningViewModel(
         val sounds = _allSounds.value
         if (sounds.isEmpty()) return
 
-        val defaultSound = sounds.find { it.name == "E2" } ?: sounds.first()
+        val defaultSound = sounds.find { it.name == "E" && it.octave == 2 } ?: sounds.first()
         stringSounds.clear()
         repeat(count) { stringSounds.add(defaultSound) }
     }
@@ -126,19 +135,5 @@ class AddEditTuningViewModel(
                 _saved.value = true
             }
         }
-    }
-}
-
-class AddEditTuningViewModelFactory(
-    private val repository: TunerRepository,
-    private val tuningId: Int?,
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(AddEditTuningViewModel::class.java)) {
-            return AddEditTuningViewModel(repository, tuningId) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
 }

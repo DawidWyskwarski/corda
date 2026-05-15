@@ -9,7 +9,7 @@ data class Instrument(
     @PrimaryKey(autoGenerate = true)
     @ColumnInfo(name = "instrument_id")
     val instrumentId: Int = 0,
-    var name: String,
+    val name: String,
     @ColumnInfo(name = "sounds_count")
     val soundsCount: Byte
 )

@@ -83,7 +83,7 @@ interface TunerDao {
     @Query("""
         SELECT * 
         FROM Sound 
-        WHERE Sound.name = "A4"
+        WHERE Sound.name = 'A' AND Sound.octave = 4
         """)
     suspend fun getReferencePitch(): Sound
 

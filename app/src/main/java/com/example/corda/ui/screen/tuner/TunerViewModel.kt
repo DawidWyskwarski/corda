@@ -1,17 +1,19 @@
 package com.example.corda.ui.screen.tuner
 
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.example.corda.data.tuner.audio.AudioProcessingService
-import com.example.corda.data.tuner.audio.PitchSmoother
-import com.example.corda.data.tuner.audio.ToneGenerator
 import com.example.corda.data.tuner.local.entities.Sound
 import com.example.corda.data.tuner.local.entities.relations.TuningWithInstrumentAndSounds
-import com.example.corda.data.tuner.model.NoteReference
-import com.example.corda.data.tuner.model.PitchResult
 import com.example.corda.data.tuner.repository.TunerRepository
-import com.example.corda.ui.screen.tuner.settings.TuningMode
+import com.example.corda.domain.tuner.TuningMode
+import com.example.corda.domain.tuner.audio.PitchDetector
+import com.example.corda.domain.tuner.audio.TonePlayer
+import com.example.corda.domain.tuner.pitch.PitchHelpers
+import com.example.corda.domain.tuner.pitch.PitchResult
+import com.example.corda.domain.tuner.pitch.PitchSmoother
+import com.example.corda.domain.tuner.pitch.ResolvedPitch
+import com.example.corda.domain.tuner.pitch.TunerModePitchResolver
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -20,6 +22,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 import kotlin.math.abs
 
 data class TunerUiState(
@@ -38,15 +41,17 @@ data class TunerUiState(
     val isPlayingChromaticNote: Boolean = false,
 )
 
-class TunerViewModel(
-    private val repository: TunerRepository
+@HiltViewModel
+class TunerViewModel @Inject constructor(
+    private val repository: TunerRepository,
+    private val pitchDetector: PitchDetector,
+    private val tonePlayer: TonePlayer,
 ) : ViewModel() {
 
-    private val audioService = AudioProcessingService()
     private val pitchSmoother = PitchSmoother()
-    private val toneGenerator = ToneGenerator()
 
     private var pitchCollectionJob: Job? = null
+    private var listeningStateJob: Job? = null
     private var inTuneFrameCount = 0
 
     val tunings: StateFlow<List<TuningWithInstrumentAndSounds>> = repository
@@ -54,25 +59,25 @@ class TunerViewModel(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = emptyList()
+            initialValue = emptyList(),
         )
 
     private val _selectedTuning = MutableStateFlow<TuningWithInstrumentAndSounds?>(null)
 
     val selectedTuning: StateFlow<TuningWithInstrumentAndSounds?> = combine(
         _selectedTuning,
-        tunings
+        tunings,
     ) { selected, tuningList ->
         val stillExists = selected != null && tuningList.any { it.tuningId == selected.tuningId }
         if (stillExists) selected else tuningList.firstOrNull()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     fun selectTuning(tuning: TuningWithInstrumentAndSounds) {
-        toneGenerator.stop()
+        tonePlayer.stop()
         _selectedTuning.value = tuning
         _tunerUiState.value = TunerUiState()
     }
@@ -90,7 +95,7 @@ class TunerViewModel(
     val selectedMode: StateFlow<TuningMode> = _selectedMode.asStateFlow()
 
     fun selectMode(mode: TuningMode) {
-        toneGenerator.stop()
+        tonePlayer.stop()
         _selectedMode.value = mode
         _tunerUiState.value = TunerUiState()
     }
@@ -114,7 +119,7 @@ class TunerViewModel(
 
         if (enabled) {
             stopMicrophoneOnly()
-            toneGenerator.stop()
+            tonePlayer.stop()
             val defaultChromatic = defaultChromaticSound()
             _tunerUiState.value = cur.copy(
                 isEarModeEnabled = true,
@@ -127,7 +132,7 @@ class TunerViewModel(
                 earSelectedChromaticSound = cur.earSelectedChromaticSound ?: defaultChromatic,
             )
         } else {
-            toneGenerator.stop()
+            tonePlayer.stop()
             _tunerUiState.value = cur.copy(
                 isEarModeEnabled = false,
                 earPlayingStandardIndex = null,
@@ -144,10 +149,10 @@ class TunerViewModel(
         if (index !in sounds.indices) return
         val cur = _tunerUiState.value
         if (cur.earPlayingStandardIndex == index) {
-            toneGenerator.stop()
+            tonePlayer.stop()
             _tunerUiState.value = cur.copy(earPlayingStandardIndex = null)
         } else {
-            toneGenerator.play(sounds[index].frequency, viewModelScope)
+            tonePlayer.play(sounds[index].frequency, viewModelScope)
             _tunerUiState.value = cur.copy(earPlayingStandardIndex = index)
         }
     }
@@ -156,7 +161,7 @@ class TunerViewModel(
         val cur = _tunerUiState.value
         _tunerUiState.value = cur.copy(earSelectedChromaticSound = sound)
         if (cur.isPlayingChromaticNote) {
-            toneGenerator.play(sound.frequency, viewModelScope)
+            tonePlayer.play(sound.frequency, viewModelScope)
         }
     }
 
@@ -164,31 +169,32 @@ class TunerViewModel(
         val cur = _tunerUiState.value
         val sound = cur.earSelectedChromaticSound ?: return
         if (cur.isPlayingChromaticNote) {
-            toneGenerator.stop()
+            tonePlayer.stop()
             _tunerUiState.value = _tunerUiState.value.copy(isPlayingChromaticNote = false)
         } else {
-            toneGenerator.play(sound.frequency, viewModelScope)
+            tonePlayer.play(sound.frequency, viewModelScope)
             _tunerUiState.value = _tunerUiState.value.copy(isPlayingChromaticNote = true)
         }
     }
 
     fun startListening() {
         if (_tunerUiState.value.isEarModeEnabled) return
-        if (audioService.isListening.value) return
+        if (pitchDetector.isListening.value) return
 
         pitchSmoother.reset()
         inTuneFrameCount = 0
-        audioService.start(viewModelScope)
+        pitchDetector.start(viewModelScope)
 
         pitchCollectionJob = viewModelScope.launch {
-            audioService.pitchFlow.collect { rawFreq ->
+            pitchDetector.pitchFlow.collect { rawFreq ->
                 val smoothedFreq = pitchSmoother.process(rawFreq)
                 updateUiFromPitch(smoothedFreq)
             }
         }
 
-        viewModelScope.launch {
-            audioService.isListening.collect { listening ->
+        listeningStateJob?.cancel()
+        listeningStateJob = viewModelScope.launch {
+            pitchDetector.isListening.collect { listening ->
                 _tunerUiState.value = _tunerUiState.value.copy(isListening = listening)
             }
         }
@@ -197,17 +203,21 @@ class TunerViewModel(
     fun stopListening() {
         pitchCollectionJob?.cancel()
         pitchCollectionJob = null
-        audioService.stop()
+        listeningStateJob?.cancel()
+        listeningStateJob = null
+        pitchDetector.stop()
         pitchSmoother.reset()
         inTuneFrameCount = 0
-        toneGenerator.stop()
+        tonePlayer.stop()
         _tunerUiState.value = TunerUiState()
     }
 
     private fun stopMicrophoneOnly() {
         pitchCollectionJob?.cancel()
         pitchCollectionJob = null
-        audioService.stop()
+        listeningStateJob?.cancel()
+        listeningStateJob = null
+        pitchDetector.stop()
         pitchSmoother.reset()
         inTuneFrameCount = 0
         val micOff = _tunerUiState.value
@@ -226,72 +236,56 @@ class TunerViewModel(
             _tunerUiState.value = _tunerUiState.value.copy(
                 detectedNote = null,
                 detectedFrequency = null,
-                centsOff = null
+                centsOff = null,
             )
             inTuneFrameCount = 0
             return
         }
 
-        val tuning = selectedTuning.value
         val current = _tunerUiState.value
+        val tuning = selectedTuning.value
 
-        when (_selectedMode.value) {
-            TuningMode.CHROMATIC -> {
-                val result = NoteReference.findClosestNote(smoothedFreq)
+        val resolved = TunerModePitchResolver.resolve(
+            smoothedFreq,
+            _selectedMode.value,
+            tuning,
+            current.focusedSoundIndex,
+        ) ?: return
+
+        when (resolved) {
+            is ResolvedPitch.Chromatic -> {
+                val result = resolved.result
                 _tunerUiState.value = current.copy(
-                    detectedNote = result.noteName,
+                    detectedNote = PitchHelpers.compositeLabel(result.pitchClass, result.octave),
                     detectedFrequency = result.frequencyHz,
-                    centsOff = result.centsOff
+                    centsOff = result.centsOff,
                 )
             }
 
-            TuningMode.STANDARD if tuning != null -> {
-                val sounds = tuning.sounds
-
-                if (sounds.isEmpty()) return
-
-                val focusedIndex = current.focusedSoundIndex
-
-                if (focusedIndex != null && focusedIndex in sounds.indices) {
-                    val targetSound = sounds[focusedIndex]
-
-                    val result = NoteReference.findClosestToSingleTarget(
-                        smoothedFreq, targetSound
-                    )
-
-                    val newTuned = checkAndMarkTuned(
-                        result, focusedIndex, current.tunedSoundIndices
-                    )
-
-                    _tunerUiState.value = current.copy(
-                        detectedNote = result.noteName,
-                        detectedFrequency = result.frequencyHz,
-                        centsOff = result.centsOff,
-                        tunedSoundIndices = newTuned
-                    )
-                } else {
-                    val result = NoteReference.findClosestNoteInSet(
-                        smoothedFreq, sounds
-                    )
-
-                    val matchingIndex = sounds.indexOfFirst { it.name == result.noteName }
-
-                    val newTuned = if (matchingIndex >= 0) {
-                        checkAndMarkTuned(result, matchingIndex, current.tunedSoundIndices)
-                    } else {
-                        current.tunedSoundIndices
-                    }
-
-                    _tunerUiState.value = current.copy(
-                        detectedNote = result.noteName,
-                        detectedFrequency = result.frequencyHz,
-                        centsOff = result.centsOff,
-                        autoSelectedSoundIndex = matchingIndex.takeIf { it >= 0 },
-                        tunedSoundIndices = newTuned
-                    )
+            is ResolvedPitch.Standard -> {
+                val result = resolved.result
+                val sounds = tuning?.sounds.orEmpty()
+                val focusIdx = current.focusedSoundIndex
+                val soundIndices = sounds.indices
+                val tuneIndex = when {
+                    focusIdx != null && focusIdx in soundIndices -> focusIdx
+                    resolved.matchingSoundIndex != null && resolved.matchingSoundIndex >= 0 ->
+                        resolved.matchingSoundIndex
+                    else -> null
                 }
+                val newTuned = if (tuneIndex != null) {
+                    checkAndMarkTuned(result, tuneIndex, current.tunedSoundIndices)
+                } else {
+                    current.tunedSoundIndices
+                }
+                _tunerUiState.value = current.copy(
+                    detectedNote = PitchHelpers.compositeLabel(result.pitchClass, result.octave),
+                    detectedFrequency = result.frequencyHz,
+                    centsOff = result.centsOff,
+                    autoSelectedSoundIndex = if (focusIdx == null) resolved.matchingSoundIndex else null,
+                    tunedSoundIndices = newTuned,
+                )
             }
-            else -> {}
         }
     }
 
@@ -299,21 +293,17 @@ class TunerViewModel(
         const val IN_TUNE_THRESHOLD_CENTS = 5f
         const val IN_TUNE_FRAMES_REQUIRED = 64
 
-        private val chromaticSounds: List<Sound> by lazy {
-            NoteReference.allNotes.map { cn ->
-                Sound(soundId = cn.midiNote, name = cn.name, frequency = cn.frequency)
-            }
-        }
+        private val chromaticSounds: List<Sound> by lazy { PitchHelpers.allSounds }
 
         private fun defaultChromaticSound(): Sound =
-            chromaticSounds.firstOrNull { it.name == "A4" }
+            chromaticSounds.firstOrNull { it.name == "A" && it.octave == 4 }
                 ?: chromaticSounds.first()
     }
 
     private fun checkAndMarkTuned(
         result: PitchResult,
         index: Int,
-        currentTuned: Set<Int>
+        currentTuned: Set<Int>,
     ): Set<Int> {
         if (abs(result.centsOff) < IN_TUNE_THRESHOLD_CENTS) {
             inTuneFrameCount++
@@ -329,20 +319,8 @@ class TunerViewModel(
     override fun onCleared() {
         super.onCleared()
         pitchCollectionJob?.cancel()
-        audioService.stop()
-        toneGenerator.release()
-    }
-}
-
-class TunerViewModelFactory(
-    private val repository: TunerRepository
-) : ViewModelProvider.Factory {
-
-    @Suppress("UNCHECKED_CAST")
-    override fun <T : ViewModel> create(modelClass: Class<T>): T {
-        if (modelClass.isAssignableFrom(TunerViewModel::class.java)) {
-            return TunerViewModel(repository) as T
-        }
-        throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
+        listeningStateJob?.cancel()
+        pitchDetector.stop()
+        tonePlayer.stop()
     }
 }

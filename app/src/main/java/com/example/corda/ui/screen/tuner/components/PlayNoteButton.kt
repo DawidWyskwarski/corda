@@ -1,4 +1,4 @@
-package com.example.corda.ui.components
+package com.example.corda.ui.screen.tuner.components
 
 import androidx.compose.animation.Crossfade
 import androidx.compose.foundation.layout.size

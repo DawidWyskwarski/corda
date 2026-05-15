@@ -1,9 +1,9 @@
-package com.example.corda.data.tuner.model
+package com.example.corda.domain.tuner.pitch
 
 data class PitchResult(
     val frequencyHz: Float,
-    val noteName: String,
+    val pitchClass: String,
     val octave: Int,
     val midiNote: Int,
-    val centsOff: Float
+    val centsOff: Float,
 )

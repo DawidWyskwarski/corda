@@ -7,7 +7,6 @@ import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDe
 import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
-import com.example.corda.data.tuner.repository.TunerRepository
 import com.example.corda.ui.components.DrawerMenuContent
 import com.example.corda.ui.navigation.inspirationsEntries
 import com.example.corda.ui.navigation.metronomeEntries
@@ -25,7 +24,6 @@ import com.example.corda.ui.navigation.utilityEntries
 @Composable
 fun CordaApp(
     modifier: Modifier = Modifier,
-    tunerRepository: TunerRepository,
 ) {
     val appState = rememberCordaAppState()
 
@@ -52,10 +50,9 @@ fun CordaApp(
             ),
             entryProvider = entryProvider {
                 tunerEntries(
-                    tunerRepository = tunerRepository,
                     openDrawer = appState::openDrawer,
                     navigateTo = appState::navigateTo,
-                    navigateBack = appState::navigateBack
+                    navigateBack = appState::navigateBack,
                 )
                 metronomeEntries(
                     openDrawer = appState::openDrawer,

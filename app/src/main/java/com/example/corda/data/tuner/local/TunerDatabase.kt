@@ -11,34 +11,23 @@ import com.example.corda.data.tuner.local.entities.Instrument
 import com.example.corda.data.tuner.local.entities.Sound
 import com.example.corda.data.tuner.local.entities.Tuning
 import com.example.corda.data.tuner.local.entities.relations.TuningSoundCrossRef
-import kotlin.math.pow
+import com.example.corda.domain.tuner.pitch.PitchHelpers
 
 @Database(
     entities = [
         Instrument::class,
         Tuning::class,
         Sound::class,
-        TuningSoundCrossRef::class
+        TuningSoundCrossRef::class,
     ],
-    version = 1
+    version = 1,
+    exportSchema = false,
 )
 abstract class TunerDatabase : RoomDatabase() {
 
     abstract val tunerDao: TunerDao
 
     companion object {
-
-        private val NOTE_NAMES = listOf(
-            "C", "C#", "D", "D#", "E", "F", "F#", "G", "G#", "A", "A#", "B"
-        )
-
-        private const val REFERENCE_FREQUENCY = 440.0
-        private const val REFERENCE_MIDI_NOTE = 69 // A4
-
-        private fun midiNote(octave: Int, noteIndex: Int) = (octave + 1) * 12 + noteIndex
-
-        private fun frequencyFromMidi(midiNote: Int): Float =
-            (REFERENCE_FREQUENCY * 2.0.pow((midiNote - REFERENCE_MIDI_NOTE) / 12.0)).toFloat()
 
         @Volatile
         private var INSTANCE: TunerDatabase? = null
@@ -48,65 +37,71 @@ abstract class TunerDatabase : RoomDatabase() {
                 return INSTANCE ?: Room.databaseBuilder(
                     ctx.applicationContext,
                     TunerDatabase::class.java,
-                    "tuner_db"
-                ).addCallback(object : Callback() {
-                    override fun onCreate(db: SupportSQLiteDatabase) {
-                        super.onCreate(db)
-                        db.beginTransaction()
-                        try {
-                            populateSounds(db)
-                            populateInstrumentsAndTunings(db)
-                            db.setTransactionSuccessful()
-                        } finally {
-                            db.endTransaction()
+                    "tuner_db",
+                )
+                    .addCallback(object : Callback() {
+                        override fun onCreate(db: SupportSQLiteDatabase) {
+                            super.onCreate(db)
+                            db.beginTransaction()
+                            try {
+                                populateSounds(db)
+                                populateInstrumentsAndTunings(db)
+                                db.execSQL(
+                                    "CREATE UNIQUE INDEX IF NOT EXISTS index_Sound_midi_note ON Sound(midi_note)",
+                                )
+                                db.setTransactionSuccessful()
+                            } finally {
+                                db.endTransaction()
+                            }
                         }
+                    })
+                    .build()
+                    .also {
+                        INSTANCE = it
                     }
-                }).build().also {
-                    INSTANCE = it
-                }
             }
         }
 
-        // Sounds
         private fun populateSounds(db: SupportSQLiteDatabase) {
             for (octave in 0..8) {
-                for ((noteIndex, noteName) in NOTE_NAMES.withIndex()) {
-                    val frequency = frequencyFromMidi(midiNote(octave, noteIndex))
+                for ((noteIndex, pitchClass) in PitchHelpers.pitchClasses.withIndex()) {
+                    val midi = PitchHelpers.midiNote(octave, noteIndex)
+                    val frequency = PitchHelpers.frequencyFromMidi(midi)
                     db.insert("Sound", 0, ContentValues().apply {
-                        put("name", "$noteName$octave")
+                        put("name", pitchClass)
                         put("frequency", frequency)
+                        put("octave", octave)
+                        put("midi_note", midi)
                     })
                 }
             }
         }
 
-        // Instruments and Tunings
         private fun populateInstrumentsAndTunings(db: SupportSQLiteDatabase) {
             val guitar6 = insertInstrument(db, name = "Guitar (6-string)", soundsCount = 6)
             val guitar7 = insertInstrument(db, name = "Guitar (7-string)", soundsCount = 7)
-            val bass4   = insertInstrument(db, name = "Bass (4-string)",   soundsCount = 4)
-            val bass5   = insertInstrument(db, name = "Bass (5-string)",   soundsCount = 5)
+            val bass4 = insertInstrument(db, name = "Bass (4-string)", soundsCount = 4)
+            val bass5 = insertInstrument(db, name = "Bass (5-string)", soundsCount = 5)
 
             // Guitar 6-string
-            insertTuningWithSounds(db, "Standard",   guitar6, listOf("E2", "A2", "D3", "G3", "B3", "E4"))
-            insertTuningWithSounds(db, "Drop D",     guitar6, listOf("D2", "A2", "D3", "G3", "B3", "E4"))
-            insertTuningWithSounds(db, "D Standard", guitar6, listOf("D2", "G2", "C3", "F3", "A3", "D4"))
+            insertTuningWithSounds(db, "Standard", guitar6, listOf(40, 45, 50, 55, 59, 64))
+            insertTuningWithSounds(db, "Drop D", guitar6, listOf(38, 45, 50, 55, 59, 64))
+            insertTuningWithSounds(db, "D Standard", guitar6, listOf(38, 43, 48, 53, 57, 62))
 
             // Guitar 7-string
-            insertTuningWithSounds(db, "Standard",   guitar7, listOf("B1", "E2", "A2", "D3", "G3", "B3", "E4"))
-            insertTuningWithSounds(db, "Drop A",     guitar7, listOf("A1", "E2", "A2", "D3", "G3", "B3", "E4"))
-            insertTuningWithSounds(db, "A Standard", guitar7, listOf("A1", "D2", "G2", "C3", "F3", "A3", "D4"))
+            insertTuningWithSounds(db, "Standard", guitar7, listOf(35, 40, 45, 50, 55, 59, 64))
+            insertTuningWithSounds(db, "Drop A", guitar7, listOf(33, 40, 45, 50, 55, 59, 64))
+            insertTuningWithSounds(db, "A Standard", guitar7, listOf(33, 38, 43, 48, 53, 57, 62))
 
             // Bass 4-string
-            insertTuningWithSounds(db, "Standard",   bass4, listOf("E1", "A1", "D2", "G2"))
-            insertTuningWithSounds(db, "D Standard", bass4, listOf("D1", "G1", "C2", "F2"))
+            insertTuningWithSounds(db, "Standard", bass4, listOf(28, 33, 38, 43))
+            insertTuningWithSounds(db, "D Standard", bass4, listOf(26, 31, 36, 41))
 
             // Bass 5-string
-            insertTuningWithSounds(db, "Standard",   bass5, listOf("B0", "E1", "A1", "D2", "G2"))
-            insertTuningWithSounds(db, "A Standard", bass5, listOf("A0", "D1", "G1", "C2", "F2"))
+            insertTuningWithSounds(db, "Standard", bass5, listOf(23, 28, 33, 38, 43))
+            insertTuningWithSounds(db, "A Standard", bass5, listOf(21, 26, 31, 36, 41))
         }
 
-        // Helpers
         private fun insertInstrument(db: SupportSQLiteDatabase, name: String, soundsCount: Int): Long =
             db.insert("Instrument", 0, ContentValues().apply {
                 put("name", name)
@@ -117,7 +112,7 @@ abstract class TunerDatabase : RoomDatabase() {
             db: SupportSQLiteDatabase,
             name: String,
             instrumentId: Long,
-            noteNames: List<String>
+            midiNotes: List<Int>,
         ) {
             val tuningId = db.insert("Tuning", 0, ContentValues().apply {
                 put("name", name)
@@ -125,9 +120,9 @@ abstract class TunerDatabase : RoomDatabase() {
                 put("last_used", 0L)
             })
 
-            noteNames.forEach { noteName ->
-                val soundId = querySoundId(db, noteName)
-                checkNotNull(soundId) { "Sound '$noteName' not found — check the note name or the seeded octave range." }
+            midiNotes.forEach { midi ->
+                val soundId = querySoundIdByMidi(db, midi)
+                checkNotNull(soundId) { "Sound with midi_note=$midi not found in seed data." }
                 db.insert("TuningSoundCrossRef", 0, ContentValues().apply {
                     put("tuning_id", tuningId)
                     put("sound_id", soundId)
@@ -135,11 +130,11 @@ abstract class TunerDatabase : RoomDatabase() {
             }
         }
 
-        /**
-         * Returns the sound_id for a given note name (e.g. "E2"), or null if not found.
-         */
-        private fun querySoundId(db: SupportSQLiteDatabase, noteName: String): Long? {
-            val cursor = db.query("SELECT sound_id FROM Sound WHERE name = ?", arrayOf(noteName))
+        private fun querySoundIdByMidi(db: SupportSQLiteDatabase, midiNote: Int): Long? {
+            val cursor = db.query(
+                "SELECT sound_id FROM Sound WHERE midi_note = ?",
+                arrayOf(midiNote.toString()),
+            )
             return if (cursor.moveToFirst()) {
                 cursor.getLong(0).also { cursor.close() }
             } else {
@@ -149,4 +144,3 @@ abstract class TunerDatabase : RoomDatabase() {
         }
     }
 }
-

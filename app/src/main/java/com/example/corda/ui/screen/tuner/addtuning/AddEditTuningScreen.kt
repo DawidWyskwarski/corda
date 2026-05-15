@@ -36,8 +36,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.data.tuner.local.entities.Instrument
-import com.example.corda.ui.components.TuningSoundGrid
-import com.example.corda.ui.components.VerticalNoteCarousel
+import com.example.corda.ui.screen.tuner.components.TuningSoundGrid
+import com.example.corda.ui.screen.tuner.components.VerticalNoteCarousel
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
