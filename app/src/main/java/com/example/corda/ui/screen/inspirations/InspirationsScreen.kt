@@ -100,7 +100,9 @@ fun InspirationsScreen(
         )
     }
 
-    BackHandler {
+    val hasOverlay = isLabelSheetOpen || isFabMenuOpen
+
+    BackHandler(enabled = hasOverlay) {
         when {
             isLabelSheetOpen -> isLabelSheetOpen = false
             isFabMenuOpen -> isFabMenuOpen = false
