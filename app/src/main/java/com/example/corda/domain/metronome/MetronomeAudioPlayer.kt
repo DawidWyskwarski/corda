@@ -26,11 +26,6 @@ class MetronomeAudioPlayer @Inject constructor() {
         generateClick(frequencyHz = 900.0, durationMs = 40, amplitude = 0.75),
     )
 
-    /**
-     * Plays a click sound.
-     *
-     * @param isAccent true for beat 1 of each bar (higher pitch), false for all other beats
-     */
     fun playBeat(isAccent: Boolean) {
         val track = if (isAccent) accentTrack else regularTrack
         if (track.state != AudioTrack.STATE_INITIALIZED) return
@@ -73,11 +68,6 @@ class MetronomeAudioPlayer @Inject constructor() {
         return track
     }
 
-    /**
-     * Generates a short decaying sine-wave click as a PCM buffer.
-     *
-     * The exponential envelope makes the tone feel like a sharp "tick" rather than a sustained beep.
-     */
     private fun generateClick(
         frequencyHz: Double,
         durationMs: Int,

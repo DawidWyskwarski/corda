@@ -346,6 +346,7 @@ private fun BpmSection(
 
     var isEditing by remember { mutableStateOf(false) }
     var bpmText by remember { mutableStateOf(bpm.toString()) }
+    var hasFocused by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
     // Keep text in sync with external BPM changes (e.g. slider) while not editing
@@ -365,6 +366,7 @@ private fun BpmSection(
         onBpmChange(parsed)
         bpmText = parsed.toString()
         isEditing = false
+        hasFocused = false
     }
 
     Column(
@@ -401,7 +403,13 @@ private fun BpmSection(
                     modifier = Modifier
                         .width(80.dp)
                         .focusRequester(focusRequester)
-                        .onFocusChanged { if (!it.isFocused && isEditing) commit() },
+                        .onFocusChanged { focusState ->
+                            if (focusState.isFocused) {
+                                hasFocused = true
+                            } else if (hasFocused) {
+                                commit()
+                            }
+                        },
                 )
                 Text(
                     text = " BPM",
