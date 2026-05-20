@@ -39,6 +39,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -103,16 +104,16 @@ fun TunerSettingsScreen(
         )
     }
 
-    val navigateBack = {
-        sharedViewModel.updateSelectedTuningLastUsed()
-        onBack()
+    DisposableEffect(Unit) {
+        onDispose {
+            sharedViewModel.updateSelectedTuningLastUsed()
+        }
     }
 
-    BackHandler {
+    BackHandler(enabled = isInstrumentSheetOpen || isFabMenuOpen) {
         when {
             isInstrumentSheetOpen -> isInstrumentSheetOpen = false
             isFabMenuOpen -> isFabMenuOpen = false
-            else -> navigateBack()
         }
     }
 
@@ -124,7 +125,7 @@ fun TunerSettingsScreen(
             TopAppBar(
                 title = { Text(stringResource(R.string.tuner_settings)) },
                 navigationIcon = {
-                    IconButton(onClick = navigateBack) {
+                    IconButton(onClick = onBack) {
                         Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
                     }
                 }
