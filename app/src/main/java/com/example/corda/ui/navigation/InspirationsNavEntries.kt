@@ -1,9 +1,9 @@
 package com.example.corda.ui.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
-import com.example.corda.ui.screen.inspirations.InspirationDetailScreen
-import com.example.corda.ui.screen.inspirations.InspirationEditScreen
 import com.example.corda.ui.screen.inspirations.InspirationsScreen
+import com.example.corda.ui.screen.inspirations.addedit.InspirationEditScreen
+import com.example.corda.ui.screen.inspirations.detail.InspirationDetailScreen
 
 fun EntryProviderScope<Screen>.inspirationsEntries(
     openDrawer: () -> Unit,

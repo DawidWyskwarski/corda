@@ -1,4 +1,4 @@
-package com.example.corda.ui.screen.inspirations
+package com.example.corda.ui.screen.inspirations.detail
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -34,6 +34,7 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.corda.ui.screen.inspirations.InspirationsViewModel
 import com.example.corda.ui.screen.inspirations.components.InspirationAttributeItem
 import com.example.corda.ui.screen.inspirations.components.InspirationImagePlaceholder
 
