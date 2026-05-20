@@ -32,6 +32,10 @@ sealed class Screen: NavKey {
     @Serializable
     data object Inspirations: Screen()
     @Serializable
+    data class InspirationDetail(val id: String): Screen()
+    @Serializable
+    data class InspirationAddEdit(val id: String? = null): Screen()
+    @Serializable
     data class AddEditTuning(val tuningId: Int? = null): Screen()
     @Serializable
     data object Settings: Screen()

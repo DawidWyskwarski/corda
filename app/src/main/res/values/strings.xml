@@ -53,7 +53,31 @@
     <string name="european">European</string>
     <string name="american">American</string>
 
-    <!-- Inspirtaion -->
+    <!-- Inspiration -->
+    <string name="search_inspirations">Search inspirations</string>
+    <string name="new_inspiration">New inspiration</string>
+    <string name="manage_labels">Manage labels</string>
+    <string name="inspiration_description">Description</string>
+    <string name="inspiration_additional_attributes">Additional attributes</string>
+    <string name="inspiration_name_hint">Name</string>
+    <string name="inspiration_description_hint">Add a description…</string>
+    <string name="inspiration_no_labels_available">No labels available</string>
+    <string name="inspiration_add_attribute">Add attribute</string>
+    <string name="inspiration_edit_attribute">Edit attribute</string>
+    <string name="inspiration_attribute_label">Label</string>
+    <string name="inspiration_delete">Delete inspiration</string>
+    <string name="inspiration_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="labels_title">Labels</string>
+    <string name="label_new">New label</string>
+    <string name="label_edit_title">Edit label</string>
+    <string name="label_delete_title">Delete label</string>
+    <string name="label_delete_message">Are you sure you want to delete \"%1$s\"? It will be removed from all inspirations.</string>
+    <string name="label_name_hint">Name</string>
+    <string name="label_save">Save</string>
+    <string name="label_create">Create</string>
+    <string name="action_confirm">Confirm</string>
+    <string name="action_cancel">Cancel</string>
+    <string name="action_delete">Delete</string>
 
     <!-- Metronome -->
     <string name="metronome_settings">Metronome settings</string>
