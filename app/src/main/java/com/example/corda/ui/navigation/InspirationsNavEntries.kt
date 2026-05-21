@@ -1,14 +1,15 @@
 package com.example.corda.ui.navigation
 
 import androidx.navigation3.runtime.EntryProviderScope
-import com.example.corda.ui.screen.inspirations.InspirationDetailScreen
-import com.example.corda.ui.screen.inspirations.InspirationEditScreen
 import com.example.corda.ui.screen.inspirations.InspirationsScreen
+import com.example.corda.ui.screen.inspirations.addedit.InspirationEditScreen
+import com.example.corda.ui.screen.inspirations.detail.InspirationDetailScreen
 
 fun EntryProviderScope<Screen>.inspirationsEntries(
     openDrawer: () -> Unit,
     navigateTo: (Screen) -> Unit,
     navigateBack: () -> Unit,
+    navigateBackToInspirations: () -> Unit,
 ) {
     entry<Screen.Inspirations> {
         InspirationsScreen(
@@ -30,7 +31,8 @@ fun EntryProviderScope<Screen>.inspirationsEntries(
         InspirationEditScreen(
             id = destination.id,
             onBack = navigateBack,
-            onSaved = navigateBack
+            onSaved = navigateBack,
+            onDeleted = navigateBackToInspirations,
         )
     }
 }

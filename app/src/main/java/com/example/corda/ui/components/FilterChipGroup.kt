@@ -48,9 +48,7 @@ fun FilterChipGroup(
 
             FilterChip(
                 selected = isSelected,
-                onClick = {
-                    onItemSelected(if (isSelected) null else item)
-                },
+                onClick = { onItemSelected(item) },
                 label = {
                     Text(item)
                 },

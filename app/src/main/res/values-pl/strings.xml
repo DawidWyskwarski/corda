@@ -42,6 +42,8 @@
     <string name="search_inspirations">Szukaj inspiracji</string>
     <string name="new_inspiration">Nowa inspiracja</string>
     <string name="manage_labels">Zarządzaj etykietami</string>
+    <string name="show_filters">Pokaż filtry</string>
+    <string name="hide_filters">Ukryj filtry</string>
     <string name="inspiration_description">Opis</string>
     <string name="inspiration_additional_attributes">Dodatkowe atrybuty</string>
     <string name="inspiration_name_hint">Nazwa</string>
@@ -52,6 +54,11 @@
     <string name="inspiration_attribute_label">Etykieta</string>
     <string name="inspiration_delete">Usuń inspirację</string>
     <string name="inspiration_delete_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
+    <string name="inspiration_add_media">Dodaj multimedia</string>
+    <string name="inspiration_pick_image">Wybierz zdjęcie</string>
+    <string name="inspiration_pick_video">Wybierz wideo</string>
+    <string name="inspiration_remove_media">Usuń multimedia</string>
+    <string name="inspiration_media_import_failed">Nie udało się zaimportować pliku. Wybierz inne zdjęcie lub wideo.</string>
     <string name="labels_title">Etykiety</string>
     <string name="label_new">Nowa etykieta</string>
     <string name="label_edit_title">Edytuj etykietę</string>
