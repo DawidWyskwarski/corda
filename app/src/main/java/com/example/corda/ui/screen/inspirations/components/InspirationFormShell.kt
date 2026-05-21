@@ -12,6 +12,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import com.example.corda.data.inspirations.local.entities.MediaType
 
 /**
  * Scrollable inspiration form layout with edge-to-edge hero and overlay navigation.
@@ -26,22 +27,33 @@ fun InspirationFormShell(
     onSave: (() -> Unit)? = null,
     saveEnabled: Boolean = true,
     showHeroEditOverlay: Boolean = false,
-    content: @Composable () -> Unit
+    mediaPath: String? = null,
+    mediaType: MediaType? = null,
+    onEditMediaClick: (() -> Unit)? = null,
+    onEditMediaLongClick: (() -> Unit)? = null,
+    content: @Composable () -> Unit,
 ) {
     Scaffold(
         modifier = modifier,
         containerColor = MaterialTheme.colorScheme.background,
         contentColor = MaterialTheme.colorScheme.onBackground,
-        contentWindowInsets = WindowInsets(0, 0, 0, 0)
+        contentWindowInsets = WindowInsets(0, 0, 0, 0),
     ) {
         Box(modifier = Modifier.fillMaxSize()) {
             Column(
                 modifier = Modifier
                     .fillMaxSize()
                     .verticalScroll(rememberScrollState())
-                    .navigationBarsPadding()
+                    .navigationBarsPadding(),
             ) {
-                InspirationHeroImage(showEditOverlay = showHeroEditOverlay)
+                InspirationHeroImage(
+                    mediaPath = mediaPath,
+                    mediaType = mediaType,
+                    showEditOverlay = showHeroEditOverlay,
+                    playVideoWhenVisible = !showHeroEditOverlay && mediaType != null,
+                    onEditMediaClick = onEditMediaClick,
+                    onEditMediaLongClick = onEditMediaLongClick,
+                )
                 content()
             }
 
@@ -50,7 +62,7 @@ fun InspirationFormShell(
                 onBack = onBack,
                 onEdit = onEdit,
                 onSave = onSave,
-                saveEnabled = saveEnabled
+                saveEnabled = saveEnabled,
             )
         }
     }

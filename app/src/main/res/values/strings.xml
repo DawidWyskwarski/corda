@@ -69,6 +69,11 @@
     <string name="inspiration_attribute_label">Label</string>
     <string name="inspiration_delete">Delete inspiration</string>
     <string name="inspiration_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="inspiration_add_media">Add media</string>
+    <string name="inspiration_pick_image">Pick image</string>
+    <string name="inspiration_pick_video">Pick video</string>
+    <string name="inspiration_remove_media">Remove media</string>
+    <string name="inspiration_media_import_failed">Could not import the selected file. Try another image or video.</string>
     <string name="labels_title">Labels</string>
     <string name="label_new">New label</string>
     <string name="label_edit_title">Edit label</string>

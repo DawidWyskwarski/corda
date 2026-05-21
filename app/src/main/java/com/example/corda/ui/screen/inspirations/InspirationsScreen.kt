@@ -54,6 +54,8 @@ import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
 import com.example.corda.ui.components.UserInfo
+import com.example.corda.data.inspirations.local.entities.MediaType
+import com.example.corda.ui.screen.inspirations.components.InspirationGridCard
 import com.example.corda.ui.screen.inspirations.components.LabelManagementBottomSheet
 
 /**
@@ -68,7 +70,7 @@ import com.example.corda.ui.screen.inspirations.components.LabelManagementBottom
 fun InspirationsScreen(
     modifier: Modifier = Modifier,
     openDrawer: () -> Unit,
-    onInspirationClick: (String) -> Unit = {},
+    onInspirationClick: (Long) -> Unit = {},
     onAddClick: () -> Unit = {},
     viewModel: InspirationsViewModel = hiltViewModel()
 ) {
@@ -117,12 +119,13 @@ fun InspirationsScreen(
     val filtered = if (state.searchQuery.isBlank() && state.selectedLabel == null) {
         state.inspirations
     } else {
-        state.inspirations.filter { inspiration ->
+        state.inspirations.filter { item ->
+            val entity = item.inspiration
             val matchesQuery = state.searchQuery.isBlank() ||
-                    inspiration.name.contains(state.searchQuery, ignoreCase = true) ||
-                    inspiration.description.contains(state.searchQuery, ignoreCase = true)
+                entity.name.contains(state.searchQuery, ignoreCase = true) ||
+                entity.description.contains(state.searchQuery, ignoreCase = true)
             val matchesLabel = state.selectedLabel == null ||
-                    inspiration.labels.contains(state.selectedLabel)
+                item.labels.any { it.name == state.selectedLabel }
             matchesQuery && matchesLabel
         }
     }
@@ -222,7 +225,7 @@ fun InspirationsScreen(
                         .fillMaxWidth()
                         .padding(horizontal = 12.dp)
                         .padding(bottom = 8.dp),
-                    items = state.availableLabels,
+                    items = state.availableLabels.map { it.name },
                     selectedItem = state.selectedLabel,
                     onItemSelected = viewModel::setSelectedLabel,
                 )
@@ -251,16 +254,21 @@ fun InspirationsScreen(
                 ) {
                     items(
                         items = filtered,
-                        key = { it.id },
-                        span = { inspiration ->
-                            if (inspiration.labels.contains("Video")) {
+                        key = { it.inspiration.inspirationId },
+                        span = { item ->
+                            if (item.inspiration.mediaType == MediaType.VIDEO) {
                                 StaggeredGridItemSpan.FullLine
                             } else {
                                 StaggeredGridItemSpan.SingleLane
                             }
                         },
-                    ) { inspiration ->
-
+                    ) { item ->
+                        InspirationGridCard(
+                            inspiration = item,
+                            onClick = {
+                                onInspirationClick(item.inspiration.inspirationId)
+                            },
+                        )
                     }
                 }
             }

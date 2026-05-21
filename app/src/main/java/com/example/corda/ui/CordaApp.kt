@@ -76,6 +76,7 @@ fun CordaApp(
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
                         navigateBack = appState::navigateBack,
+                        navigateBackToInspirations = appState::navigateBackToInspirations,
                     )
                     utilityEntries(
                         activity = activity,

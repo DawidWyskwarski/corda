@@ -9,7 +9,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.corda.data.inspirations.model.InspirationAttribute
+import com.example.corda.data.inspirations.local.entities.LabelEntity
+import com.example.corda.data.inspirations.local.entities.relations.InspirationWithLabels
 
 /**
  * Scrollable form body for inspiration detail and edit screens.
@@ -17,43 +18,29 @@ import com.example.corda.data.inspirations.model.InspirationAttribute
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 fun InspirationFormContent(
-    name: String,
-    description: String,
-    labels: List<String>,
+    inspiration: InspirationWithLabels,
     isEditing: Boolean,
     modifier: Modifier = Modifier,
-    availableLabels: List<String> = emptyList(),
+    availableLabels: List<LabelEntity> = emptyList(),
     showDeleteButton: Boolean = false,
     editActions: InspirationEditActions? = null,
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = 16.dp,
-                vertical = 12.dp
-            )
+            .padding(horizontal = 16.dp, vertical = 12.dp),
     ) {
         if (isEditing && editActions != null) {
             InspirationEditFields(
-                name = name,
-                description = description,
-                labels = labels,
+                inspiration = inspiration,
                 availableLabels = availableLabels,
                 showDeleteButton = showDeleteButton,
-                actions = editActions
+                actions = editActions,
             )
         } else {
-            InspirationDetailFields(
-                name = name,
-                description = description,
-                labels = labels
-            )
+            InspirationDetailFields(inspiration = inspiration)
         }
 
-        Spacer(
-            modifier = Modifier
-                .height(12.dp)
-        )
+        Spacer(modifier = Modifier.height(12.dp))
     }
 }

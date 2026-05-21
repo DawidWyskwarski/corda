@@ -14,59 +14,50 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.corda.R
-import com.example.corda.data.inspirations.model.InspirationAttribute
+import com.example.corda.data.inspirations.local.entities.relations.InspirationWithLabels
 
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
 internal fun InspirationDetailFields(
-    name: String,
-    description: String,
-    labels: List<String>
+    inspiration: InspirationWithLabels,
 ) {
+    val entity = inspiration.inspiration
+
     Text(
-        text = name,
-        style = MaterialTheme.typography.headlineMedium
+        text = entity.name,
+        style = MaterialTheme.typography.headlineMedium,
     )
 
-    if (labels.isNotEmpty()) {
-        Spacer(
-            modifier = Modifier
-                .height(6.dp)
-        )
+    if (inspiration.labels.isNotEmpty()) {
+        Spacer(modifier = Modifier.height(6.dp))
 
         FlowRow(
-            horizontalArrangement = Arrangement.spacedBy(6.dp)
+            horizontalArrangement = Arrangement.spacedBy(6.dp),
         ) {
-            labels.forEach { label ->
+            inspiration.labels.forEach { label ->
                 FilterChip(
                     selected = false,
                     onClick = {},
-                    label = { Text(label) }
+                    label = { Text(label.name) },
                 )
             }
         }
     }
 
-    if (description.isNotBlank()) {
-        Spacer(
-            modifier = Modifier
-                .height(12.dp)
-        )
+    if (entity.description.isNotBlank()) {
+        Spacer(modifier = Modifier.height(12.dp))
 
         Text(
             text = stringResource(R.string.inspiration_description),
-            style = MaterialTheme.typography.titleMedium
+            style = MaterialTheme.typography.titleMedium,
         )
 
-        Spacer(
-            modifier = Modifier
-                .height(2.dp)
-        )
+        Spacer(modifier = Modifier.height(2.dp))
 
         Text(
-            text = description,
+            text = entity.description,
             style = MaterialTheme.typography.bodyMedium,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

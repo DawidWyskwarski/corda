@@ -88,25 +88,25 @@ fun LabelManagementBottomSheet(
                 LazyColumn(modifier = Modifier.fillMaxWidth()) {
                     items(
                         items = state.availableLabels,
-                        key = { it }
+                        key = { it.labelId },
                     ) { label ->
                         Row(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .padding(vertical = 4.dp),
                             verticalAlignment = Alignment.CenterVertically,
-                            horizontalArrangement = Arrangement.SpaceBetween
+                            horizontalArrangement = Arrangement.SpaceBetween,
                         ) {
                             Text(
-                                text = label,
+                                text = label.name,
                                 style = MaterialTheme.typography.bodyLarge,
-                                modifier = Modifier.weight(1f)
+                                modifier = Modifier.weight(1f),
                             )
                             Row {
-                                IconButton(onClick = { editTarget = label }) {
+                                IconButton(onClick = { editTarget = label.name }) {
                                     Icon(Icons.Outlined.Edit, contentDescription = null)
                                 }
-                                IconButton(onClick = { deleteTarget = label }) {
+                                IconButton(onClick = { deleteTarget = label.name }) {
                                     Icon(Icons.Outlined.Delete, contentDescription = null)
                                 }
                             }

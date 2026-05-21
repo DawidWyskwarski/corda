@@ -6,8 +6,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalClipboardManager
-import androidx.compose.ui.text.AnnotatedString
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.ui.screen.inspirations.InspirationsViewModel
@@ -24,30 +22,31 @@ import com.example.corda.ui.screen.inspirations.components.InspirationFormShell
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalLayoutApi::class)
 @Composable
 fun InspirationDetailScreen(
-    id: String,
+    id: Long,
     onBack: () -> Unit,
-    onEdit: (String) -> Unit,
+    onEdit: (Long) -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: InspirationsViewModel = hiltViewModel()
+    viewModel: InspirationsViewModel = hiltViewModel(),
 ) {
-    val state by viewModel.detailState.collectAsStateWithLifecycle()
+    val inspiration by viewModel.detailInspiration.collectAsStateWithLifecycle()
 
     LaunchedEffect(id) {
         viewModel.loadInspiration(id)
     }
 
-    val inspiration = state.inspiration ?: return
+    val item = inspiration ?: return
+    val entity = item.inspiration
 
     InspirationFormShell(
         modifier = modifier,
         isEditing = false,
         onBack = onBack,
-        onEdit = { onEdit(inspiration.id) }
+        onEdit = { onEdit(entity.inspirationId) },
+        mediaPath = entity.mediaPath,
+        mediaType = entity.mediaType,
     ) {
         InspirationFormContent(
-            name = inspiration.name,
-            description = inspiration.description,
-            labels = inspiration.labels,
+            inspiration = item,
             isEditing = false,
         )
     }

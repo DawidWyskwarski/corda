@@ -93,4 +93,19 @@ class CordaAppState(
             backStack.removeLastOrNull()
         }
     }
+
+    /**
+     * Leaves inspiration detail/edit and returns to the hub list.
+     * Used after delete so we do not land on a detail screen for a removed item.
+     */
+    fun navigateBackToInspirations() {
+        scope.launch {
+            drawerState.close()
+            while (backStack.lastOrNull() is Screen.InspirationDetail ||
+                backStack.lastOrNull() is Screen.InspirationAddEdit
+            ) {
+                backStack.removeLastOrNull()
+            }
+        }
+    }
 }

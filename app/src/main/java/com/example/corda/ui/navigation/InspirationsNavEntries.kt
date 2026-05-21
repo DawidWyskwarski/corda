@@ -9,6 +9,7 @@ fun EntryProviderScope<Screen>.inspirationsEntries(
     openDrawer: () -> Unit,
     navigateTo: (Screen) -> Unit,
     navigateBack: () -> Unit,
+    navigateBackToInspirations: () -> Unit,
 ) {
     entry<Screen.Inspirations> {
         InspirationsScreen(
@@ -30,7 +31,8 @@ fun EntryProviderScope<Screen>.inspirationsEntries(
         InspirationEditScreen(
             id = destination.id,
             onBack = navigateBack,
-            onSaved = navigateBack
+            onSaved = navigateBack,
+            onDeleted = navigateBackToInspirations,
         )
     }
 }
