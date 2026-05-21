@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.Help
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Settings
@@ -31,7 +30,8 @@ import com.example.corda.ui.navigation.Screen
 
 private data class NavigationItem(
     val icon: ImageVector,
-    @StringRes val labelRes: Int,
+    // Currently annotations applies to the value parameter only, 'param' ensures it remains that way in the future
+    @param:StringRes val labelRes: Int,
     val screen: Screen
 )
 
