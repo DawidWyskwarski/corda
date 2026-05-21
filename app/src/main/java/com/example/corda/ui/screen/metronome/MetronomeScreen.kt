@@ -183,21 +183,24 @@ private fun ActiveMetronomeScreen(
     val textColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     val scale = remember { Animatable(1f) }
-    val ringScale = remember { Animatable(1f) }
-    val ringAlpha = remember { Animatable(0f) }
+    val ringScales = remember { Array(3) { Animatable(1f) } }
+    val ringAlphas = remember { Array(3) { Animatable(0f) } }
+    val ringSlot = remember { object { var index = 0 } }
     val animScope = rememberCoroutineScope()
 
-    LaunchedEffect(state.currentBeat) {
+    LaunchedEffect(state.beatTick) {
         if (!state.isRunning) return@LaunchedEffect
         val isAccent = state.currentBeat == 1
         scale.snapTo(if (isAccent) 1.20f else 1.12f)
         if (isAccent) {
-            // Ring animation runs independently so it can outlast the beat interval
+            val i = ringSlot.index % 3
+            ringSlot.index++
+            val ringDuration = (50_000 / state.bpm).coerceIn(150, 1200)
             animScope.launch {
-                ringScale.snapTo(1f)
-                ringAlpha.snapTo(0.5f)
-                launch { ringScale.animateTo(1.65f, tween(600, easing = LinearOutSlowInEasing)) }
-                ringAlpha.animateTo(0f, tween(600))
+                ringScales[i].snapTo(1f)
+                ringAlphas[i].snapTo(0.5f)
+                launch { ringScales[i].animateTo(1.65f, tween(ringDuration, easing = LinearOutSlowInEasing)) }
+                ringAlphas[i].animateTo(0f, tween(ringDuration))
             }
         }
         scale.animateTo(1f, tween(220, easing = FastOutSlowInEasing))
@@ -220,18 +223,20 @@ private fun ActiveMetronomeScreen(
             Spacer(modifier = Modifier.weight(1f))
 
             Box(contentAlignment = Alignment.Center) {
-                // Fading ring — only visible on beat 1
-                Box(
-                    modifier = Modifier
-                        .size(220.dp)
-                        .graphicsLayer(
-                            scaleX = ringScale.value,
-                            scaleY = ringScale.value,
-                            alpha = ringAlpha.value,
-                        )
-                        .clip(CircleShape)
-                        .background(circleColor),
-                )
+                // Three ring layers drawn concurrently, each slot fades independently
+                ringScales.indices.forEach { i ->
+                    Box(
+                        modifier = Modifier
+                            .size(220.dp)
+                            .graphicsLayer(
+                                scaleX = ringScales[i].value,
+                                scaleY = ringScales[i].value,
+                                alpha = ringAlphas[i].value,
+                            )
+                            .clip(CircleShape)
+                            .background(circleColor),
+                    )
+                }
                 // Main beat circle
                 Box(
                     modifier = Modifier

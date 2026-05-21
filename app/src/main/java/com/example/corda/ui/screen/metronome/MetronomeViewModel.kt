@@ -14,7 +14,7 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 data class MetronomeUiState(
-    val bpm: Int = 140,
+    val bpm: Int = 130,
     val isRunning: Boolean = false,
     val currentBeat: Int = 1,
     val beatsPerBar: Int = 4,
@@ -22,6 +22,7 @@ data class MetronomeUiState(
     val playBars: Int = 1,
     val muteBars: Int = 1,
     val isMuted: Boolean = false,
+    val beatTick: Long = 0L,
 )
 
 @HiltViewModel
@@ -59,7 +60,7 @@ class MetronomeViewModel @Inject constructor(
     }
 
     private fun start() {
-        _state.update { it.copy(isRunning = true, currentBeat = 1, isMuted = false) }
+        _state.update { it.copy(isRunning = true, currentBeat = 1, isMuted = false, beatTick = 1L) }
         audioPlayer.playBeat(isAccent = true)
         startTimer()
     }
@@ -86,7 +87,7 @@ class MetronomeViewModel @Inject constructor(
                 } else {
                     false
                 }
-                _state.update { it.copy(currentBeat = newBeat, isMuted = isMuted) }
+                _state.update { it.copy(currentBeat = newBeat, isMuted = isMuted, beatTick = totalBeats) }
                 if (!isMuted) {
                     audioPlayer.playBeat(isAccent = newBeat == 1)
                 }
@@ -101,6 +102,6 @@ class MetronomeViewModel @Inject constructor(
 
     companion object {
         const val BPM_MIN = 20
-        const val BPM_MAX = 300
+        const val BPM_MAX = 240
     }
 }
