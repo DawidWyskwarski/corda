@@ -16,8 +16,8 @@ import androidx.compose.material.icons.outlined.Delete
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.InputChip
@@ -41,7 +41,6 @@ internal fun InspirationEditFields(
     name: String,
     description: String,
     labels: List<String>,
-    attributes: List<InspirationAttribute>,
     availableLabels: List<String>,
     showDeleteButton: Boolean,
     actions: InspirationEditActions
@@ -60,9 +59,14 @@ internal fun InspirationEditFields(
         }
     )
 
-    Spacer(modifier = Modifier.height(InspirationFormSpacing.afterTitle))
+    Spacer(
+        modifier = Modifier.height(6.dp)
+    )
 
-    FlowRow(horizontalArrangement = Arrangement.spacedBy(InspirationFormSpacing.chipGap)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(6.dp)
+    ) {
+
         labels.forEach { label ->
             InputChip(
                 selected = true,
@@ -70,17 +74,20 @@ internal fun InspirationEditFields(
                 label = { Text(label) }
             )
         }
+
         Box {
             FilterChip(
                 selected = false,
                 onClick = { showLabelPicker = true },
                 label = { Text("+") }
             )
+
             DropdownMenu(
                 expanded = showLabelPicker,
                 onDismissRequest = { showLabelPicker = false }
             ) {
                 val unusedLabels = availableLabels.filter { it !in labels }
+
                 if (unusedLabels.isEmpty()) {
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.inspiration_no_labels_available)) },
@@ -102,13 +109,19 @@ internal fun InspirationEditFields(
         }
     }
 
-    Spacer(modifier = Modifier.height(InspirationFormSpacing.section))
+    Spacer(
+        modifier = Modifier.height(12.dp)
+    )
 
     Text(
         text = stringResource(R.string.inspiration_description),
         style = MaterialTheme.typography.titleMedium
     )
-    Spacer(modifier = Modifier.height(InspirationFormSpacing.labelToField))
+
+    Spacer(
+        modifier = Modifier.height(4.dp)
+    )
+
     InspirationOutlinedTextField(
         value = description,
         onValueChange = actions.onDescriptionChange,
@@ -117,42 +130,14 @@ internal fun InspirationEditFields(
         modifier = Modifier.height(160.dp)
     )
 
-    if (attributes.isNotEmpty()) {
-        Spacer(modifier = Modifier.height(InspirationFormSpacing.section))
-        Text(
-            text = stringResource(R.string.inspiration_additional_attributes),
-            style = MaterialTheme.typography.titleMedium
-        )
-        Spacer(modifier = Modifier.height(InspirationFormSpacing.attributeGap))
-        Column(verticalArrangement = Arrangement.spacedBy(InspirationFormSpacing.attributeGap)) {
-            attributes.forEach { attribute ->
-                InspirationAttributeItem(
-                    attribute = attribute,
-                    isEditing = true,
-                    onEditClick = { actions.onAttributeEdit(attribute) },
-                    onDeleteClick = { actions.onAttributeDelete(attribute.id) }
-                )
-            }
-        }
-    }
-
-    Spacer(modifier = Modifier.height(InspirationFormSpacing.section))
-
-    FilledTonalButton(
-        onClick = actions.onAddAttribute,
-        modifier = Modifier.fillMaxWidth(),
-        colors = ButtonDefaults.filledTonalButtonColors(
-            containerColor = MaterialTheme.colorScheme.secondaryContainer,
-            contentColor = MaterialTheme.colorScheme.onSecondaryContainer
-        )
-    ) {
-        Text(stringResource(R.string.inspiration_add_attribute))
-    }
+    Spacer(
+        modifier = Modifier.height(12.dp)
+    )
 
     if (showDeleteButton) {
-        Spacer(modifier = Modifier.height(InspirationFormSpacing.section))
+        Spacer(modifier = Modifier.height(12.dp))
         HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
-        Spacer(modifier = Modifier.height(InspirationFormSpacing.beforeDelete))
+        Spacer(modifier = Modifier.height(16.dp))
         OutlinedButton(
             onClick = actions.onDelete,
             modifier = Modifier.fillMaxWidth(),

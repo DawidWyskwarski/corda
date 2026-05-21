@@ -38,7 +38,7 @@ data class InspirationEditUiState(
 @HiltViewModel
 class InspirationsViewModel @Inject constructor() : ViewModel() {
 
-    private val inspirationsData = sampleInspirations.toMutableList()
+    private val inspirationsData = mutableListOf<Inspiration>()
     private val labelsData = mutableListOf("Want to learn", "Song", "Learned", "Image", "Something")
 
     private val _listState = MutableStateFlow(
@@ -209,53 +209,3 @@ class InspirationsViewModel @Inject constructor() : ViewModel() {
         onSaved()
     }
 }
-
-private val sampleInspirations = listOf(
-    Inspiration(
-        id = "1",
-        name = "Cool rhythm",
-        description = "An interesting rhythmic pattern",
-        labels = listOf("Want to learn"),
-        attributes = listOf(
-            InspirationAttribute("a1", "Open in spotify", "https://spotify.com"),
-            InspirationAttribute("a2", "Search online", "https://google.com")
-        )
-    ),
-    Inspiration(
-        id = "2",
-        name = "Master of puppets",
-        description = "Classic metal masterpiece by Metallica",
-        labels = listOf("Learned", "Song"),
-        attributes = listOf(
-            InspirationAttribute("a3", "Open in spotify", "https://spotify.com")
-        )
-    ),
-    Inspiration(
-        id = "3",
-        name = "How is he doing that !!!!",
-        description = "Amazing technique seen in a video",
-        labels = listOf("Video"),
-        attributes = emptyList()
-    ),
-    Inspiration(
-        id = "4",
-        name = "Label",
-        description = "",
-        labels = listOf("Something"),
-        attributes = emptyList()
-    ),
-    Inspiration(
-        id = "5",
-        name = "Cool",
-        description = "",
-        labels = emptyList(),
-        attributes = emptyList()
-    ),
-    Inspiration(
-        id = "6",
-        name = "No idea",
-        description = "",
-        labels = listOf("Idea"),
-        attributes = emptyList()
-    )
-)

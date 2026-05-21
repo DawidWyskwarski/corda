@@ -31,7 +31,6 @@ fun InspirationDetailScreen(
     viewModel: InspirationsViewModel = hiltViewModel()
 ) {
     val state by viewModel.detailState.collectAsStateWithLifecycle()
-    val clipboardManager = LocalClipboardManager.current
 
     LaunchedEffect(id) {
         viewModel.loadInspiration(id)
@@ -49,11 +48,7 @@ fun InspirationDetailScreen(
             name = inspiration.name,
             description = inspiration.description,
             labels = inspiration.labels,
-            attributes = inspiration.attributes,
             isEditing = false,
-            onCopyAttribute = { url ->
-                clipboardManager.setText(AnnotatedString(url))
-            }
         )
     }
 }

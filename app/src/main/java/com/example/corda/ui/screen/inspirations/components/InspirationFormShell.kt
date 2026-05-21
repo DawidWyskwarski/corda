@@ -1,5 +1,6 @@
 package com.example.corda.ui.screen.inspirations.components
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
@@ -15,6 +16,7 @@ import androidx.compose.ui.Modifier
 /**
  * Scrollable inspiration form layout with edge-to-edge hero and overlay navigation.
  */
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun InspirationFormShell(
     isEditing: Boolean,

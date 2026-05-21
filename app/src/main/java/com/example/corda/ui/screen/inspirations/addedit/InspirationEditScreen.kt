@@ -138,7 +138,6 @@ fun InspirationEditScreen(
             name = state.name,
             description = state.description,
             labels = state.labels,
-            attributes = state.attributes,
             isEditing = true,
             availableLabels = state.availableLabels,
             showDeleteButton = state.id != null,

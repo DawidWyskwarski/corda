@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.unit.dp
 import com.example.corda.data.inspirations.model.InspirationAttribute
 
 /**
@@ -19,20 +20,18 @@ fun InspirationFormContent(
     name: String,
     description: String,
     labels: List<String>,
-    attributes: List<InspirationAttribute>,
     isEditing: Boolean,
     modifier: Modifier = Modifier,
     availableLabels: List<String> = emptyList(),
     showDeleteButton: Boolean = false,
     editActions: InspirationEditActions? = null,
-    onCopyAttribute: (String) -> Unit = {}
 ) {
     Column(
         modifier = modifier
             .fillMaxWidth()
             .padding(
-                horizontal = InspirationFormSpacing.horizontal,
-                vertical = InspirationFormSpacing.sectionVertical
+                horizontal = 16.dp,
+                vertical = 12.dp
             )
     ) {
         if (isEditing && editActions != null) {
@@ -40,7 +39,6 @@ fun InspirationFormContent(
                 name = name,
                 description = description,
                 labels = labels,
-                attributes = attributes,
                 availableLabels = availableLabels,
                 showDeleteButton = showDeleteButton,
                 actions = editActions
@@ -49,12 +47,13 @@ fun InspirationFormContent(
             InspirationDetailFields(
                 name = name,
                 description = description,
-                labels = labels,
-                attributes = attributes,
-                onCopyAttribute = onCopyAttribute
+                labels = labels
             )
         }
 
-        Spacer(modifier = Modifier.height(InspirationFormSpacing.bottom))
+        Spacer(
+            modifier = Modifier
+                .height(12.dp)
+        )
     }
 }

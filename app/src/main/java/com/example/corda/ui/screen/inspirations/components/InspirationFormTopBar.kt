@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.outlined.Edit
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 
 @Composable
 internal fun InspirationFormTopBar(
@@ -41,10 +47,21 @@ internal fun InspirationFormTopBar(
 
         when {
             isEditing && onSave != null -> {
-                InspirationSavePill(
+                TextButton(
                     onClick = onSave,
-                    enabled = saveEnabled
-                )
+                    enabled = saveEnabled,
+                    colors = ButtonDefaults.textButtonColors(
+                        containerColor = MaterialTheme.colorScheme.primary,
+                        contentColor = MaterialTheme.colorScheme.onPrimary
+                    )
+                ) {
+                    Text(
+                        text = stringResource(R.string.action_confirm),
+                        style = MaterialTheme.typography.labelLarge,
+                        modifier = Modifier
+                            .padding(horizontal = 16.dp)
+                    )
+                }
             }
             !isEditing && onEdit != null -> {
                 InspirationOverlayIconButton(

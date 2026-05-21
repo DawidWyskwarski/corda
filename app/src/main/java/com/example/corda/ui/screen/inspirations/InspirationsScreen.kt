@@ -7,6 +7,7 @@ import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.shrinkVertically
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -52,7 +53,7 @@ import com.example.corda.R
 import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
-import com.example.corda.ui.screen.inspirations.components.InspirationCard
+import com.example.corda.ui.components.UserInfo
 import com.example.corda.ui.screen.inspirations.components.LabelManagementBottomSheet
 
 /**
@@ -227,31 +228,40 @@ fun InspirationsScreen(
                 )
             }
 
-            LazyVerticalStaggeredGrid(
-                columns = StaggeredGridCells.Fixed(2),
-                modifier = Modifier
-                    .weight(1f)
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp)
-                    .padding(top = if (isFilterPanelOpen) 0.dp else 8.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
-                verticalItemSpacing = 8.dp,
-            ) {
-                items(
-                    items = filtered,
-                    key = { it.id },
-                    span = { inspiration ->
-                        if (inspiration.labels.contains("Video")) {
-                            StaggeredGridItemSpan.FullLine
-                        } else {
-                            StaggeredGridItemSpan.SingleLane
-                        }
-                    },
-                ) { inspiration ->
-                    InspirationCard(
-                        inspiration = inspiration,
-                        onClick = { onInspirationClick(inspiration.id) }
+            if (filtered.isEmpty()) {
+                Box(
+                    modifier = Modifier.fillMaxSize(),
+                    contentAlignment = Alignment.Center
+                ) {
+                    UserInfo(
+                        mainText = "No inspirations found",
+                        supportingText = "Please add some to get started!"
                     )
+                }
+            } else {
+                LazyVerticalStaggeredGrid(
+                    columns = StaggeredGridCells.Fixed(2),
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxWidth()
+                        .padding(horizontal = 12.dp)
+                        .padding(top = if (isFilterPanelOpen) 0.dp else 8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    verticalItemSpacing = 8.dp,
+                ) {
+                    items(
+                        items = filtered,
+                        key = { it.id },
+                        span = { inspiration ->
+                            if (inspiration.labels.contains("Video")) {
+                                StaggeredGridItemSpan.FullLine
+                            } else {
+                                StaggeredGridItemSpan.SingleLane
+                            }
+                        },
+                    ) { inspiration ->
+
+                    }
                 }
             }
         }
