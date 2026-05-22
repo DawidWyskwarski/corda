@@ -20,7 +20,6 @@ class SettingsManager(context: Context) {
 
     private object Keys {
         val DARK_MODE = booleanPreferencesKey("dark_mode")
-        val KEEP_FOCUS = booleanPreferencesKey("keep_focus")
         val BASE_FREQUENCY = intPreferencesKey("base_frequency")
         val LANGUAGE = stringPreferencesKey("language")
     }
