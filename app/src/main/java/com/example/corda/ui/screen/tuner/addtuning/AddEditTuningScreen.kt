@@ -33,8 +33,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.corda.R
 import com.example.corda.data.tuner.local.entities.Instrument
 import com.example.corda.ui.screen.tuner.components.TuningSoundGrid
 import com.example.corda.ui.screen.tuner.components.VerticalNoteCarousel
@@ -59,8 +61,8 @@ fun AddEditTuningScreen(
     }
 
     val isEditMode = viewModel.isEditMode
-    val title = if (isEditMode) "Edit tuning" else "Add tuning"
-    val actionLabel = if (isEditMode) "Save" else "Add"
+    val title = if (isEditMode) stringResource(R.string.edit_tuning_title) else stringResource(R.string.add_tuning_title)
+    val actionLabel = if (isEditMode) stringResource(R.string.action_save) else stringResource(R.string.action_add)
 
     Scaffold(
         modifier = modifier,
@@ -69,7 +71,7 @@ fun AddEditTuningScreen(
                 title = { Text(title) },
                 navigationIcon = {
                     IconButton(onClick = onBack) {
-                        Icon(Icons.Rounded.Close, contentDescription = "Close")
+                        Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.close))
                     }
                 },
                 actions = {
@@ -94,7 +96,7 @@ fun AddEditTuningScreen(
             OutlinedTextField(
                 value = tuningName,
                 onValueChange = { viewModel.setTuningName(it) },
-                label = { Text("Tuning name") },
+                label = { Text(stringResource(R.string.tuning_name_hint)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )
@@ -163,7 +165,7 @@ private fun InstrumentDropdown(
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text("Instrument") },
+            label = { Text(stringResource(R.string.tuning_instrument_label)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled)
             },

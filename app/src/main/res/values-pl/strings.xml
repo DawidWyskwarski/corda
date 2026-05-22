@@ -82,6 +82,15 @@
     <string name="metronome_pill_muting_label">Graj %1$d Wycisz %2$d</string>
     <string name="metronome_active_muting_label">Graj %1$d takt wycisz %2$d</string>
 
+    <!-- Add/edit tuning screen -->
+    <string name="add_tuning_title">Dodaj strój</string>
+    <string name="edit_tuning_title">Edytuj strój</string>
+    <string name="action_add">Dodaj</string>
+    <string name="tuning_name_hint">Nazwa stroju</string>
+    <string name="tuning_instrument_label">Instrument</string>
+    <string name="close">Zamknij</string>
+    <string name="tuned">Nastrojony</string>
+
     <!-- Tuner instrument management -->
     <string name="instrument_management_title">Instrumenty</string>
     <string name="instrument_new">Nowy instrument</string>
