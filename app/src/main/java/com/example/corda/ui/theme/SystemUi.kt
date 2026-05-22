@@ -19,9 +19,6 @@ fun SystemUiEffect(
 
     SideEffect {
         val window = (view.context as Activity).window
-        //window.setBackgroundDrawable(ColorDrawable(backgroundColor.toArgb())) // Probably only necessary to do this on startup
-        //window.statusBarColor = android.graphics.Color.TRANSPARENT
-        //window.navigationBarColor = android.graphics.Color.TRANSPARENT
 
         WindowCompat.getInsetsController(window, view).apply {
             isAppearanceLightStatusBars = !darkTheme
