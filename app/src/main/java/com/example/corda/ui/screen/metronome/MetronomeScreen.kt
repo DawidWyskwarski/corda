@@ -199,7 +199,7 @@ private fun ActiveMetronomeScreen(
         if (isAccent) {
             val i = ringSlot.index % 3
             ringSlot.index++
-            val ringDuration = (70_000 / state.bpm).coerceIn(150, 1200) // 70000 instead of 60000, so the animation is slightly longer (looks better at high bpm)
+            val ringDuration = (60_000 / state.bpm).coerceIn(150, 1200) // 60000, so the animation is as long as the beat
 
             // Animations launched concurrently
             animScope.launch {
