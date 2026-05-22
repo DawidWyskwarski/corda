@@ -4,9 +4,9 @@
 
     <!-- Descriptions / labels -->
     <string name="selected_text">Wybrane</string>
-    <string name="open_drawer">Otwórz menu?</string>
-    <string name="disable_ear_mode">Wyłącz tryb ucha?</string>
-    <string name="enable_ear_mode">Włącz tryb ucha</string>
+    <string name="open_drawer">Otwórz menu</string>
+    <string name="disable_ear_mode">Wyłącz tryb ćwiczenia słuchu</string>
+    <string name="enable_ear_mode">Włącz tryb ćwiczenia słuchu</string>
     <string name="back">Powrót</string>
     <string name="error">Błąd</string>
 
@@ -89,7 +89,7 @@
     <string name="bass_4">Bas (4 struny)</string>
     <string name="bass_5">Bas (5 strun)</string>
     <string name="ukulele">Ukulele</string>
-    <string name="tuner_settings">Ustawienia stroika?</string>
+    <string name="tuner_settings">Ustawienia stroika</string>
     <string name="manage_instruments">Zarządzaj instrumentami</string>
     <string name="tuner_mode">Tryb</string>
     <string name="tunings">Stroje</string>
@@ -97,7 +97,7 @@
     <string name="no_tunings">Nie znaleziono strojów.</string>
     <string name="chromatic_description">Tryb chromatyczny automatycznie wykrywa nutę.</string>
     <string name="dont_select_tuning">Nie ma potrzeby wybierać stroju.</string>
-    <string name="new_custom_tuning">Nowy własny strój</string>
+    <string name="new_custom_tuning">Nowy strój</string>
     <string name="instrument_delete_blocked_has_tunings">Nie można usunąc instrumentu z przydielonymi strojami.</string>
     <string name="tuner">Stroik</string>
     <string name="metronome">Metronom</string>
@@ -105,8 +105,8 @@
     <string name="settings">Ustawienia</string>
     <string name="help_feedback">Pomoc i feedback</string>
     <string name="play_something">Zagraj coś</string>
-    <string name="tune_higher">Stroj wyżej?</string>
-    <string name="tune_lower">Stroj niżej?</string>
+    <string name="tune_higher">Wyżej</string>
+    <string name="tune_lower">Niżej</string>
     <string name="perfect">Idealnie</string>
 
 </resources>
