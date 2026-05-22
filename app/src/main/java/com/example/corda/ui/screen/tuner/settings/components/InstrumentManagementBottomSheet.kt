@@ -18,6 +18,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -38,8 +39,9 @@ fun InstrumentManagementBottomSheet(
     settingsViewModel: TunerSettingsViewModel,
     onDismiss: () -> Unit,
 ) {
-    val context = LocalContext.current
-    val deleteBlockedMessage = stringResource(R.string.instrument_delete_blocked_has_tunings)
+    // Capture the localized context here, inside ProvideAppLocale, so resources are correct.
+    // We use localizedContext.resources.getString() in dialogs instead of stringResource(), because AlertDialog creates a separate Android window that doesn't reliably inherit the Compose CompositionLocal overrides.
+    val localizedContext = LocalContext.current
 
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = false)
 
@@ -57,59 +59,63 @@ fun InstrumentManagementBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp)
-                .padding(bottom = 24.dp),
-        ) {
-            Text(
-                text = "Instruments",
-                style = MaterialTheme.typography.titleMedium,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-                items(
-                    items = instrumentRows,
-                    key = { it.instrument.instrumentId },
-                ) { row ->
-                    InstrumentListItem(
-                        instrument = row.instrument,
-                        onEdit = { editTarget = row },
-                        onDelete = {
-                            if (row.tuningCount > 0) {
-                                Toast.makeText(
-                                    context,
-                                    deleteBlockedMessage,
-                                    Toast.LENGTH_SHORT,
-                                ).show()
-                            } else {
-                                deleteTarget = row
-                            }
-                        },
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            HorizontalDivider()
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            Button(
-                onClick = { showCreateDialog = true },
-                modifier = Modifier.fillMaxWidth(),
+        // Wrap the bottom sheet content to ensure LocalContext is localized inside the popup.
+        CompositionLocalProvider(LocalContext provides localizedContext) {
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .padding(bottom = 24.dp),
             ) {
-                Text("New instrument")
+                Text(
+                    text = stringResource(R.string.instrument_management_title),
+                    style = MaterialTheme.typography.titleMedium,
+                )
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                LazyColumn(modifier = Modifier.fillMaxWidth()) {
+                    items(
+                        items = instrumentRows,
+                        key = { it.instrument.instrumentId },
+                    ) { row ->
+                        InstrumentListItem(
+                            instrument = row.instrument,
+                            onEdit = { editTarget = row },
+                            onDelete = {
+                                if (row.tuningCount > 0) {
+                                    Toast.makeText(
+                                        localizedContext,
+                                        localizedContext.resources.getString(R.string.instrument_delete_blocked_has_tunings),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                } else {
+                                    deleteTarget = row
+                                }
+                            },
+                        )
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                HorizontalDivider()
+
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Button(
+                    onClick = { showCreateDialog = true },
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.instrument_new))
+                }
             }
         }
     }
 
     if (showCreateDialog) {
         CreateInstrumentDialog(
+            ctx = localizedContext,
             onDismiss = { showCreateDialog = false },
             onCreate = { name, count ->
                 settingsViewModel.createInstrument(name, count)
@@ -123,6 +129,7 @@ fun InstrumentManagementBottomSheet(
         EditInstrumentDialog(
             instrument = target.instrument,
             tuningCount = target.tuningCount,
+            ctx = localizedContext,
             onDismiss = { editTarget = null },
             onSave = { newName, newCount ->
                 settingsViewModel.updateInstrument(target.instrument, newName, newCount)
@@ -133,14 +140,12 @@ fun InstrumentManagementBottomSheet(
 
     if (deleteTarget != null) {
         val target = deleteTarget!!
+        val res = localizedContext.resources
         AlertDialog(
             onDismissRequest = { deleteTarget = null },
-            title = { Text("Delete instrument") },
+            title = { Text(res.getString(R.string.instrument_delete_title)) },
             text = {
-                Text(
-                    "Are you sure you want to delete \"${target.instrument.name}\"? " +
-                        "This action cannot be undone.",
-                )
+                Text(res.getString(R.string.instrument_delete_message, target.instrument.name))
             },
             confirmButton = {
                 TextButton(
@@ -149,12 +154,12 @@ fun InstrumentManagementBottomSheet(
                         deleteTarget = null
                     },
                 ) {
-                    Text("Delete")
+                    Text(res.getString(R.string.action_delete))
                 }
             },
             dismissButton = {
                 TextButton(onClick = { deleteTarget = null }) {
-                    Text("Cancel")
+                    Text(res.getString(R.string.action_cancel))
                 }
             },
         )

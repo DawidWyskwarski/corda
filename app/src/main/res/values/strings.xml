@@ -97,6 +97,20 @@
     <string name="metronome_pill_muting_label">Play %1$d Mute %2$d</string>
     <string name="metronome_active_muting_label">Play %1$d bar mute %2$d</string>
 
+    <!-- Tuner instrument management -->
+    <string name="instrument_management_title">Instruments</string>
+    <string name="instrument_new">New instrument</string>
+    <string name="instrument_edit_title">Edit instrument</string>
+    <string name="instrument_delete_title">Delete instrument</string>
+    <string name="instrument_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
+    <string name="instrument_name_hint">Name</string>
+    <string name="instrument_string_count_hint">Number of strings</string>
+    <string name="instrument_string_count_error">Must be between 2 and 24</string>
+    <string name="instrument_string_count_locked">Locked while tunings use this instrument</string>
+    <string name="instrument_strings_label">%1$d strings</string>
+    <string name="action_save">Save</string>
+    <string name="action_create">Create</string>
+
     <!-- Tuner -->
     <string name="chromatic_mode">Chromatic mode</string>
 

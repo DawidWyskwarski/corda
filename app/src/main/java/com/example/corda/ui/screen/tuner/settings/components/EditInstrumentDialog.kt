@@ -1,5 +1,6 @@
 package com.example.corda.ui.screen.tuner.settings.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,16 +17,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 import com.example.corda.data.tuner.local.entities.Instrument
 
 @Composable
 fun EditInstrumentDialog(
     instrument: Instrument,
     tuningCount: Int,
+    ctx: Context,
     onDismiss: () -> Unit,
     onSave: (newName: String, newStringCount: Int) -> Unit,
 ) {
     val hasTunings = tuningCount > 0
+    val res = ctx.resources
 
     var name by rememberSaveable { mutableStateOf(instrument.name) }
     var stringCountText by rememberSaveable {
@@ -38,13 +42,13 @@ fun EditInstrumentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("Edit instrument") },
+        title = { Text(res.getString(R.string.instrument_edit_title)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(res.getString(R.string.instrument_name_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -55,17 +59,17 @@ fun EditInstrumentDialog(
                             stringCountText = input
                         }
                     },
-                    label = { Text("Number of strings") },
+                    label = { Text(res.getString(R.string.instrument_string_count_hint)) },
                     placeholder = { Text("2–24") },
                     singleLine = true,
                     enabled = !hasTunings,
                     isError = stringCountText.isNotEmpty() && !isCountValid,
                     supportingText = when {
                         hasTunings -> {
-                            { Text("Locked while tunings use this instrument") }
+                            { Text(res.getString(R.string.instrument_string_count_locked)) }
                         }
                         stringCountText.isNotEmpty() && !isCountValid -> {
-                            { Text("Must be between 2 and 24") }
+                            { Text(res.getString(R.string.instrument_string_count_error)) }
                         }
                         else -> null
                     },
@@ -79,12 +83,12 @@ fun EditInstrumentDialog(
                 onClick = { onSave(name, parsedCount!!) },
                 enabled = isFormValid,
             ) {
-                Text("Save")
+                Text(res.getString(R.string.action_save))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(res.getString(R.string.action_cancel))
             }
         },
     )

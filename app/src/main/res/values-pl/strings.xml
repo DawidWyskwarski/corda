@@ -82,6 +82,20 @@
     <string name="metronome_pill_muting_label">Graj %1$d Wycisz %2$d</string>
     <string name="metronome_active_muting_label">Graj %1$d takt wycisz %2$d</string>
 
+    <!-- Tuner instrument management -->
+    <string name="instrument_management_title">Instrumenty</string>
+    <string name="instrument_new">Nowy instrument</string>
+    <string name="instrument_edit_title">Edytuj instrument</string>
+    <string name="instrument_delete_title">Usuń instrument</string>
+    <string name="instrument_delete_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
+    <string name="instrument_name_hint">Nazwa</string>
+    <string name="instrument_string_count_hint">Liczba strun</string>
+    <string name="instrument_string_count_error">Musi być między 2 a 24</string>
+    <string name="instrument_string_count_locked">Zablokowane, gdy stroje używają tego instrumentu</string>
+    <string name="instrument_strings_label">%1$d strun</string>
+    <string name="action_save">Zapisz</string>
+    <string name="action_create">Utwórz</string>
+
     <!-- Tuner -->
     <string name="chromatic_mode">Tryb chromatyczny</string>
     <string name="guitar_6">Gitara (6 strun)</string>

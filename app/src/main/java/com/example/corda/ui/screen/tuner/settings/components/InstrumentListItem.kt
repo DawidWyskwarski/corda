@@ -15,7 +15,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 import com.example.corda.data.tuner.local.entities.Instrument
 
 @Composable
@@ -43,17 +45,17 @@ fun InstrumentListItem(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = "${instrument.soundsCount} strings",
+                text = stringResource(R.string.instrument_strings_label, instrument.soundsCount),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
         }
         Row {
             IconButton(onClick = onEdit) {
-                Icon(Icons.Rounded.Edit, contentDescription = "Edit")
+                Icon(Icons.Rounded.Edit, contentDescription = null)
             }
             IconButton(onClick = onDelete) {
-                Icon(Icons.Rounded.Delete, contentDescription = "Delete")
+                Icon(Icons.Rounded.Delete, contentDescription = null)
             }
         }
     }

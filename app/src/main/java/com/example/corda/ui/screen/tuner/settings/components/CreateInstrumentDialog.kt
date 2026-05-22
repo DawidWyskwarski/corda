@@ -1,5 +1,6 @@
 package com.example.corda.ui.screen.tuner.settings.components
 
+import android.content.Context
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -16,14 +17,17 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 
 @Composable
 fun CreateInstrumentDialog(
+    ctx: Context,
     onDismiss: () -> Unit,
     onCreate: (name: String, stringCount: Int) -> Unit,
 ) {
     var name by rememberSaveable { mutableStateOf("") }
     var stringCountText by rememberSaveable { mutableStateOf("") }
+    val res = ctx.resources
 
     val parsedCount = stringCountText.toIntOrNull()
     val isCountValid = parsedCount != null && parsedCount in 2..24
@@ -31,13 +35,13 @@ fun CreateInstrumentDialog(
 
     AlertDialog(
         onDismissRequest = onDismiss,
-        title = { Text("New instrument") },
+        title = { Text(res.getString(R.string.instrument_new)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(12.dp)) {
                 OutlinedTextField(
                     value = name,
                     onValueChange = { name = it },
-                    label = { Text("Name") },
+                    label = { Text(res.getString(R.string.instrument_name_hint)) },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                 )
@@ -48,12 +52,12 @@ fun CreateInstrumentDialog(
                             stringCountText = input
                         }
                     },
-                    label = { Text("Number of strings") },
+                    label = { Text(res.getString(R.string.instrument_string_count_hint)) },
                     placeholder = { Text("2-24") },
                     singleLine = true,
                     isError = stringCountText.isNotEmpty() && !isCountValid,
                     supportingText = if (stringCountText.isNotEmpty() && !isCountValid) {
-                        { Text("Must be between 2 and 24") }
+                        { Text(res.getString(R.string.instrument_string_count_error)) }
                     } else {
                         null
                     },
@@ -67,12 +71,12 @@ fun CreateInstrumentDialog(
                 onClick = { onCreate(name, parsedCount!!) },
                 enabled = isFormValid,
             ) {
-                Text("Create")
+                Text(res.getString(R.string.action_create))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text("Cancel")
+                Text(res.getString(R.string.action_cancel))
             }
         },
     )
