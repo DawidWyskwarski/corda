@@ -317,7 +317,6 @@ class TunerViewModel @Inject constructor(
     }
 
     override fun onCleared() {
-        super.onCleared()
         pitchCollectionJob?.cancel()
         listeningStateJob?.cancel()
         pitchDetector.stop()
