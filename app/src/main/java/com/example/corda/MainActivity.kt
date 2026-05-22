@@ -38,16 +38,6 @@ class MainActivity : ComponentActivity() {
         val initialDark = runBlocking { settingsManager.isDarkMode.first() }
 
         applyWindowTheme(this, initialDark)
-        enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.auto(
-                lightScrim = backgroundLight.toArgb(),
-                darkScrim = backgroundDark.toArgb(),
-            ),
-            navigationBarStyle = SystemBarStyle.auto(
-                lightScrim = android.graphics.Color.TRANSPARENT,
-                darkScrim = android.graphics.Color.TRANSPARENT,
-            ),
-        )
 
         setContent {
             val activity = checkNotNull(LocalContext.current.findComponentActivity())
