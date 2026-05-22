@@ -268,7 +268,7 @@ fun CordaTheme(
   }
 
   // Adjusting icons to the theme (otherwise top bar icons are invisible)
-  SystemUiEffect(darkTheme = darkTheme, backgroundColor = colorScheme.background)
+  SystemUiEffect(darkTheme = darkTheme)
 
   CompositionLocalProvider(LocalCordaColors provides cordaColors) {
     MaterialTheme(

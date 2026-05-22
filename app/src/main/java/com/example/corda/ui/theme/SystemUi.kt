@@ -12,7 +12,6 @@ import androidx.core.graphics.drawable.toDrawable
 @Composable
 fun SystemUiEffect(
     darkTheme: Boolean,
-    backgroundColor: Color,
 ) {
     val view = LocalView.current
     if (view.isInEditMode) return

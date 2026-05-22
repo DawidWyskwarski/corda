@@ -26,7 +26,6 @@ class SettingsManager(context: Context) {
     }
 
     val isDarkMode: Flow<Boolean> = settingsDataStore.data.map { it[Keys.DARK_MODE] ?: false }
-    val keepFocus: Flow<Boolean> = settingsDataStore.data.map { it[Keys.KEEP_FOCUS] ?: true }
     val baseFrequency: Flow<Int> = settingsDataStore.data.map { it[Keys.BASE_FREQUENCY] ?: 440 }
     val language: Flow<String> = settingsDataStore.data.map {
         normalizeLanguageTag(it[Keys.LANGUAGE])
