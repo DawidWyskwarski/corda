@@ -75,9 +75,12 @@ class MetronomeViewModel @Inject constructor(
         timerJob = viewModelScope.launch {
             var totalBeats = 1L
             while (true) {
+                // Time between ticks = 60000 ms / BPM (60000 ms = 1 minute)
                 delay(60_000L / _state.value.bpm)
                 totalBeats++
                 val current = _state.value
+
+                // Subtracting 1 gives us a 0-based bar number
                 val newBeat = ((totalBeats - 1) % current.beatsPerBar + 1).toInt()
                 val isMuted = if (current.mutingEnabled) {
                     val currentBarIndex = (totalBeats - 1) / current.beatsPerBar

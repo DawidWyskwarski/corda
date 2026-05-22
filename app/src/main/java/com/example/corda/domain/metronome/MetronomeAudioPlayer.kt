@@ -78,6 +78,7 @@ class MetronomeAudioPlayer @Inject constructor() {
         val decayFactor = 80.0 / durationMs * 35
         for (i in 0 until numSamples) {
             val t = i.toDouble() / sampleRate
+            // Fast decay so it sounds like a tick
             val envelope = exp(-t * decayFactor)
             val sample = amplitude * Short.MAX_VALUE * envelope * sin(2.0 * PI * frequencyHz * t)
             buffer[i] = sample.toInt().coerceIn(Short.MIN_VALUE.toInt(), Short.MAX_VALUE.toInt()).toShort()

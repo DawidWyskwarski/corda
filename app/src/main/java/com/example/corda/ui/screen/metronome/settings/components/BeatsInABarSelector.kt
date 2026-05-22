@@ -30,6 +30,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.abs
 
 private const val BEATS = 12
+// To simulate infinite scroll
 private const val VIRTUAL_COUNT = BEATS * 1000
 
 @OptIn(ExperimentalFoundationApi::class)
@@ -45,11 +46,13 @@ fun BeatsInABarSelector(
 
     val itemSizeDp = 56.dp
 
+    //Starting around the middle of the virtual list
     val centerBase = VIRTUAL_COUNT / 2
     val initialIndex = centerBase + (selectedBeats - 1)
 
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
 
+    // Snapping the nearest item to the center
     val snapFlingBehavior = rememberSnapFlingBehavior(
         snapLayoutInfoProvider = remember(listState) {
             SnapLayoutInfoProvider(lazyListState = listState, snapPosition = SnapPosition.Center)
@@ -63,8 +66,12 @@ fun BeatsInABarSelector(
             .collect { isScrolling ->
                 if (!isScrolling && wasScrolling) {
                     val layoutInfo = listState.layoutInfo
+
+                    // Calculating center of view
                     val viewportCenter =
                         (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+
+                    // For each visible item, calculating its absolute distance from the center of view and selecting the one with the lowest score
                     val centeredItem = layoutInfo.visibleItemsInfo.minByOrNull {
                         abs(it.offset + it.size / 2 - viewportCenter)
                     }
@@ -77,8 +84,12 @@ fun BeatsInABarSelector(
     // Scroll to center when selectedBeats changes externally (e.g. from a tap)
     LaunchedEffect(selectedBeats) {
         val layoutInfo = listState.layoutInfo
+
+        // Calculating center of view
         val viewportCenter =
             (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
+
+        // For each visible item, calculating its absolute distance from the center of view and selecting the one with the lowest score
         val currentCenteredItem = layoutInfo.visibleItemsInfo.minByOrNull {
             abs(it.offset + it.size / 2 - viewportCenter)
         }
@@ -86,6 +97,8 @@ fun BeatsInABarSelector(
         if (currentBeat != selectedBeats) {
             val currentIndex = currentCenteredItem?.index ?: listState.firstVisibleItemIndex
             val currentBeatFallback = (currentIndex % BEATS) + 1
+
+            // Adding BEATS to ensure a positive value
             val offset = (selectedBeats - currentBeatFallback + BEATS) % BEATS
             val targetIndex = if (offset <= BEATS / 2) {
                 currentIndex + offset

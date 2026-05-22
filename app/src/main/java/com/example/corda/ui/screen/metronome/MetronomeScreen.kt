@@ -183,8 +183,12 @@ private fun ActiveMetronomeScreen(
     val textColor = MaterialTheme.colorScheme.onPrimaryContainer
 
     val scale = remember { Animatable(1f) }
+
+    // Three independent "ripple" layers so the animations can overlap
+    // Thanks to Animatable, UI can read .value and update accordingly
     val ringScales = remember { Array(3) { Animatable(1f) } }
     val ringAlphas = remember { Array(3) { Animatable(0f) } }
+    // Round robin index to allow the animations to play concurrently
     val ringSlot = remember { object { var index = 0 } }
     val animScope = rememberCoroutineScope()
 
@@ -195,14 +199,20 @@ private fun ActiveMetronomeScreen(
         if (isAccent) {
             val i = ringSlot.index % 3
             ringSlot.index++
-            val ringDuration = (50_000 / state.bpm).coerceIn(150, 1200)
+            val ringDuration = (70_000 / state.bpm).coerceIn(150, 1200) // 70000 instead of 60000, so the animation is slightly longer (looks better at high bpm)
+
+            // Animations launched concurrently
             animScope.launch {
                 ringScales[i].snapTo(1f)
                 ringAlphas[i].snapTo(0.5f)
+
+                // "Ripples" change in size and fade concurrent
                 launch { ringScales[i].animateTo(1.65f, tween(ringDuration, easing = LinearOutSlowInEasing)) }
                 ringAlphas[i].animateTo(0f, tween(ringDuration))
             }
         }
+
+        // Main circle animation
         scale.animateTo(1f, tween(220, easing = FastOutSlowInEasing))
     }
 
