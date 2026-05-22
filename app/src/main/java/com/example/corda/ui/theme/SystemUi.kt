@@ -1,13 +1,13 @@
 package com.example.corda.ui.theme
 
 import android.app.Activity
-import android.graphics.drawable.ColorDrawable
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
+import androidx.core.graphics.drawable.toDrawable
 
 @Composable
 fun SystemUiEffect(
@@ -29,5 +29,5 @@ fun SystemUiEffect(
 
 fun applyWindowTheme(activity: Activity, isDark: Boolean) {
     val background = if (isDark) backgroundDark else backgroundLight
-    activity.window.setBackgroundDrawable(ColorDrawable(background.toArgb()))
+    activity.window.setBackgroundDrawable(background.toArgb().toDrawable())
 }

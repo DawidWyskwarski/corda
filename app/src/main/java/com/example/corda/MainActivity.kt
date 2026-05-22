@@ -11,7 +11,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.corda.data.SettingsManager
+import com.example.corda.ui.screen.settings.SettingsManager
 import com.example.corda.ui.CordaApp
 import com.example.corda.ui.theme.CordaTheme
 import com.example.corda.ui.theme.LANGUAGE_EN
@@ -53,16 +53,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val activity = checkNotNull(LocalContext.current.findComponentActivity())
             val isDark by settingsManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
-            val keepFocus by settingsManager.keepFocus.collectAsStateWithLifecycle(initialValue = true)
             val languageTag by settingsManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
-
-            LaunchedEffect(keepFocus) {
-                if (keepFocus) {
-                    window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                } else {
-                    window.clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
-                }
-            }
 
             LaunchedEffect(languageTag) {
                 Locale.setDefault(Locale.forLanguageTag(languageTag))

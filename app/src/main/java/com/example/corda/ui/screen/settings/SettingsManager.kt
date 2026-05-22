@@ -1,4 +1,4 @@
-package com.example.corda.data
+package com.example.corda.ui.screen.settings
 
 import android.content.Context
 import androidx.datastore.preferences.core.booleanPreferencesKey

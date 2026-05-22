@@ -1,7 +1,7 @@
 package com.example.corda.di
 
 import android.content.Context
-import com.example.corda.data.SettingsManager
+import com.example.corda.ui.screen.settings.SettingsManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
