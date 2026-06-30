@@ -254,7 +254,7 @@ fun CordaTheme(
       else -> lightScheme
   }
 
-  // These colors arent part of the predefined themes, so we define them here
+  // These colors aren't part of the predefined themes, so we define them here
   val cordaColors = if (darkTheme) {
     CordaExtraColors(
       tunerInTune = tunerInTuneDark,

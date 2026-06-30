@@ -9,7 +9,6 @@ import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import kotlin.math.PI
-import kotlin.math.min
 import kotlin.math.roundToInt
 import kotlin.math.sin
 

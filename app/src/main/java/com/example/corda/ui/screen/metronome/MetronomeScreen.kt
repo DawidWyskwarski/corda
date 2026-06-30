@@ -188,7 +188,7 @@ private fun ActiveMetronomeScreen(
     // Thanks to Animatable, UI can read .value and update accordingly
     val ringScales = remember { Array(3) { Animatable(1f) } }
     val ringAlphas = remember { Array(3) { Animatable(0f) } }
-    // Round robin index to allow the animations to play concurrently
+    // Round-robin index to allow the animations to play concurrently
     val ringSlot = remember { object { var index = 0 } }
     val animScope = rememberCoroutineScope()
 

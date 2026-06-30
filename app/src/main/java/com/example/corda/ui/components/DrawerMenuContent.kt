@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.MusicNote
 import androidx.compose.material.icons.rounded.Settings
 import androidx.compose.material.icons.rounded.Speed
@@ -59,11 +58,6 @@ fun DrawerMenuContent(
                 labelRes = R.string.metronome,
                 screen = Screen.Metronome
             ),
-            NavigationItem(
-                icon = Icons.AutoMirrored.Rounded.QueueMusic,
-                labelRes = R.string.inspirations,
-                screen = Screen.Inspirations
-            )
         )
     }
 

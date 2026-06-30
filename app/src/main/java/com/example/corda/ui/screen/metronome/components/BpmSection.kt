@@ -56,7 +56,7 @@ fun BpmSection(
         if (!isEditing) bpmText = bpm.toString()
     }
 
-    // Auto-focus the field when editing begins
+    // Autofocus the field when editing begins
     LaunchedEffect(isEditing) {
         if (isEditing) focusRequester.requestFocus()
     }

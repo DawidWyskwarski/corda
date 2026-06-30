@@ -13,7 +13,6 @@ import androidx.navigation3.runtime.entryProvider
 import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.corda.ui.components.DrawerMenuContent
-import com.example.corda.ui.navigation.inspirationsEntries
 import com.example.corda.ui.navigation.metronomeEntries
 import com.example.corda.ui.navigation.tunerEntries
 import com.example.corda.ui.navigation.utilityEntries
@@ -71,12 +70,6 @@ fun CordaApp(
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
                         navigateBack = appState::navigateBack,
-                    )
-                    inspirationsEntries(
-                        openDrawer = appState::openDrawer,
-                        navigateTo = appState::navigateTo,
-                        navigateBack = appState::navigateBack,
-                        navigateBackToInspirations = appState::navigateBackToInspirations,
                     )
                     utilityEntries(
                         activity = activity,

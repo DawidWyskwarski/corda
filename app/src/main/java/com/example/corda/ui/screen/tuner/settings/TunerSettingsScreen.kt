@@ -47,19 +47,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
+import com.example.corda.domain.tuner.TuningMode
 import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
 import com.example.corda.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.ui.components.UserInfo
+import com.example.corda.ui.screen.tuner.TunerViewModel
 import com.example.corda.ui.screen.tuner.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.ui.screen.tuner.settings.components.TuningListItem
-import com.example.corda.domain.tuner.TuningMode
-import com.example.corda.ui.screen.tuner.TunerViewModel
 
 /**
  * Screen for the tuner settings.
