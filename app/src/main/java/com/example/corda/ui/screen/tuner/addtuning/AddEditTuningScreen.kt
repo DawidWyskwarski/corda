@@ -11,14 +11,10 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
@@ -38,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
 import com.example.corda.data.tuner.local.entities.Instrument
+import com.example.corda.ui.components.SingleClickIconButton
 import com.example.corda.ui.screen.tuner.components.TuningSoundGrid
 import com.example.corda.ui.screen.tuner.components.VerticalNoteCarousel
 
@@ -69,11 +66,7 @@ fun AddEditTuningScreen(
         topBar = {
             TopAppBar(
                 title = { Text(title) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.close))
-                    }
-                },
+                navigationIcon = { SingleClickIconButton(onClick = onBack) },
                 actions = {
                     TextButton(
                         onClick = { viewModel.saveTuning() },

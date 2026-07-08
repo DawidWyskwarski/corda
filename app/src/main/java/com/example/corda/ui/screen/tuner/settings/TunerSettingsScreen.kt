@@ -20,7 +20,6 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.selectableGroup
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.rounded.ArrowBack
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Piano
@@ -55,6 +54,7 @@ import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
 import com.example.corda.ui.components.SimpleSingleChoiceButtonGroup
+import com.example.corda.ui.components.SingleClickIconButton
 import com.example.corda.ui.components.UserInfo
 import com.example.corda.ui.screen.tuner.TunerViewModel
 import com.example.corda.ui.screen.tuner.settings.components.InstrumentManagementBottomSheet
@@ -123,11 +123,7 @@ fun TunerSettingsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.tuner_settings)) },
-                navigationIcon = {
-                    IconButton(onClick = onBack) {
-                        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
-                    }
-                }
+                navigationIcon = { SingleClickIconButton(onClick = onBack) }
             )
         },
         floatingActionButton = {
@@ -194,6 +190,8 @@ fun TunerSettingsScreen(
         )
     }
 }
+
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
