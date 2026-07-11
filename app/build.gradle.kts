@@ -88,9 +88,4 @@ dependencies {
     
     // Data Store
     implementation(libs.androidx.datastore.preferences)
-
-    // Inspirations media
-    implementation(libs.coil.compose)
-    implementation(libs.media3.exoplayer)
-    implementation(libs.media3.ui)
 }

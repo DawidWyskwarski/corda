@@ -21,9 +21,6 @@ import com.example.corda.ui.navigation.utilityEntries
  * `CordaApp` - the root UI component of the app
  *
  * Mainly orchestrates the navigation between screens and the drawer menu.
- *
- * ### TODO
- * - fix the transition animations. right now if i quickly double click on the back icon in settings the app goes back twice. (Need to block navigation after the click or something)
  */
 @Composable
 fun CordaApp(
@@ -32,24 +29,24 @@ fun CordaApp(
 ) {
     val appState = rememberCordaAppState()
 
-    ModalNavigationDrawer(
-        modifier = modifier,
-        drawerState = appState.drawerState,
-        // Disable the 'swipe-to-open' gesture unless the drawer is already open.
-        // you can close it by swiping/clicking away,
-        // but you can't swipe to open it
-        gesturesEnabled = appState.drawerState.isOpen,
-        drawerContent = {
-            DrawerMenuContent(
-                currentScreen = appState.currentScreen,
-                onScreenSelected = appState::navigateTo
-            )
-        }
-    ) {
-        Box(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background),
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ){
+        ModalNavigationDrawer(
+            modifier = modifier,
+            drawerState = appState.drawerState,
+            // Disable the 'swipe-to-open' gesture unless the drawer is already open.
+            // you can close it by swiping/clicking away,
+            // but you can't swipe to open it
+            gesturesEnabled = appState.drawerState.isOpen,
+            drawerContent = {
+                DrawerMenuContent(
+                    currentScreen = appState.currentScreen,
+                    onScreenSelected = appState::navigateTo
+                )
+            }
         ) {
             NavDisplay(
                 backStack = appState.backStack,
@@ -63,17 +60,17 @@ fun CordaApp(
                         activity = activity,
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
-                        navigateBack = appState::navigateBack,
+                        navigateBack = appState::navigateBack
                     )
                     metronomeEntries(
                         activity = activity,
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
-                        navigateBack = appState::navigateBack,
+                        navigateBack = appState::navigateBack
                     )
                     utilityEntries(
                         activity = activity,
-                        navigateBack = appState::navigateBack,
+                        navigateBack = appState::navigateBack
                     )
                 }
             )

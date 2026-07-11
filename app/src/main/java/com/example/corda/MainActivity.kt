@@ -1,8 +1,12 @@
 package com.example.corda
 
+import android.graphics.Color
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
+import androidx.activity.enableEdgeToEdge
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
@@ -31,13 +35,28 @@ class MainActivity : ComponentActivity() {
 
         // Blocking the thread until value is retrieved - avoiding a flash
         val initialDark = runBlocking { settingsManager.isDarkMode.first() }
-
         applyWindowTheme(this, initialDark)
 
         setContent {
             val activity = checkNotNull(LocalContext.current.findComponentActivity())
             val isDark by settingsManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
             val languageTag by settingsManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
+
+            DisposableEffect(isDark) {
+                activity.enableEdgeToEdge(
+                    statusBarStyle = if (isDark) {
+                        SystemBarStyle.dark(Color.TRANSPARENT)
+                    } else {
+                        SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                    },
+                    navigationBarStyle = if (isDark) {
+                        SystemBarStyle.dark(Color.TRANSPARENT)
+                    } else {
+                        SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
+                    }
+                )
+                onDispose {}
+            }
 
             LaunchedEffect(languageTag) {
                 Locale.setDefault(Locale.forLanguageTag(languageTag))

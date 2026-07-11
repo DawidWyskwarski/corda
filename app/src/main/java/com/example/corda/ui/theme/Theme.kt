@@ -242,14 +242,13 @@ private val highContrastDarkColorScheme = darkColorScheme(
 fun CordaTheme(
     darkTheme: Boolean,
     dynamicColor: Boolean = true,
-    content: @Composable() () -> Unit
+    content: @Composable () -> Unit
 ) {
   val colorScheme = when {
       dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
           val context = LocalContext.current
           if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
       }
-      
       darkTheme -> darkScheme
       else -> lightScheme
   }
@@ -266,9 +265,6 @@ fun CordaTheme(
       tunerInTuneBright = tunerInTuneBrightLight,
     )
   }
-
-  // Adjusting icons to the theme (otherwise top bar icons are invisible)
-  SystemUiEffect(darkTheme = darkTheme)
 
   CompositionLocalProvider(LocalCordaColors provides cordaColors) {
     MaterialTheme(
