@@ -17,9 +17,9 @@ import androidx.compose.ui.unit.dp
  */
 @Composable
 fun PlayNoteButton(
+    modifier: Modifier = Modifier,
     isPlaying: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
 ) {
     FilledIconToggleButton(
         checked = isPlaying,

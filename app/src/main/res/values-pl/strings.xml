@@ -118,6 +118,8 @@
     <string name="tunings">Stroje</string>
     <string name="search_tunings">Wyszukaj stroje</string>
     <string name="no_tunings">Nie znaleziono strojów.</string>
+    <string name="tuning_delete_title">Usuń strój</string>
+    <string name="tuning_delete_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
     <string name="chromatic_description">Tryb chromatyczny automatycznie wykrywa nutę.</string>
     <string name="dont_select_tuning">Nie ma potrzeby wybierać stroju.</string>
     <string name="new_custom_tuning">Nowy strój</string>

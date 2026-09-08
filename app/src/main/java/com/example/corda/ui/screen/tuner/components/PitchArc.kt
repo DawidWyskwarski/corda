@@ -24,8 +24,8 @@ import kotlin.math.abs
 
 @Composable
 fun PitchArc(
-    modifier: Modifier = Modifier,
     centsOff: Float?,
+    modifier: Modifier = Modifier,
 ) {
     val cordaColors = LocalCordaColors.current
     val trackColor = MaterialTheme.colorScheme.primaryContainer
@@ -34,7 +34,7 @@ fun PitchArc(
     } else {
         cordaColors.tunerInTuneBright
     }
-
+    // TODO improve the colours
     val indicatorColor = if (centsOff != null) {
         if (abs(centsOff) < 5f) {
             cordaColors.tunerInTune

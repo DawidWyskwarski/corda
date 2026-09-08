@@ -7,11 +7,10 @@ import com.example.corda.ui.screen.settings.SettingsScreen
 import com.example.corda.ui.screen.settings.SettingsViewModel
 
 fun EntryProviderScope<Screen>.utilityEntries(
-    activity: ComponentActivity,
     navigateBack: () -> Unit,
 ) {
     entry<Screen.Settings> {
-        val settingsViewModel: SettingsViewModel = hiltViewModel(viewModelStoreOwner = activity)
+        val settingsViewModel: SettingsViewModel = hiltViewModel()
 
         SettingsScreen(
             viewModel = settingsViewModel,

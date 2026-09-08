@@ -57,7 +57,6 @@ fun CordaApp(
                 ),
                 entryProvider = entryProvider {
                     tunerEntries(
-                        activity = activity,
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
                         navigateBack = appState::navigateBack
@@ -69,7 +68,6 @@ fun CordaApp(
                         navigateBack = appState::navigateBack
                     )
                     utilityEntries(
-                        activity = activity,
                         navigateBack = appState::navigateBack
                     )
                 }

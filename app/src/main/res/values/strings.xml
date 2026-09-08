@@ -136,6 +136,8 @@
     <string name="tunings">Tunings</string>
     <string name="search_tunings">Search tunings</string>
     <string name="no_tunings">No tunings found.</string>
+    <string name="tuning_delete_title">Delete tuning</string>
+    <string name="tuning_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
     <string name="chromatic_description">Chromatic mode detects the note automatically.</string>
     <string name="dont_select_tuning">No need to select a tuning.</string>
 

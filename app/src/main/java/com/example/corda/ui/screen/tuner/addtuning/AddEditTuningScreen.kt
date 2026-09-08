@@ -13,9 +13,9 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.ExposedDropdownMenuDefaults
-import androidx.compose.material3.MenuAnchorType
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -46,10 +46,15 @@ fun AddEditTuningScreen(
     modifier: Modifier = Modifier,
 ) {
     val tuningName by viewModel.tuningName.collectAsStateWithLifecycle()
-    val selectedInstrument by viewModel.selectedInstrument.collectAsStateWithLifecycle()
+
     val instruments by viewModel.instruments.collectAsStateWithLifecycle()
-    val allSounds by viewModel.allSounds.collectAsStateWithLifecycle()
+    val selectedInstrument by viewModel.selectedInstrument.collectAsStateWithLifecycle()
+
+    val stringMusicNotes by viewModel.stringMusicNotes.collectAsStateWithLifecycle()
     val selectedStringIndex by viewModel.selectedStringIndex.collectAsStateWithLifecycle()
+
+    val allNotes by viewModel.allNotes.collectAsStateWithLifecycle()
+
     val isSaveEnabled by viewModel.isSaveEnabled.collectAsStateWithLifecycle()
     val saved by viewModel.saved.collectAsStateWithLifecycle()
 
@@ -103,16 +108,18 @@ fun AddEditTuningScreen(
                 onInstrumentSelected = { viewModel.selectInstrument(it) },
             )
 
-            if (viewModel.stringSounds.isNotEmpty()) {
+            if (stringMusicNotes.isNotEmpty()) {
                 TuningSoundGrid(
-                    sounds = viewModel.stringSounds,
+                    //TODO rework this to be more generic (also to be able to take MusicNote?)
+                    musicNotes = stringMusicNotes,
                     selectedIndex = selectedStringIndex,
                     onIndexSelected = { viewModel.selectString(it) },
+                    tunedIndices = emptySet(),
                 )
             }
 
             AnimatedVisibility(
-                visible = selectedStringIndex != null && allSounds.isNotEmpty(),
+                visible = selectedStringIndex != null && allNotes.isNotEmpty(),
                 enter = expandVertically(expandFrom = Alignment.Top) + fadeIn(),
                 exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
             ) {
@@ -120,13 +127,12 @@ fun AddEditTuningScreen(
                     Spacer(modifier = Modifier.height(16.dp))
 
                     val currentSound = selectedStringIndex?.let { idx ->
-                        viewModel.stringSounds.getOrNull(idx)
+                        stringMusicNotes.getOrNull(idx)
                     }
 
                     if (currentSound != null) {
                         VerticalNoteCarousel(
-                            sounds = allSounds,
-                            selectedSound = currentSound,
+                            notes = allNotes,
                             onSoundSelected = { viewModel.setNoteForSelectedString(it) },
                             modifier = Modifier.fillMaxWidth(),
                         )
@@ -143,7 +149,7 @@ private fun InstrumentDropdown(
     instruments: List<Instrument>,
     selectedInstrument: Instrument?,
     enabled: Boolean,
-    onInstrumentSelected: (Instrument) -> Unit,
+    onInstrumentSelected: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -164,7 +170,7 @@ private fun InstrumentDropdown(
             },
             modifier = Modifier
                 .fillMaxWidth()
-                .menuAnchor(MenuAnchorType.PrimaryNotEditable),
+                .menuAnchor(ExposedDropdownMenuAnchorType.PrimaryNotEditable),
         )
 
         ExposedDropdownMenu(
@@ -175,7 +181,7 @@ private fun InstrumentDropdown(
                 DropdownMenuItem(
                     text = { Text(instrument.name) },
                     onClick = {
-                        onInstrumentSelected(instrument)
+                        onInstrumentSelected(instrument.id)
                         expanded = false
                     },
                 )

@@ -36,12 +36,16 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.text.AnnotatedString
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.example.corda.data.tuner.local.entities.relations.TuningWithInstrumentAndSounds
-import com.example.corda.ui.screen.tuner.components.soundsPreviewAnnotated
+import com.example.corda.data.tuner.local.entities.MusicNote
+import com.example.corda.data.tuner.local.models.TuningDetails
+import com.example.corda.ui.screen.tuner.components.annotateMusicNotes
+import com.example.corda.ui.screen.tuner.components.noteLabelAnnotation
 
 /**
  * A single row in the tunings list.
@@ -58,13 +62,13 @@ import com.example.corda.ui.screen.tuner.components.soundsPreviewAnnotated
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TuningListItem(
-    tuning: TuningWithInstrumentAndSounds,
+    tuning: TuningDetails,
     shapes: ListItemShapes,
     isSelected: Boolean,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
     onEdit: () -> Unit,
     onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val containerColor by animateColorAsState(
         targetValue = if (isSelected) {
@@ -76,8 +80,8 @@ fun TuningListItem(
     )
 
     val bodyStyle = MaterialTheme.typography.bodyMedium
-    val notesPreview = remember(tuning.sounds, bodyStyle) {
-        soundsPreviewAnnotated(sounds = tuning.sounds, baseStyle = bodyStyle)
+    val notesPreview = remember(tuning.musicNotes, bodyStyle) {
+        annotateMusicNotes(tuning.musicNotes, bodyStyle)
     }
 
     var showMenu by remember { mutableStateOf(false) }

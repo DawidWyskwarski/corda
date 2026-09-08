@@ -18,7 +18,7 @@ import androidx.compose.ui.Modifier
  * @param onClick Callback to invoke when the button is clicked
  */
 @Composable
-fun SingleClickIconButton(
+fun SingleClickIconButton( // TODO change this name
     modifier: Modifier = Modifier,
     onClick: () -> Unit
 ) {

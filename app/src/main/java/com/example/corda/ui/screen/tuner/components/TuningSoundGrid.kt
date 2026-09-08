@@ -12,7 +12,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.corda.data.tuner.local.entities.Sound
+import com.example.corda.data.tuner.local.entities.MusicNote
 
 /**
  * 2-column grid of [TuningNoteChip]s with index-based selection.
@@ -24,11 +24,11 @@ import com.example.corda.data.tuner.local.entities.Sound
  */
 @Composable
 fun TuningSoundGrid(
-    sounds: List<Sound>,
+    musicNotes: List<MusicNote>,
+    selectedIndex: Int?,
+    onIndexSelected: (Int) -> Unit,
+    tunedIndices: Set<Int>,
     modifier: Modifier = Modifier,
-    selectedIndex: Int? = null,
-    onIndexSelected: (Int?) -> Unit = {},
-    tunedIndices: Set<Int> = emptySet(),
 ) {
     var internalIndex by remember { mutableIntStateOf(-1) }
     val activeIndex = selectedIndex ?: internalIndex.takeIf { it >= 0 }
@@ -41,19 +41,14 @@ fun TuningSoundGrid(
         horizontalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         itemsIndexed(
-            items = sounds,
+            items = musicNotes,
             key = { index, _ -> index },
         ) { index, sound ->
             TuningNoteChip(
-                pitchClass = sound.name,
-                octave = sound.octave,
+                musicNote = sound,
                 isSelected = activeIndex == index,
                 isTuned = index in tunedIndices,
-                onClick = {
-                    val newIndex = if (activeIndex == index) null else index
-                    internalIndex = newIndex ?: -1
-                    onIndexSelected(newIndex)
-                },
+                onClick = { onIndexSelected(index) },
             )
         }
     }

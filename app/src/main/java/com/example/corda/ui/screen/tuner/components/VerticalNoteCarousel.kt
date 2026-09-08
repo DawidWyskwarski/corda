@@ -13,41 +13,34 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.corda.data.tuner.local.entities.Sound
+import com.example.corda.data.tuner.local.entities.MusicNote
 
 private val ITEM_HEIGHT = 56.dp
 private const val VISIBLE_ITEMS = 5
 
-/**
- * Snap-to-center vertical picker for [Sound] items.
- *
- * Uses [contentPadding] equal to 2 item heights so the snapped
- * item (`firstVisibleItemIndex`) sits visually in the center.
- */
+//TODO regenerate docs
 @Composable
 fun VerticalNoteCarousel(
-    sounds: List<Sound>,
-    selectedSound: Sound,
-    onSoundSelected: (Sound) -> Unit,
     modifier: Modifier = Modifier,
+    notes: List<MusicNote>,
+    onSoundSelected: (Int) -> Unit,
 ) {
-    if (sounds.isEmpty()) return
+    if (notes.isEmpty()) return
 
-    val initialIndex = remember(selectedSound, sounds) {
-        sounds.indexOfFirst { it.soundId == selectedSound.soundId }.coerceAtLeast(0)
-    }
-
+    val initialIndex = remember(notes) { notes.size / 2 }
     val listState = rememberLazyListState(initialFirstVisibleItemIndex = initialIndex)
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .collect { index ->
-                if (index in sounds.indices) onSoundSelected(sounds[index])
+                onSoundSelected( index )
             }
     }
 
@@ -57,7 +50,9 @@ fun VerticalNoteCarousel(
         contentPadding = PaddingValues(vertical = ITEM_HEIGHT * 2),
         modifier = modifier.height(ITEM_HEIGHT * VISIBLE_ITEMS),
     ) {
-        itemsIndexed(sounds, key = { _, s -> s.soundId }) { index, sound ->
+        itemsIndexed(
+            notes
+        ) { index, sound ->
             val isSelected = index == listState.firstVisibleItemIndex
 
             Surface(
@@ -68,12 +63,9 @@ fun VerticalNoteCarousel(
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     NoteLabel(
-                        sound = sound,
+                        musicNote = sound,
                         style = if (isSelected) MaterialTheme.typography.headlineMedium
                         else MaterialTheme.typography.titleLarge,
-                        color = if (isSelected) MaterialTheme.colorScheme.onPrimaryContainer
-                        else MaterialTheme.colorScheme.onSurface,
-                        subscriptScale = if (isSelected) 0.6f else 0.65f,
                     )
                 }
             }

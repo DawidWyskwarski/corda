@@ -24,7 +24,6 @@ import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Piano
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
@@ -35,7 +34,6 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.SearchBar
 import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -49,22 +47,23 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
+import com.example.corda.data.tuner.local.entities.Instrument
+import com.example.corda.data.tuner.local.models.TuningDetails
 import com.example.corda.domain.tuner.TuningMode
+import com.example.corda.ui.components.DeleteItemDialog
 import com.example.corda.ui.components.FABMenu
 import com.example.corda.ui.components.FABMenuItem
 import com.example.corda.ui.components.FilterChipGroup
 import com.example.corda.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.ui.components.SingleClickIconButton
 import com.example.corda.ui.components.UserInfo
-import com.example.corda.ui.screen.tuner.TunerViewModel
 import com.example.corda.ui.screen.tuner.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.ui.screen.tuner.settings.components.TuningListItem
 
 /**
  * Screen for the tuner settings.
  *
- * @param sharedViewModel shared ViewModel scoped to the tuner feature (selected tuning, mode)
- * @param settingsViewModel screen-specific ViewModel for search, filter, and instrument list
+ * @param viewModel screen-specific ViewModel for search, filter, and instrument list
  * @param onBack lambda reporting an event to `CordaApp` to go back
  * @param onAddTuning lambda to navigate to the Add Tuning screen
  * @param onEditTuning lambda to navigate to the Edit Tuning screen with the tuning ID
@@ -72,14 +71,14 @@ import com.example.corda.ui.screen.tuner.settings.components.TuningListItem
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TunerSettingsScreen(
-    sharedViewModel: TunerViewModel,
-    settingsViewModel: TunerSettingsViewModel,
-    modifier: Modifier = Modifier,
+    viewModel: TunerSettingsViewModel,
     onBack: () -> Unit,
     onAddTuning: () -> Unit,
     onEditTuning: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
-    val selectedMode by sharedViewModel.selectedMode.collectAsStateWithLifecycle()
+    val selectedMode by viewModel.selectedTuningMode.collectAsStateWithLifecycle()
+    val instruments by viewModel.instruments.collectAsStateWithLifecycle()
     val modes = remember { TuningMode.entries.toList() }
     var isFabMenuOpen by remember { mutableStateOf(false) }
     var isInstrumentSheetOpen by remember { mutableStateOf(false) }
@@ -105,7 +104,7 @@ fun TunerSettingsScreen(
 
     DisposableEffect(Unit) {
         onDispose {
-            sharedViewModel.updateSelectedTuningLastUsed()
+            viewModel.markSelectedTuningAsUsed()
         }
     }
 
@@ -156,7 +155,7 @@ fun TunerSettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 selectedItem = selectedMode,
                 items = modes,
-                onItemSelected = { sharedViewModel.selectMode(it) }
+                onItemSelected = { viewModel.setTuningMode(it) }
             )
 
             AnimatedContent(
@@ -172,12 +171,27 @@ fun TunerSettingsScreen(
                 label = "Mode Animation"
             ) { mode ->
                 when (mode) {
-                    TuningMode.STANDARD -> TuningsContent(
-                        sharedViewModel = sharedViewModel,
-                        settingsViewModel = settingsViewModel,
-                        onEditTuning = onEditTuning,
-                    )
-                    TuningMode.CHROMATIC -> ChromaticContent()
+                    TuningMode.STANDARD -> {
+
+                        val filteredTunings by viewModel.filteredTunings.collectAsStateWithLifecycle()
+                        val selectedTuningId by viewModel.selectedTuningId.collectAsStateWithLifecycle()
+                        val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
+                        val filterInstrument by viewModel.filterInstrument.collectAsStateWithLifecycle()
+
+                        StandardModeContent(
+                            filteredTunings = filteredTunings,
+                            selectedTuningId = selectedTuningId,
+                            searchQuery = searchQuery,
+                            instruments = instruments,
+                            filterInstrument = filterInstrument,
+                            onSelectTuning = viewModel::setSelectedTuning,
+                            onSelectFilterInstrumentId = viewModel::setFilterInstrument,
+                            onSearchQueryChange = viewModel::setSearchQuery,
+                            onDeleteTuning = viewModel::deleteTuning,
+                            onEditTuning = onEditTuning
+                        )
+                    }
+                    TuningMode.CHROMATIC -> ChromaticModeContent()
                 }
             }
         }
@@ -185,45 +199,45 @@ fun TunerSettingsScreen(
 
     if (isInstrumentSheetOpen) {
         InstrumentManagementBottomSheet(
-            settingsViewModel = settingsViewModel,
-            onDismiss = { isInstrumentSheetOpen = false },
+            instruments = instruments,
+            doesInstrumentHaveTunings = viewModel::hasTunings,
+            onCreateInstrument = viewModel::createInstrument,
+            onUpdateInstrument = viewModel::updateInstrument,
+            onDeleteInstrument = viewModel::deleteInstrument,
+            onDismiss = { isInstrumentSheetOpen = false }
         )
     }
 }
 
-
-
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
-private fun TuningsContent(
-    sharedViewModel: TunerViewModel,
-    settingsViewModel: TunerSettingsViewModel,
+private fun StandardModeContent(
+    filteredTunings: List<TuningDetails>,
+    selectedTuningId: Int?,
+    searchQuery: String,
+    instruments: List<Instrument>,
+    filterInstrument: Instrument?,
+    onSelectTuning: (Int) -> Unit,
+    onSelectFilterInstrumentId: (Int) -> Unit,
+    onSearchQueryChange: (String) -> Unit,
     onEditTuning: (Int) -> Unit,
+    onDeleteTuning: (Int) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val filteredTunings by settingsViewModel.filteredTunings.collectAsStateWithLifecycle()
-    val selectedTuning by sharedViewModel.selectedTuning.collectAsStateWithLifecycle()
-    val searchQuery by settingsViewModel.searchQuery.collectAsStateWithLifecycle()
-    val instruments by settingsViewModel.instruments.collectAsStateWithLifecycle()
-    val selectedInstrument by settingsViewModel.selectedInstrument.collectAsStateWithLifecycle()
-
     val count by remember { derivedStateOf { filteredTunings.size } }
+    var pendingTuningToDelete by remember { mutableStateOf<TuningDetails?>(null) }
 
-    var deleteTuningId by remember { mutableStateOf<Int?>(null) }
-
-    Column(modifier = modifier.fillMaxSize()) {
-
-        if (filteredTunings.isEmpty() && selectedTuning == null) {
-
+    Column(
+        modifier = modifier.fillMaxSize()
+    ) {
+        if (filteredTunings.isEmpty()) {
             UserInfo(
                 modifier = Modifier
                     .fillMaxSize(),
-                mainText = "No tunings found",
-                supportingText = "Tap + to add the one want"
+                mainText = stringResource(R.string.no_tunings),
+                supportingText = "Tap + to add the one you want"
             )
-
         } else {
-
             Text(
                 modifier = Modifier.padding(vertical = 8.dp),
                 text = stringResource(R.string.tunings),
@@ -237,7 +251,7 @@ private fun TuningsContent(
                 inputField = {
                     SearchBarDefaults.InputField(
                         query = searchQuery,
-                        onQueryChange = { settingsViewModel.setSearchQuery(it) },
+                        onQueryChange = { onSearchQueryChange(it) },
                         onSearch = { },
                         expanded = false,
                         onExpandedChange = { },
@@ -247,7 +261,7 @@ private fun TuningsContent(
                         },
                         trailingIcon = {
                             if (searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { settingsViewModel.setSearchQuery("") }) {
+                                IconButton(onClick = { onSearchQueryChange("") }) {
                                     Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.clear_search))
                                 }
                             }
@@ -261,9 +275,9 @@ private fun TuningsContent(
             Spacer(modifier = Modifier.height(8.dp))
 
             FilterChipGroup(
-                items = instruments.map { it.name },
-                selectedItem = selectedInstrument,
-                onItemSelected = { settingsViewModel.setSelectedInstrument(it) }
+                items = instruments,
+                selectedItem = filterInstrument,
+                onItemSelected = { onSelectFilterInstrumentId(it.id) }
             )
 
             Spacer(modifier = Modifier.height(8.dp))
@@ -284,48 +298,32 @@ private fun TuningsContent(
                             index = index,
                             count = count
                         ),
-                        isSelected = tuning.tuningId == selectedTuning?.tuningId,
-                        onClick = { sharedViewModel.selectTuning(tuning) },
+                        isSelected = tuning.tuningId == selectedTuningId,
+                        onClick = { onSelectTuning(tuning.tuningId) },
                         onEdit = { onEditTuning(tuning.tuningId) },
-                        onDelete = { deleteTuningId = tuning.tuningId },
+                        onDelete = { pendingTuningToDelete = tuning },
                     )
                 }
             }
         }
     }
 
-    if (deleteTuningId != null) {
-        val tuningToDelete = filteredTunings.find { it.tuningId == deleteTuningId }
-        AlertDialog(
-            onDismissRequest = { deleteTuningId = null },
-            title = { Text("Delete tuning") },
-            text = {
-                Text(
-                    "Are you sure you want to delete \"${tuningToDelete?.tuningName ?: ""}\"? " +
-                            "This action cannot be undone."
-                )
+    pendingTuningToDelete?.let { tuning ->
+        DeleteItemDialog(
+            titleRes = R.string.tuning_delete_title,
+            messageRes = R.string.tuning_delete_message,
+            itemName = tuning.tuningName,
+            onDelete = {
+                onDeleteTuning(tuning.tuningId)
+                pendingTuningToDelete = null
             },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        deleteTuningId?.let { settingsViewModel.deleteTuning(it) }
-                        deleteTuningId = null
-                    }
-                ) {
-                    Text("Delete")
-                }
-            },
-            dismissButton = {
-                TextButton(onClick = { deleteTuningId = null }) {
-                    Text("Cancel")
-                }
-            },
+            onDismiss = { pendingTuningToDelete = null }
         )
     }
 }
 
 @Composable
-private fun ChromaticContent(
+private fun ChromaticModeContent(
     modifier: Modifier = Modifier
 ) {
     UserInfo(

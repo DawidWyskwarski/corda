@@ -1,6 +1,6 @@
 package com.example.corda.domain.tuner.pitch
 
-import com.example.corda.data.tuner.local.entities.Sound
+import com.example.corda.data.tuner.local.entities.MusicNote
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import kotlin.math.pow
@@ -84,6 +84,6 @@ class PitchHelpersTest {
         assertEquals(108, PitchHelpers.allChromaticSounds().size)
     }
 
-    private fun sound(name: String, midi: Int, octave: Int, frequency: Float): Sound =
-        Sound(soundId = midi, name = name, frequency = frequency, octave = octave, midiNote = midi)
+    private fun sound(name: String, midi: Int, octave: Int, frequency: Float): MusicNote =
+        MusicNote(soundId = midi, name = name, frequency = frequency, octave = octave, midiNote = midi)
 }

@@ -11,7 +11,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.corda.ui.screen.settings.SettingsManager
+import com.example.corda.ui.screen.settings.SystemStateManager
 import com.example.corda.ui.CordaApp
 import com.example.corda.ui.theme.CordaTheme
 import com.example.corda.ui.theme.LANGUAGE_EN
@@ -28,19 +28,19 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var settingsManager: SettingsManager
+    lateinit var systemStateManager: SystemStateManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Blocking the thread until value is retrieved - avoiding a flash
-        val initialDark = runBlocking { settingsManager.isDarkMode.first() }
+        val initialDark = runBlocking { systemStateManager.isDarkMode.first() }
         applyWindowTheme(this, initialDark)
 
         setContent {
             val activity = checkNotNull(LocalContext.current.findComponentActivity())
-            val isDark by settingsManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
-            val languageTag by settingsManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
+            val isDark by systemStateManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
+            val languageTag by systemStateManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
 
             DisposableEffect(isDark) {
                 activity.enableEdgeToEdge(

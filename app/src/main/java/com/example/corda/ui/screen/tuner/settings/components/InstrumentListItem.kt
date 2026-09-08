@@ -45,7 +45,7 @@ fun InstrumentListItem(
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = stringResource(R.string.instrument_strings_label, instrument.soundsCount),
+                text = stringResource(R.string.instrument_strings_label, instrument.musicNotesCount),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
