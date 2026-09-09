@@ -33,7 +33,7 @@ class MetronomeAudioPlayer @Inject constructor() {
             if (track.playState == AudioTrack.PLAYSTATE_PLAYING) {
                 track.stop()
             }
-            track.setPlaybackHeadPosition(0)
+            track.playbackHeadPosition = 0
             track.play()
         } catch (_: IllegalStateException) {
             // Ignore races between stop/play during rapid BPM changes

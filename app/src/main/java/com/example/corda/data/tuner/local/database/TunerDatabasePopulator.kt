@@ -28,7 +28,7 @@ class TunerDatabasePopulator (
         // From C0 (12) to B8 (119)
         val midiRange = 12..119
 
-        var musicNotes = listOf<MusicNote>()
+        val musicNotes = mutableListOf<MusicNote>()
 
         for (midiNote in midiRange) {
             val octave = (midiNote - 12) / 12

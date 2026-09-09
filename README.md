@@ -29,14 +29,14 @@ Corda is an Android app for musicians. It combines a chromatic and instrument-sp
 
 ## Tech stack
 
-| Area | Libraries |
-|------|-----------|
-| UI | Jetpack Compose, Material 3 |
-| Navigation | Navigation 3 (type-safe, serializable destinations) |
-| DI | Hilt |
-| Persistence | Room, DataStore Preferences |
-| Audio / pitch | TarsosDSP, `AudioRecord`, `AudioTrack` |
-| Media | Coil, Media3 ExoPlayer |
+| Area          | Libraries                                           |
+|---------------|-----------------------------------------------------|
+| UI            | Jetpack Compose, Material 3                         |
+| Navigation    | Navigation 3 (type-safe, serializable destinations) |
+| DI            | Hilt                                                |
+| Persistence   | Room, DataStore Preferences                         |
+| Audio / pitch | TarsosDSP, `AudioRecord`, `AudioTrack`              |
+| Media         | Coil, Media3 ExoPlayer                              |
 
 - **Language:** Kotlin  
 - **Min SDK:** 24 · **Target SDK:** 36 · **Compile SDK:** 37  
@@ -80,8 +80,8 @@ Grant microphone permission when prompted — the tuner will not work without it
 
 ## Permissions
 
-| Permission | Used for |
-|------------|----------|
+| Permission     | Used for              |
+|----------------|-----------------------|
 | `RECORD_AUDIO` | Tuner pitch detection |
 
 ## Localization

@@ -31,7 +31,8 @@ fun SingleClickIconButton( // TODO change this name
                 isEnabled = false
                 onClick()
             }
-        }
+        },
+        modifier = modifier
     ) {
         Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
     }

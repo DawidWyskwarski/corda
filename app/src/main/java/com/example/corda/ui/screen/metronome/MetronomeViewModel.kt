@@ -12,6 +12,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 
 data class MetronomeUiState(
     val bpm: Int = 130,
@@ -76,7 +77,7 @@ class MetronomeViewModel @Inject constructor(
             var totalBeats = 1L
             while (true) {
                 // Time between ticks = 60000 ms / BPM (60000 ms = 1 minute)
-                delay(60_000L / _state.value.bpm)
+                delay((60_000L / _state.value.bpm).milliseconds)
                 totalBeats++
                 val current = _state.value
 

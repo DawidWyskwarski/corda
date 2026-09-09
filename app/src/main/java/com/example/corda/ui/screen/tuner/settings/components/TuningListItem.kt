@@ -36,16 +36,12 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
-import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import com.example.corda.data.tuner.local.entities.MusicNote
 import com.example.corda.data.tuner.local.models.TuningDetails
 import com.example.corda.ui.screen.tuner.components.annotateMusicNotes
-import com.example.corda.ui.screen.tuner.components.noteLabelAnnotation
 
 /**
  * A single row in the tunings list.

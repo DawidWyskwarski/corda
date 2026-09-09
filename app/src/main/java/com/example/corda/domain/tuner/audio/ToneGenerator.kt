@@ -156,6 +156,6 @@ class ToneGenerator(
     private companion object {
         const val FADE_MS = 100
         const val VOLUME = 1.0
-        val TWO_PI = 2.0 * PI
+        const val TWO_PI = 2.0 * PI
     }
 }

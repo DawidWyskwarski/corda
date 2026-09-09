@@ -1,6 +1,5 @@
 package com.example.corda.ui.navigation
 
-import androidx.activity.ComponentActivity
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import com.example.corda.ui.screen.settings.SettingsScreen

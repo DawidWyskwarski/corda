@@ -23,7 +23,7 @@ import kotlinx.coroutines.launch
 class AudioProcessingService : PitchDetector {
 
     companion object {
-        val SAMPLE_RATE: Int get() = TUNER_SAMPLE_RATE
+        const val SAMPLE_RATE: Int = TUNER_SAMPLE_RATE
         const val BUFFER_SIZE = 5120
         const val OVERLAP = 4096
         private const val PROBABILITY_THRESHOLD = 0.75f
@@ -67,7 +67,7 @@ class AudioProcessingService : PitchDetector {
 
             val format = TarsosDSPAudioFormat(SAMPLE_RATE.toFloat(), 16, 1, true, false)
             val audioEvent = AudioEvent(format).apply {
-                setOverlap(OVERLAP)
+                overlap = OVERLAP
             }
 
             val pitchProcessor = PitchProcessor(
@@ -104,7 +104,7 @@ class AudioProcessingService : PitchDetector {
                         floatBuffer[OVERLAP + i] = shortBuffer[i] / 32768f
                     }
 
-                    audioEvent.setFloatBuffer(floatBuffer)
+                    audioEvent.floatBuffer = floatBuffer
                     pitchProcessor.process(audioEvent)
                 }
             } finally {

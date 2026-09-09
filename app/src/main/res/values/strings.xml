@@ -6,9 +6,7 @@
     <!-- COMPONENTS -->
     <string name="tuner">Tuner</string>
     <string name="metronome">Metronome</string>
-    <string name="inspirations">Inspirations</string>
     <string name="settings">Settings</string>
-    <string name="help_feedback">Help &amp; feedback</string>
     <string name="tools">Tools</string>
 
     <!-- FAB Menu -->
@@ -24,22 +22,18 @@
     <string name="perfect">Perfect</string>
 
     <!-- Tuning list item -->
-    <string name="selected_text">Selected</string>
 
     <!-- SCREENS -->
     <!-- Descriptions -->
     <string name="open_drawer">Open drawer</string>
     <string name="disable_ear_mode">Disable ear mode</string>
     <string name="enable_ear_mode">Enable ear mode</string>
-    <string name="back">Back</string>
     <string name="error">Error</string>
     <string name="clear_search">Clear search</string>
-    <string name="all">All</string>
 
     <!-- Settings -->
     <string name="settings_display">Display</string>
     <string name="dark_mode">Dark mode</string>
-    <string name="keep_focus">Keep focus</string>
 
     <string name="settings_calibration">Calibration</string>
     <string name="base_frequency">Base frequency (Hz)</string>
@@ -49,40 +43,8 @@
     <string name="language">Language</string>
     <string name="language_english">English</string>
     <string name="language_polish">Polski</string>
-    <string name="notation">Notation</string>
-    <string name="european">European</string>
-    <string name="american">American</string>
 
     <!-- Inspiration -->
-    <string name="search_inspirations">Search inspirations</string>
-    <string name="new_inspiration">New inspiration</string>
-    <string name="manage_labels">Manage labels</string>
-    <string name="show_filters">Show filters</string>
-    <string name="hide_filters">Hide filters</string>
-    <string name="inspiration_description">Description</string>
-    <string name="inspiration_additional_attributes">Additional attributes</string>
-    <string name="inspiration_name_hint">Name</string>
-    <string name="inspiration_description_hint">Add a description…</string>
-    <string name="inspiration_no_labels_available">No labels available</string>
-    <string name="inspiration_add_attribute">Add attribute</string>
-    <string name="inspiration_edit_attribute">Edit attribute</string>
-    <string name="inspiration_attribute_label">Label</string>
-    <string name="inspiration_delete">Delete inspiration</string>
-    <string name="inspiration_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
-    <string name="inspiration_add_media">Add media</string>
-    <string name="inspiration_pick_image">Pick image</string>
-    <string name="inspiration_pick_video">Pick video</string>
-    <string name="inspiration_remove_media">Remove media</string>
-    <string name="inspiration_media_import_failed">Could not import the selected file. Try another image or video.</string>
-    <string name="labels_title">Labels</string>
-    <string name="label_new">New label</string>
-    <string name="label_edit_title">Edit label</string>
-    <string name="label_delete_title">Delete label</string>
-    <string name="label_delete_message">Are you sure you want to delete \"%1$s\"? It will be removed from all inspirations.</string>
-    <string name="label_name_hint">Name</string>
-    <string name="label_save">Save</string>
-    <string name="label_create">Create</string>
-    <string name="action_confirm">Confirm</string>
     <string name="action_cancel">Cancel</string>
     <string name="action_delete">Delete</string>
 
@@ -103,7 +65,6 @@
     <string name="action_add">Add</string>
     <string name="tuning_name_hint">Tuning name</string>
     <string name="tuning_instrument_label">Instrument</string>
-    <string name="close">Close</string>
     <string name="tuned">Tuned</string>
 
     <!-- Tuner instrument management -->
@@ -122,12 +83,6 @@
 
     <!-- Tuner -->
     <string name="chromatic_mode">Chromatic mode</string>
-
-    <string name="guitar_6">Guitar (6-string)</string>
-    <string name="guitar_7">Guitar (7-string)</string>
-    <string name="bass_4">Bass (4-string)</string>
-    <string name="bass_5">Bass (5-string)</string>
-    <string name="ukulele">Ukulele</string>
 
     <string name="tuner_settings">Tuner Settings</string>
     <string name="new_custom_tuning">New custom tuning</string>
