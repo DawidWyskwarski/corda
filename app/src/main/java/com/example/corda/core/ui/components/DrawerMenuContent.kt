@@ -1,6 +1,5 @@
 package com.example.corda.core.ui.components
 
-import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.height
@@ -21,18 +20,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.corda.R
+import com.example.corda.core.navigation.NavItem
 import com.example.corda.core.navigation.Screen
-
-private data class NavigationItem( // TODO put in the navigation directory
-    val icon: ImageVector,
-    // Currently annotations applies to the value parameter only, 'param' ensures it remains that way in the future
-    @param:StringRes val labelRes: Int,
-    val screen: Screen
-)
 
 /**
  * Contents of the drawer menu
@@ -48,12 +40,12 @@ fun DrawerMenuContent(
 ) {
     val tools = remember {
         listOf(
-            NavigationItem(
+            NavItem(
                 icon = Icons.Rounded.MusicNote,
                 labelRes = R.string.tuner,
                 screen = Screen.Tuner
             ),
-            NavigationItem(
+            NavItem(
                 icon = Icons.Rounded.Speed,
                 labelRes = R.string.metronome,
                 screen = Screen.Metronome
@@ -63,7 +55,7 @@ fun DrawerMenuContent(
 
     val utilities = remember {
         listOf(
-            NavigationItem(
+            NavItem(
                 icon = Icons.Rounded.Settings,
                 labelRes = R.string.settings,
                 screen = Screen.Settings
