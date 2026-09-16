@@ -51,10 +51,10 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun MainMetronomeScreen(
-    modifier: Modifier = Modifier,
-    viewModel: MetronomeViewModel,
     openDrawer: () -> Unit,
     openSettings: () -> Unit,
+    viewModel: MetronomeViewModel,
+    modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsState()
 

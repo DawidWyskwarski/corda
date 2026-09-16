@@ -10,9 +10,9 @@ import androidx.compose.ui.Modifier
 
 @Composable
 fun UserInfo(
-    modifier: Modifier = Modifier,
     mainText: String,
     supportingText: String = "",
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier,

@@ -14,10 +14,10 @@ import androidx.compose.ui.unit.dp
 
 @Composable
 fun <T> FilterChipGroup(
-    modifier: Modifier = Modifier,
     items: List<T>,
     selectedItem: T?,
-    onItemSelected: (T) -> Unit
+    onItemSelected: (T) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     LazyRow(
         modifier = modifier,

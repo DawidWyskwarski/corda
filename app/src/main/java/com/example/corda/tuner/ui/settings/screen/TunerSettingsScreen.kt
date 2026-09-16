@@ -45,6 +45,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
 import com.example.corda.core.tuner.TuningMode
@@ -71,11 +72,11 @@ import com.example.corda.tuner.ui.settings.components.TuningListItem
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun TunerSettingsScreen(
-    viewModel: TunerSettingsViewModel,
     onBack: () -> Unit,
     onAddTuning: () -> Unit,
     onEditTuning: (Int) -> Unit,
     modifier: Modifier = Modifier,
+    viewModel: TunerSettingsViewModel = hiltViewModel(),
 ) {
     val selectedMode by viewModel.selectedTuningMode.collectAsStateWithLifecycle()
     val instruments by viewModel.instruments.collectAsStateWithLifecycle()
@@ -152,10 +153,10 @@ fun TunerSettingsScreen(
             )
 
             SimpleSingleChoiceButtonGroup(
-                modifier = Modifier.fillMaxWidth(),
                 selectedItem = selectedMode,
                 items = modes,
-                onItemSelected = { viewModel.setTuningMode(it) }
+                onItemSelected = { viewModel.setTuningMode(it) },
+                modifier = Modifier.fillMaxWidth(),
             )
 
             AnimatedContent(
@@ -232,10 +233,10 @@ private fun StandardModeContent(
     ) {
         if (filteredTunings.isEmpty()) {
             UserInfo(
+                mainText = stringResource(R.string.no_tunings),
+                supportingText = "Tap + to add the one you want",
                 modifier = Modifier
                     .fillMaxSize(),
-                mainText = stringResource(R.string.no_tunings),
-                supportingText = "Tap + to add the one you want"
             )
         } else {
             Text(
@@ -327,9 +328,9 @@ private fun ChromaticModeContent(
     modifier: Modifier = Modifier
 ) {
     UserInfo(
+        mainText = stringResource(R.string.chromatic_description),
+        supportingText = stringResource(R.string.dont_select_tuning),
         modifier = modifier
             .fillMaxSize(),
-        mainText = stringResource(R.string.chromatic_description),
-        supportingText = stringResource(R.string.dont_select_tuning)
     )
 }

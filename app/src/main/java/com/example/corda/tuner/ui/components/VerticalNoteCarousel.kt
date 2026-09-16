@@ -26,9 +26,9 @@ private const val VISIBLE_ITEMS = 5
 //TODO regenerate docs
 @Composable
 fun VerticalNoteCarousel(
-    modifier: Modifier = Modifier,
     notes: List<MusicNote>,
     onSoundSelected: (Int) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     if (notes.isEmpty()) return
 

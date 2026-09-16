@@ -36,9 +36,9 @@ fun TuningNoteChip(
         onClick = onClick,
         label = {
             NoteLabel(
-                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
                 musicNote = musicNote,
                 style = MaterialTheme.typography.titleMedium,
+                modifier = Modifier.padding(horizontal = 16.dp, vertical = 16.dp),
             )
         },
         trailingIcon = if (isTuned) {

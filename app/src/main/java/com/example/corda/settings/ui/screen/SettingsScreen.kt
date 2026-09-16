@@ -26,6 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
 import com.example.corda.core.ui.components.NavigateBackButton
@@ -39,9 +40,9 @@ private val dividerPadding = Modifier.padding(vertical = 8.dp)
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    onBack: () -> Unit,
     modifier: Modifier = Modifier,
-    viewModel: SettingsViewModel,
-    onBack: () -> Unit
+    viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val isDarkMode by viewModel.isDarkMode.collectAsStateWithLifecycle()
     val languageTag by viewModel.language.collectAsStateWithLifecycle()

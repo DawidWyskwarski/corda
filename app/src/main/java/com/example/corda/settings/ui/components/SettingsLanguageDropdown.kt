@@ -25,6 +25,7 @@ import com.example.corda.core.ui.system.LANGUAGE_PL
 fun SettingsLanguageDropdown(
     selectedLanguageTag: String,
     onLanguageSelected: (String) -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val options = remember {
         listOf(
@@ -38,6 +39,7 @@ fun SettingsLanguageDropdown(
     )
 
     ExposedDropdownMenuBox(
+        modifier = modifier,
         expanded = expanded,
         onExpandedChange = { expanded = !expanded },
     ) {

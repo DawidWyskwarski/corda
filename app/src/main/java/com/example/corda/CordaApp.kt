@@ -1,6 +1,5 @@
 package com.example.corda
 
-import androidx.activity.ComponentActivity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
@@ -25,7 +24,6 @@ import com.example.corda.settings.navigation.settingsEntry
 @Composable
 fun CordaApp(
     modifier: Modifier = Modifier,
-    activity: ComponentActivity,
 ) {
     val appState = rememberCordaAppState()
 
@@ -62,7 +60,6 @@ fun CordaApp(
                         navigateBack = appState::navigateBack
                     )
                     metronomeEntries(
-                        activity = activity,
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
                         navigateBack = appState::navigateBack

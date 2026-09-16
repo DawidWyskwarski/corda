@@ -35,9 +35,9 @@ import com.example.corda.core.navigation.Screen
  */
 @Composable
 fun DrawerMenuContent(
-    modifier: Modifier = Modifier,
     currentScreen: Screen,
-    onScreenSelected: (Screen) -> Unit
+    onScreenSelected: (Screen) -> Unit,
+    modifier: Modifier = Modifier
 ) {
     val tools = remember {
         listOf(

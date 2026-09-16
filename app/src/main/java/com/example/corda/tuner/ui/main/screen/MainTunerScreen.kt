@@ -44,6 +44,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.LifecycleResumeEffect
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
@@ -61,10 +62,10 @@ import java.util.Locale
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MainTunerScreen(
-    modifier: Modifier = Modifier,
-    viewModel: MainTunerViewModel,
     openDrawer: () -> Unit,
-    openSettings: () -> Unit
+    openSettings: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: MainTunerViewModel = hiltViewModel(),
 ) {
     val selectedTuning by viewModel.selectedTuning.collectAsStateWithLifecycle()
     val selectedMode by viewModel.tuningMode.collectAsStateWithLifecycle()
@@ -154,9 +155,9 @@ fun MainTunerScreen(
                 TuningMode.STANDARD -> {
                     if (selectedTuning == null) {
                         UserInfo(
-                            modifier = Modifier.fillMaxSize(),
                             mainText = "No tunings found",
-                            supportingText = "Please select or add a tuning"
+                            supportingText = "Please select or add a tuning",
+                            modifier = Modifier.fillMaxSize(),
                         )
                     } else {
 
@@ -173,29 +174,29 @@ fun MainTunerScreen(
                                 )
                                 Box {
                                     PitchArc(
+                                        centsOff = tunerState.centsOff,
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 16.dp, vertical = 8.dp),
-                                        centsOff = tunerState.centsOff
                                     )
 
                                     NoteLabel(
-                                        modifier = Modifier.align(Alignment.Center),
                                         musicNote = tunerState.note,
-                                        style = MaterialTheme.typography.displayLargeEmphasized
+                                        style = MaterialTheme.typography.displayLargeEmphasized,
+                                        modifier = Modifier.align(Alignment.Center),
                                     )
                                 }
                             }
                         }
 
                         TuningSoundGrid(
-                            modifier = Modifier
-                                .weight(1f)
-                                .padding(horizontal = 16.dp),
                             musicNotes = selectedTuning!!.musicNotes,
                             selectedIndex = currentlyClickedIndex ?: tunerState.noteIndex,
                             onIndexSelected = { viewModel.onItemClicked(it) },
                             tunedIndices = tunedIndices,
+                            modifier = Modifier
+                                .weight(1f)
+                                .padding(horizontal = 16.dp),
                         )
                     }
                 }
@@ -203,9 +204,9 @@ fun MainTunerScreen(
 
                     if (selectedTuning == null) {
                         UserInfo(
-                            modifier = Modifier.fillMaxSize(),
                             mainText = "Oops, something went wrong.",
-                            supportingText = "Failed to load data."
+                            supportingText = "Failed to load data.",
+                            modifier = Modifier.fillMaxSize(),
                         )
                     } else {
 
@@ -223,16 +224,16 @@ fun MainTunerScreen(
                                 )
                                 Box {
                                     PitchArc(
+                                        centsOff = tunerState.centsOff,
                                         modifier = Modifier
                                             .fillMaxWidth()
                                             .padding(horizontal = 16.dp, vertical = 8.dp),
-                                        centsOff = tunerState.centsOff
                                     )
 
                                     NoteLabel(
-                                        modifier = Modifier.align(Alignment.Center),
                                         musicNote = tunerState.note,
-                                        style = MaterialTheme.typography.displayLargeEmphasized
+                                        style = MaterialTheme.typography.displayLargeEmphasized,
+                                        modifier = Modifier.align(Alignment.Center),
                                     )
                                 }
                             }
@@ -240,12 +241,12 @@ fun MainTunerScreen(
 
                         if (isEarModeEnabled) {
                             EarModeChromaticContent(
-                                modifier = Modifier
-                                    .weight(1f),
                                 allNotes = selectedTuning!!.musicNotes,
                                 onPlayToggle = { index ->
                                     viewModel.onItemClicked(index) // TODO this needs to be changed. It might be better to have 2 functions one to select and other to play. To be investigated.
                                 },
+                                modifier = Modifier
+                                    .weight(1f),
                             )
                         }
                     }
@@ -265,8 +266,6 @@ private fun EarModeChromaticContent(
 
     var isPlaying by remember { mutableStateOf(false) } // TODO this looks like a bad idea. Backend playback state and UI state may be misaligned.
     var selectedIndex by remember { mutableIntStateOf(0) }
-
-    // TODO change every place to have the modifier as the last argument
 
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,

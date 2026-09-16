@@ -8,11 +8,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 
 @Composable
-fun SettingsSectionHeader(title: String) {
+fun SettingsSectionHeader(
+    title: String,
+    modifier: Modifier = Modifier
+) {
     Text(
         text = title,
         style = MaterialTheme.typography.labelLarge,
         color = MaterialTheme.colorScheme.primary,
-        modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
+        modifier = modifier.padding(top = 16.dp, bottom = 8.dp), // TODO I think that the parent composable should set the modifier
     )
 }

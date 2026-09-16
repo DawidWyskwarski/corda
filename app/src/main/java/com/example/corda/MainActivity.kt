@@ -9,14 +9,12 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.core.datastore.SettingsDataStoreManager
 import com.example.corda.core.ui.theme.CordaTheme
 import com.example.corda.core.ui.system.LANGUAGE_EN
 import com.example.corda.core.ui.system.ProvideAppLocale
 import com.example.corda.core.ui.system.applyWindowTheme
-import com.example.corda.core.helpers.findComponentActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -26,8 +24,7 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    @Inject
-    lateinit var settingsDataStoreManager: SettingsDataStoreManager
+    @Inject lateinit var settingsDataStoreManager: SettingsDataStoreManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,12 +34,11 @@ class MainActivity : ComponentActivity() {
         applyWindowTheme(this, initialDark)
 
         setContent {
-            val activity = checkNotNull(LocalContext.current.findComponentActivity())
             val isDark by settingsDataStoreManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
             val languageTag by settingsDataStoreManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
 
             DisposableEffect(isDark) {
-                activity.enableEdgeToEdge(
+                enableEdgeToEdge(
                     statusBarStyle = if (isDark) {
                         SystemBarStyle.dark(Color.TRANSPARENT)
                     } else {
@@ -63,7 +59,7 @@ class MainActivity : ComponentActivity() {
 
             ProvideAppLocale(languageTag = languageTag) {
                 CordaTheme(darkTheme = isDark) {
-                    CordaApp(activity = activity)
+                    CordaApp()
                 }
             }
         }

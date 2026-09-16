@@ -71,10 +71,10 @@ data class FABMenuItem(
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun FABMenu(
-    modifier: Modifier = Modifier,
     isExpanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
-    items: List<FABMenuItem>
+    items: List<FABMenuItem>,
+    modifier: Modifier = Modifier
 ) {
     val listState = rememberLazyListState()
     val fabVisible by remember {

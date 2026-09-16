@@ -41,6 +41,7 @@ fun InstrumentManagementBottomSheet(
     onUpdateInstrument: (Instrument) -> Unit,
     onDeleteInstrument: (Int) -> Unit,
     onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     // Capture the localized context here, inside ProvideAppLocale, so resources are correct.
     // We use localizedContext.resources.getString() in dialogs instead of stringResource(), because AlertDialog creates a separate Android window that doesn't reliably inherit the Compose CompositionLocal overrides.
@@ -59,6 +60,7 @@ fun InstrumentManagementBottomSheet(
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = sheetState,
+        modifier = modifier,
     ) {
         // Wrap the bottom sheet content to ensure LocalContext is localized inside the popup.
         CompositionLocalProvider(LocalContext provides localizedContext) {

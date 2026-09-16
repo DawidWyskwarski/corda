@@ -34,9 +34,9 @@ import com.example.corda.metronome.ui.settings.components.BeatsInABarSelector
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MetronomeSettingsScreen(
-    modifier: Modifier = Modifier,
-    viewModel: MetronomeViewModel,
     onBack: () -> Unit,
+    viewModel: MetronomeViewModel,
+    modifier: Modifier = Modifier,
 ) {
     val state by viewModel.state.collectAsState()
 
