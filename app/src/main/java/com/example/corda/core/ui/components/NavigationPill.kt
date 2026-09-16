@@ -17,6 +17,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 
 /**
  * Custom component for a navigation pill.
@@ -34,7 +35,7 @@ fun NavigationPill(
 ) {
     Surface(
         modifier = modifier,
-        onClick = onClick,
+        onClick = dropUnlessResumed(block = onClick),
         shape = CircleShape,
         color = MaterialTheme.colorScheme.primaryContainer
     ) {

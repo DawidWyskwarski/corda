@@ -26,7 +26,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
-import com.example.corda.core.ui.components.SingleClickIconButton
+import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.tuner.ui.components.TuningSoundGrid
 import com.example.corda.tuner.ui.components.VerticalNoteCarousel
 import com.example.corda.tuner.ui.update.components.InstrumentDropdown
@@ -66,7 +66,7 @@ fun UpdateTuningScreen(
         topBar = {
             TopAppBar(
                 title = { Text(title) },
-                navigationIcon = { SingleClickIconButton(onClick = onBack) },
+                navigationIcon = { NavigateBackButton(onClick = onBack) },
                 actions = {
                     TextButton(
                         onClick = { viewModel.saveTuning() },

@@ -22,6 +22,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
 import com.example.corda.R
 import com.example.corda.core.navigation.NavItem
 import com.example.corda.core.navigation.Screen
@@ -102,9 +103,7 @@ fun DrawerMenuContent(
                     },
                     label = { Text(stringResource(tool.labelRes)) },
                     selected = currentScreen == tool.screen,
-                    onClick = {
-                        onScreenSelected(tool.screen)
-                    }
+                    onClick = dropUnlessResumed { onScreenSelected(tool.screen) }
                 )
             }
 
@@ -123,9 +122,7 @@ fun DrawerMenuContent(
                     },
                     label = { Text(stringResource(utility.labelRes)) },
                     selected = currentScreen == utility.screen,
-                    onClick = {
-                        onScreenSelected(utility.screen)
-                    }
+                    onClick = dropUnlessResumed { onScreenSelected(utility.screen) }
                 )
             }
         }

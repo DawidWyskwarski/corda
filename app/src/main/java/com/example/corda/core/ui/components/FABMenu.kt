@@ -47,6 +47,7 @@ import androidx.compose.ui.semantics.isTraversalGroup
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.semantics.stateDescription
 import androidx.compose.ui.semantics.traversalIndex
+import androidx.lifecycle.compose.dropUnlessResumed
 
 import com.example.corda.R
 
@@ -190,7 +191,7 @@ fun FABMenu(
                                 Modifier
                             }
                         ),
-                    onClick = item.onClick,
+                    onClick = dropUnlessResumed(block = item.onClick),
                     icon = { Icon(item.icon, contentDescription = null) },
                     text = { Text(text = stringResource(item.labelRes)) },
                 )

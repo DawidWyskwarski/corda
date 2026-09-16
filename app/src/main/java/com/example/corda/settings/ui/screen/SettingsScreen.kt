@@ -28,7 +28,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
-import com.example.corda.core.ui.components.SingleClickIconButton
+import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.settings.ui.components.SettingsClickableItem
 import com.example.corda.settings.ui.components.SettingsLanguageDropdown
 import com.example.corda.settings.ui.components.SettingsSectionHeader
@@ -53,7 +53,7 @@ fun SettingsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.SemiBold) },
-                navigationIcon = { SingleClickIconButton(onClick = onBack) },
+                navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
         }
     ) { innerPadding ->

@@ -26,7 +26,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.corda.R
-import com.example.corda.core.ui.components.SingleClickIconButton
+import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.metronome.ui.MetronomeViewModel
 import com.example.corda.metronome.ui.settings.components.BarCountRow
 import com.example.corda.metronome.ui.settings.components.BeatsInABarSelector
@@ -47,7 +47,7 @@ fun MetronomeSettingsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.metronome_settings)) },
-                navigationIcon = { SingleClickIconButton(onClick = onBack) },
+                navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
         },
     ) { innerPadding ->

@@ -28,7 +28,8 @@ object TunerDatabaseModule {
             name = "tuner_db"
         ).addCallback(
             TunerDatabaseCallback(provider)
-        ).build()
+        ).fallbackToDestructiveMigration(dropAllTables = true)
+        .build()
     }
     @Provides
     fun provideSoundDao(db: TunerDatabase) = db.getMusicNoteDao()

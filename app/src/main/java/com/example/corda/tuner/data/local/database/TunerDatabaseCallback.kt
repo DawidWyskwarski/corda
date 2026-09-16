@@ -17,7 +17,19 @@ class TunerDatabaseCallback(
 
     override fun onCreate(db: SupportSQLiteDatabase) {
         super.onCreate(db)
+        seed()
+    }
 
+    /**
+     * Room recreates the tables without calling [onCreate] when a destructive
+     * migration happens, so the seed has to be triggered here as well.
+     */
+    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+        super.onDestructiveMigration(db)
+        seed()
+    }
+
+    private fun seed() {
         applicationScope.launch {
             try {
                 TunerDatabasePopulator(databaseProvider.get()).populate()

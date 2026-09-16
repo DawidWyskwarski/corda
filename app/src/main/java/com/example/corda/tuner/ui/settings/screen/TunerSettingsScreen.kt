@@ -55,7 +55,7 @@ import com.example.corda.core.ui.components.FABMenu
 import com.example.corda.core.ui.components.FABMenuItem
 import com.example.corda.core.ui.components.FilterChipGroup
 import com.example.corda.core.ui.components.SimpleSingleChoiceButtonGroup
-import com.example.corda.core.ui.components.SingleClickIconButton
+import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.core.ui.components.UserInfo
 import com.example.corda.tuner.ui.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.tuner.ui.settings.components.TuningListItem
@@ -122,7 +122,7 @@ fun TunerSettingsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.tuner_settings)) },
-                navigationIcon = { SingleClickIconButton(onClick = onBack) }
+                navigationIcon = { NavigateBackButton(onClick = onBack) }
             )
         },
         floatingActionButton = {
