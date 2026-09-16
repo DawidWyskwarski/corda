@@ -11,13 +11,12 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import com.example.corda.ui.screen.settings.SystemStateManager
-import com.example.corda.ui.CordaApp
-import com.example.corda.ui.theme.CordaTheme
-import com.example.corda.ui.theme.LANGUAGE_EN
-import com.example.corda.ui.theme.ProvideAppLocale
-import com.example.corda.ui.theme.applyWindowTheme
-import com.example.corda.ui.util.findComponentActivity
+import com.example.corda.core.datastore.SettingsDataStoreManager
+import com.example.corda.core.ui.theme.CordaTheme
+import com.example.corda.core.ui.system.LANGUAGE_EN
+import com.example.corda.core.ui.system.ProvideAppLocale
+import com.example.corda.core.ui.system.applyWindowTheme
+import com.example.corda.core.helpers.findComponentActivity
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
@@ -28,19 +27,19 @@ import javax.inject.Inject
 class MainActivity : ComponentActivity() {
 
     @Inject
-    lateinit var systemStateManager: SystemStateManager
+    lateinit var settingsDataStoreManager: SettingsDataStoreManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         // Blocking the thread until value is retrieved - avoiding a flash
-        val initialDark = runBlocking { systemStateManager.isDarkMode.first() }
+        val initialDark = runBlocking { settingsDataStoreManager.isDarkMode.first() }
         applyWindowTheme(this, initialDark)
 
         setContent {
             val activity = checkNotNull(LocalContext.current.findComponentActivity())
-            val isDark by systemStateManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
-            val languageTag by systemStateManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
+            val isDark by settingsDataStoreManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
+            val languageTag by settingsDataStoreManager.language.collectAsStateWithLifecycle(initialValue = LANGUAGE_EN)
 
             DisposableEffect(isDark) {
                 activity.enableEdgeToEdge(

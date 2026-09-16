@@ -1,0 +1,140 @@
+package com.example.corda.tuner.ui.update.screen
+
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.shrinkVertically
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.corda.R
+import com.example.corda.core.ui.components.SingleClickIconButton
+import com.example.corda.tuner.ui.components.TuningSoundGrid
+import com.example.corda.tuner.ui.components.VerticalNoteCarousel
+import com.example.corda.tuner.ui.update.components.InstrumentDropdown
+import kotlin.collections.getOrNull
+import kotlin.collections.isNotEmpty
+
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+fun UpdateTuningScreen(
+    viewModel: UpdateTuningViewModel,
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val tuningName by viewModel.tuningName.collectAsStateWithLifecycle()
+
+    val instruments by viewModel.instruments.collectAsStateWithLifecycle()
+    val selectedInstrument by viewModel.selectedInstrument.collectAsStateWithLifecycle()
+
+    val stringMusicNotes by viewModel.stringMusicNotes.collectAsStateWithLifecycle()
+    val selectedStringIndex by viewModel.selectedStringIndex.collectAsStateWithLifecycle()
+
+    val allNotes by viewModel.allNotes.collectAsStateWithLifecycle()
+
+    val isSaveEnabled by viewModel.isSaveEnabled.collectAsStateWithLifecycle()
+    val saved by viewModel.saved.collectAsStateWithLifecycle()
+
+    LaunchedEffect(saved) {
+        if (saved) onBack()
+    }
+
+    val isEditMode = viewModel.isEditMode
+    val title = if (isEditMode) stringResource(R.string.edit_tuning_title) else stringResource(R.string.add_tuning_title)
+    val actionLabel = if (isEditMode) stringResource(R.string.action_save) else stringResource(R.string.action_add)
+
+    Scaffold(
+        modifier = modifier,
+        topBar = {
+            TopAppBar(
+                title = { Text(title) },
+                navigationIcon = { SingleClickIconButton(onClick = onBack) },
+                actions = {
+                    TextButton(
+                        onClick = { viewModel.saveTuning() },
+                        enabled = isSaveEnabled,
+                    ) {
+                        Text(actionLabel)
+                    }
+                },
+            )
+        },
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .fillMaxSize()
+                .padding(horizontal = 16.dp),
+        ) {
+            Spacer(modifier = Modifier.height(8.dp))
+
+            OutlinedTextField(
+                value = tuningName,
+                onValueChange = { viewModel.setTuningName(it) },
+                label = { Text(stringResource(R.string.tuning_name_hint)) },
+                singleLine = true,
+                modifier = Modifier.fillMaxWidth(),
+            )
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            InstrumentDropdown(
+                instruments = instruments,
+                selectedInstrument = selectedInstrument,
+                enabled = !isEditMode,
+                onInstrumentSelected = { viewModel.selectInstrument(it) },
+            )
+
+            if (stringMusicNotes.isNotEmpty()) {
+                TuningSoundGrid(
+                    //TODO rework this to be more generic (also to be able to take MusicNote?)
+                    musicNotes = stringMusicNotes,
+                    selectedIndex = selectedStringIndex,
+                    onIndexSelected = { viewModel.selectString(it) },
+                    tunedIndices = emptySet(),
+                )
+            }
+
+            AnimatedVisibility(
+                visible = selectedStringIndex != null && allNotes.isNotEmpty(),
+                enter = expandVertically(expandFrom = Alignment.Top) + fadeIn(),
+                exit = shrinkVertically(shrinkTowards = Alignment.Top) + fadeOut(),
+            ) {
+                Column {
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    val currentSound = selectedStringIndex?.let { idx ->
+                        stringMusicNotes.getOrNull(idx)
+                    }
+
+                    if (currentSound != null) {
+                        VerticalNoteCarousel(
+                            notes = allNotes,
+                            onSoundSelected = { viewModel.setNoteForSelectedString(it) },
+                            modifier = Modifier.fillMaxWidth(),
+                        )
+                    }
+                }
+            }
+        }
+    }
+}
+

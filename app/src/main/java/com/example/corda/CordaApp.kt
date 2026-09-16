@@ -1,0 +1,77 @@
+package com.example.corda
+
+import androidx.activity.ComponentActivity
+import androidx.compose.foundation.background
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalNavigationDrawer
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.lifecycle.viewmodel.navigation3.rememberViewModelStoreNavEntryDecorator
+import androidx.navigation3.runtime.entryProvider
+import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
+import androidx.navigation3.ui.NavDisplay
+import com.example.corda.core.ui.components.DrawerMenuContent
+import com.example.corda.metronome.navigation.metronomeEntries
+import com.example.corda.tuner.navigation.tunerEntries
+import com.example.corda.settings.navigation.settingsEntry
+
+/**
+ * `CordaApp` - the root UI component of the app
+ *
+ * Mainly orchestrates the navigation between screens and the drawer menu.
+ */
+@Composable
+fun CordaApp(
+    modifier: Modifier = Modifier,
+    activity: ComponentActivity,
+) {
+    val appState = rememberCordaAppState()
+
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(MaterialTheme.colorScheme.background)
+    ){
+        ModalNavigationDrawer(
+            modifier = modifier,
+            drawerState = appState.drawerState,
+            // Disable the 'swipe-to-open' gesture unless the drawer is already open.
+            // you can close it by swiping/clicking away,
+            // but you can't swipe to open it
+            gesturesEnabled = appState.drawerState.isOpen,
+            drawerContent = {
+                DrawerMenuContent(
+                    currentScreen = appState.currentScreen,
+                    onScreenSelected = appState::navigateTo
+                )
+            }
+        ) {
+            NavDisplay(
+                backStack = appState.backStack,
+                onBack = appState::navigateBack,
+                entryDecorators = listOf(
+                    rememberSaveableStateHolderNavEntryDecorator(),
+                    rememberViewModelStoreNavEntryDecorator()
+                ),
+                entryProvider = entryProvider {
+                    tunerEntries(
+                        openDrawer = appState::openDrawer,
+                        navigateTo = appState::navigateTo,
+                        navigateBack = appState::navigateBack
+                    )
+                    metronomeEntries(
+                        activity = activity,
+                        openDrawer = appState::openDrawer,
+                        navigateTo = appState::navigateTo,
+                        navigateBack = appState::navigateBack
+                    )
+                    settingsEntry(
+                        navigateBack = appState::navigateBack
+                    )
+                }
+            )
+        }
+    }
+}
