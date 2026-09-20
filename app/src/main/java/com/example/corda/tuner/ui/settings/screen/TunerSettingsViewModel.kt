@@ -50,16 +50,7 @@ class TunerSettingsViewModel @Inject constructor(
     val searchQuery: StateFlow<String> = _searchQuery.asStateFlow()
 
     private val _filterInstrumentId = MutableStateFlow<Int?>(null)
-    val filterInstrument: StateFlow<Instrument?> = combine(
-        _filterInstrumentId,
-        instruments
-    ) { instrumentId, instruments ->
-        instruments.firstOrNull { it.id == instrumentId }
-    }.stateIn(
-        scope = viewModelScope,
-        started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
-    )
+    val filterInstrumentId: StateFlow<Int?> = _filterInstrumentId.asStateFlow()
 
     private val _selectedTuningId = MutableStateFlow<Int?>(null)
     val selectedTuningId: StateFlow<Int?> = _selectedTuningId.asStateFlow()

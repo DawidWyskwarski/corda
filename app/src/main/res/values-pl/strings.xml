@@ -64,6 +64,8 @@
     <string name="instrument_string_count_error">Musi być między 2 a 24</string>
     <string name="instrument_string_count_locked">Zablokowane, gdy stroje używają tego instrumentu</string>
     <string name="instrument_strings_label">%1$d strun</string>
+    <string name="instrument_list_empty">Brak instrumentów</string>
+    <string name="instrument_list_empty_supporting">Utwórz instrument, aby dodawać stroje</string>
     <string name="action_save">Zapisz</string>
     <string name="action_create">Utwórz</string>
 

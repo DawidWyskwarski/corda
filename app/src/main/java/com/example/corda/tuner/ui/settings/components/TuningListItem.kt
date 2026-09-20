@@ -1,26 +1,17 @@
 package com.example.corda.tuner.ui.settings.components
 
 import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
 import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
-import androidx.compose.foundation.gestures.awaitEachGesture
-import androidx.compose.foundation.gestures.awaitFirstDown
-import androidx.compose.foundation.gestures.awaitLongPressOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material.icons.rounded.Delete
-import androidx.compose.material.icons.rounded.Edit
-import androidx.compose.material3.DropdownMenu
-import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
@@ -29,17 +20,17 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SegmentedListItem
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
-import androidx.compose.ui.unit.dp
 import com.example.corda.tuner.data.local.models.TuningDetails
 import com.example.corda.tuner.ui.components.annotateMusicNotes
 
@@ -52,8 +43,7 @@ import com.example.corda.tuner.ui.components.annotateMusicNotes
  * - Supporting: note string preview (e.g. "D2 A2 D3 G3 B3 E4")
  * - Trailing  : animated check-circle when this tuning is selected
  *
- * When [onEdit] and/or [onDelete] are provided, long-pressing the item shows a context menu
- * at the press location with the corresponding actions.
+ * Long-pressing the item shows a context menu at the press location offering [onEdit] and [onDelete].
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -66,45 +56,44 @@ fun TuningListItem(
     onDelete: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val containerColor by animateColorAsState(
-        targetValue = if (isSelected) {
-            MaterialTheme.colorScheme.secondaryContainer
-        } else {
-            MaterialTheme.colorScheme.surfaceContainer
-        },
-        label = "TuningListItem container color",
-    )
-
     val bodyStyle = MaterialTheme.typography.bodyMedium
     val notesPreview = remember(tuning.musicNotes, bodyStyle) {
         annotateMusicNotes(tuning.musicNotes, bodyStyle)
     }
 
-    var showMenu by remember { mutableStateOf(false) }
+    var isMenuVisible by remember { mutableStateOf(false) }
     var menuOffset by remember { mutableStateOf(DpOffset.Zero) }
     val density = LocalDensity.current
+
+    val interactionSource = remember { MutableInteractionSource() }
+
+    LaunchedEffect(interactionSource) {
+        interactionSource.interactions.collect {
+            if (it is PressInteraction.Press) {
+                menuOffset = with(density) {
+                    DpOffset(
+                        it.pressPosition.x.toDp(),
+                        it.pressPosition.y.toDp(),
+                    )
+                }
+            }
+        }
+    }
 
     Box(modifier = modifier) {
         SegmentedListItem(
             onClick = onClick,
+            onLongClick = { isMenuVisible = true },
+            interactionSource = interactionSource,
             shapes = shapes,
-            modifier = Modifier
-                .pointerInput(Unit) {
-                    awaitEachGesture {
-                        val down = awaitFirstDown(requireUnconsumed = false)
-                        val longPress = awaitLongPressOrCancellation(down.id)
-                        if (longPress != null) {
-                            menuOffset = with(density) {
-                                DpOffset(
-                                    x = longPress.position.x.toDp(),
-                                    y = longPress.position.y.toDp(),
-                                )
-                            }
-                            showMenu = true
-                        }
-                    }
-                },
-            colors = ListItemDefaults.colors(containerColor = containerColor),
+            verticalAlignment = Alignment.CenterVertically,
+            colors = ListItemDefaults.colors(
+                containerColor = if (isSelected) {
+                    MaterialTheme.colorScheme.secondaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surfaceContainer
+                }
+            ),
             overlineContent = {
                 Text(
                     text = tuning.instrumentName,
@@ -151,67 +140,21 @@ fun TuningListItem(
             )
         }
 
-        Box(
-            modifier = Modifier
-                .offset(
-                    x = menuOffset.x,
-                    y = menuOffset.y,
-                )
-                .size(0.dp),
-        ) {
-            DropdownMenu(
-                modifier = Modifier.width(192.dp),
-                expanded = showMenu,
-                onDismissRequest = { showMenu = false },
-            ) {
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = tuning.tuningName,
-                            style = MaterialTheme.typography.bodyLargeEmphasized,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    },
-                    onClick = { showMenu = false },
-                )
-
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = "Edit",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Edit,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = {
-                        showMenu = false
-                        onEdit()
-                    },
-                )
-                DropdownMenuItem(
-                    text = {
-                        Text(
-                            text = "Delete",
-                            style = MaterialTheme.typography.bodyLarge,
-                        )
-                    },
-                    trailingIcon = {
-                        Icon(
-                            imageVector = Icons.Rounded.Delete,
-                            contentDescription = null,
-                        )
-                    },
-                    onClick = {
-                        showMenu = false
-                        onDelete()
-                    },
-                )
-            }
+        if ( isMenuVisible ) {
+            TuningDropdownMenu(
+                tuningName = tuning.tuningName,
+                offset = menuOffset,
+                isMenuVisible = true,
+                onDismiss = { isMenuVisible = false },
+                onEdit = {
+                    isMenuVisible = false
+                    onEdit()
+                },
+                onDelete = {
+                    isMenuVisible = false
+                    onDelete()
+                }
+            )
         }
     }
 }

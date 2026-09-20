@@ -10,15 +10,15 @@ import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.selection.selectableGroup
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Close
@@ -31,19 +31,21 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
-import androidx.compose.material3.SearchBar
-import androidx.compose.material3.SearchBarDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextField
+import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
-import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
 import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
@@ -54,20 +56,21 @@ import com.example.corda.tuner.data.local.models.TuningDetails
 import com.example.corda.core.ui.components.DeleteItemDialog
 import com.example.corda.core.ui.components.FABMenu
 import com.example.corda.core.ui.components.FABMenuItem
-import com.example.corda.core.ui.components.FilterChipGroup
 import com.example.corda.core.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.core.ui.components.UserInfo
+import com.example.corda.tuner.ui.settings.components.InstrumentFilterChipGroup
 import com.example.corda.tuner.ui.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.tuner.ui.settings.components.TuningListItem
 
 /**
  * Screen for the tuner settings.
  *
- * @param viewModel screen-specific ViewModel for search, filter, and instrument list
  * @param onBack lambda reporting an event to `CordaApp` to go back
  * @param onAddTuning lambda to navigate to the Add Tuning screen
  * @param onEditTuning lambda to navigate to the Edit Tuning screen with the tuning ID
+ * @param modifier applied to the screen's [Scaffold]
+ * @param viewModel screen-specific ViewModel for search, filter, and instrument list
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
 @Composable
@@ -109,12 +112,7 @@ fun TunerSettingsScreen(
         }
     }
 
-    BackHandler(enabled = isInstrumentSheetOpen || isFabMenuOpen) {
-        when {
-            isInstrumentSheetOpen -> isInstrumentSheetOpen = false
-            isFabMenuOpen -> isFabMenuOpen = false
-        }
-    }
+    BackHandler(enabled = isFabMenuOpen) { isFabMenuOpen = false }
 
     Scaffold(
         modifier = modifier,
@@ -144,7 +142,7 @@ fun TunerSettingsScreen(
             modifier = Modifier
                 .padding(innerPadding)
                 .fillMaxSize()
-                .padding(16.dp),
+                .padding(horizontal = 16.dp),
         ) {
             Text(
                 text = stringResource(R.string.tuner_mode),
@@ -177,14 +175,14 @@ fun TunerSettingsScreen(
                         val filteredTunings by viewModel.filteredTunings.collectAsStateWithLifecycle()
                         val selectedTuningId by viewModel.selectedTuningId.collectAsStateWithLifecycle()
                         val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-                        val filterInstrument by viewModel.filterInstrument.collectAsStateWithLifecycle()
+                        val filterInstrumentId by viewModel.filterInstrumentId.collectAsStateWithLifecycle()
 
                         StandardModeContent(
                             filteredTunings = filteredTunings,
                             selectedTuningId = selectedTuningId,
                             searchQuery = searchQuery,
                             instruments = instruments,
-                            filterInstrument = filterInstrument,
+                            filterInstrument = filterInstrumentId,
                             onSelectTuning = viewModel::setSelectedTuning,
                             onSelectFilterInstrumentId = viewModel::setFilterInstrument,
                             onSearchQueryChange = viewModel::setSearchQuery,
@@ -192,6 +190,7 @@ fun TunerSettingsScreen(
                             onEditTuning = onEditTuning
                         )
                     }
+
                     TuningMode.CHROMATIC -> ChromaticModeContent()
                 }
             }
@@ -217,20 +216,65 @@ private fun StandardModeContent(
     selectedTuningId: Int?,
     searchQuery: String,
     instruments: List<Instrument>,
-    filterInstrument: Instrument?,
+    filterInstrument: Int?,
     onSelectTuning: (Int) -> Unit,
     onSelectFilterInstrumentId: (Int) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onEditTuning: (Int) -> Unit,
     onDeleteTuning: (Int) -> Unit,
-    modifier: Modifier = Modifier,
 ) {
-    val count by remember { derivedStateOf { filteredTunings.size } }
     var pendingTuningToDelete by remember { mutableStateOf<TuningDetails?>(null) }
+    val focusManager = LocalFocusManager.current
 
     Column(
-        modifier = modifier.fillMaxSize()
+        modifier = Modifier
+            .fillMaxSize()
     ) {
+        Text(
+            modifier = Modifier.padding(vertical = 8.dp),
+            text = stringResource(R.string.tunings),
+            style = MaterialTheme.typography.titleSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+
+        TextField(
+            value = searchQuery,
+            onValueChange = onSearchQueryChange,
+            modifier = Modifier.fillMaxWidth(),
+            placeholder = { Text(stringResource(R.string.search_tunings)) },
+            leadingIcon = {
+                Icon(Icons.Rounded.Search, contentDescription = null)
+            },
+            trailingIcon = {
+                if (searchQuery.isNotEmpty()) {
+                    IconButton(onClick = { onSearchQueryChange("") }) {
+                        Icon(
+                            Icons.Rounded.Close,
+                            contentDescription = stringResource(R.string.clear_search)
+                        )
+                    }
+                }
+            },
+            singleLine = true,
+            shape = CircleShape,
+            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Search),
+            keyboardActions = KeyboardActions(onSearch = { focusManager.clearFocus() }),
+            colors = TextFieldDefaults.colors(
+                focusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                unfocusedContainerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                focusedIndicatorColor = Color.Transparent,
+                unfocusedIndicatorColor = Color.Transparent,
+            ),
+        )
+
+        InstrumentFilterChipGroup(
+            instruments = instruments,
+            selectedId = filterInstrument,
+            onInstrumentSelected = { onSelectFilterInstrumentId(it) },
+            modifier = Modifier
+                .padding(vertical = 8.dp)
+        )
+
         if (filteredTunings.isEmpty()) {
             UserInfo(
                 mainText = stringResource(R.string.no_tunings),
@@ -239,50 +283,6 @@ private fun StandardModeContent(
                     .fillMaxSize(),
             )
         } else {
-            Text(
-                modifier = Modifier.padding(vertical = 8.dp),
-                text = stringResource(R.string.tunings),
-                style = MaterialTheme.typography.titleSmall,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-
-            SearchBar(
-                modifier = Modifier.fillMaxWidth(),
-                windowInsets = WindowInsets(top = 0.dp),
-                inputField = {
-                    SearchBarDefaults.InputField(
-                        query = searchQuery,
-                        onQueryChange = { onSearchQueryChange(it) },
-                        onSearch = { },
-                        expanded = false,
-                        onExpandedChange = { },
-                        placeholder = { Text(stringResource(R.string.search_tunings)) },
-                        leadingIcon = {
-                            Icon(Icons.Rounded.Search, contentDescription = null)
-                        },
-                        trailingIcon = {
-                            if (searchQuery.isNotEmpty()) {
-                                IconButton(onClick = { onSearchQueryChange("") }) {
-                                    Icon(Icons.Rounded.Close, contentDescription = stringResource(R.string.clear_search))
-                                }
-                            }
-                        },
-                    )
-                },
-                expanded = false,
-                onExpandedChange = { },
-            ) {}
-
-            Spacer(modifier = Modifier.height(8.dp))
-
-            FilterChipGroup(
-                items = instruments,
-                selectedItem = filterInstrument,
-                onItemSelected = { onSelectFilterInstrumentId(it.id) }
-            )
-
-            Spacer(modifier = Modifier.height(8.dp))
-
             LazyColumn(
                 modifier = Modifier
                     .weight(1f)
@@ -297,7 +297,7 @@ private fun StandardModeContent(
                         tuning = tuning,
                         shapes = ListItemDefaults.segmentedShapes(
                             index = index,
-                            count = count
+                            count = filteredTunings.size,
                         ),
                         isSelected = tuning.tuningId == selectedTuningId,
                         onClick = { onSelectTuning(tuning.tuningId) },
@@ -324,13 +324,11 @@ private fun StandardModeContent(
 }
 
 @Composable
-private fun ChromaticModeContent(
-    modifier: Modifier = Modifier
-) {
+private fun ChromaticModeContent() {
     UserInfo(
         mainText = stringResource(R.string.chromatic_description),
         supportingText = stringResource(R.string.dont_select_tuning),
-        modifier = modifier
+        modifier = Modifier
             .fillMaxSize(),
     )
 }
