@@ -6,6 +6,7 @@ import com.example.corda.tuner.data.local.dao.TuningDao
 import com.example.corda.tuner.data.local.entities.Instrument
 import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.Tuning
+import com.example.corda.tuner.data.local.models.CurrentTuning
 import com.example.corda.tuner.data.local.models.TuningDetails
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
@@ -38,7 +39,7 @@ class TunerRepositoryImpl @Inject constructor(
 
     override suspend fun getTuning(tuningId: Int): TuningDetails? = tuningDao.getTuningDetails(tuningId)
 
-    override fun getMostRecentTuning(): Flow<TuningDetails?> = tuningDao.getMostRecentTuning()
+    override fun getMostRecentTuning(): Flow<CurrentTuning?> = tuningDao.getMostRecentTuning()
 
     override suspend fun insertTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> = runCatching {
         tuningDao.insertTuningWithSounds(tuning, musicNotes)

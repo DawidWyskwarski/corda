@@ -63,7 +63,11 @@
     <string name="instrument_string_count_hint">Liczba strun</string>
     <string name="instrument_string_count_error">Musi być między 2 a 24</string>
     <string name="instrument_string_count_locked">Zablokowane, gdy stroje używają tego instrumentu</string>
-    <string name="instrument_strings_label">%1$d strun</string>
+    <plurals name="instrument_string_label">
+        <item quantity="one">%1$d Struna</item>
+        <item quantity="few">%1$d Struny</item>
+        <item quantity="many">%1$d Strun</item>
+    </plurals>
     <string name="instrument_list_empty">Brak instrumentów</string>
     <string name="instrument_list_empty_supporting">Utwórz instrument, aby dodawać stroje</string>
     <string name="action_save">Zapisz</string>
@@ -90,5 +94,9 @@
     <string name="tune_higher">Wyżej</string>
     <string name="tune_lower">Niżej</string>
     <string name="perfect">Idealnie</string>
+
+    <!-- Build in Instruments -->
+    <string name="guitar_instrument">Gitara</string>
+    <string name="bass_instrument">Bas</string>
 
 </resources>

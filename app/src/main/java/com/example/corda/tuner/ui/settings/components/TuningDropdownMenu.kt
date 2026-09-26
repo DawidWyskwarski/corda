@@ -36,7 +36,6 @@ import androidx.compose.ui.unit.dp
 fun TuningDropdownMenu(
     tuningName: String,
     offset: DpOffset,
-    isMenuVisible: Boolean,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
     onDelete: () -> Unit
@@ -51,7 +50,7 @@ fun TuningDropdownMenu(
         DropdownMenu(
             modifier = Modifier
                 .width(192.dp),
-            expanded = isMenuVisible,
+            expanded = true,
             onDismissRequest = onDismiss,
             shape = MaterialTheme.shapes.large,
         ) {

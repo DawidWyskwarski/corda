@@ -12,6 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameWithNoteCount
 
 @Composable
 fun InstrumentFilterChipGroup(
@@ -32,7 +33,7 @@ fun InstrumentFilterChipGroup(
             FilterChip(
                 selected = it.id == selectedId,
                 onClick = { onInstrumentSelected(it.id) },
-                label = { Text( it.name ) },
+                label = { Text( it.displayNameWithNoteCount() ) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,

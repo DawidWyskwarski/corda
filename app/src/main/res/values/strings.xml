@@ -77,7 +77,10 @@
     <string name="instrument_string_count_hint">Number of strings</string>
     <string name="instrument_string_count_error">Must be between 2 and 24</string>
     <string name="instrument_string_count_locked">Locked while tunings use this instrument</string>
-    <string name="instrument_strings_label">%1$d strings</string>
+    <plurals name="instrument_string_label">
+        <item quantity="one">%1$d String</item>
+        <item quantity="other">%1$d Strings</item>
+    </plurals>
     <string name="instrument_list_empty">No instruments yet</string>
     <string name="instrument_list_empty_supporting">Create one to start adding tunings</string>
     <string name="action_save">Save</string>
@@ -98,4 +101,7 @@
     <string name="chromatic_description">Chromatic mode detects the note automatically.</string>
     <string name="dont_select_tuning">No need to select a tuning.</string>
 
+    <!-- Build in Instruments -->
+    <string name="guitar_instrument">Guitar</string>
+    <string name="bass_instrument">Bass</string>
 </resources>

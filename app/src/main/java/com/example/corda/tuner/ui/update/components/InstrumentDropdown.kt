@@ -18,6 +18,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.example.corda.R
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
+import com.example.corda.tuner.ui.helpers.displayNameWithNoteCount
 import kotlin.collections.forEach
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -37,7 +39,7 @@ fun InstrumentDropdown( // TODO: Make this more generic
         modifier = modifier,
     ) {
         OutlinedTextField(
-            value = selectedInstrument?.name ?: "",
+            value = selectedInstrument?.displayNameOnly() ?: "",
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
@@ -56,7 +58,7 @@ fun InstrumentDropdown( // TODO: Make this more generic
         ) {
             instruments.forEach { instrument ->
                 DropdownMenuItem(
-                    text = { Text(instrument.name) },
+                    text = { Text( instrument.displayNameWithNoteCount() ) },
                     onClick = {
                         onInstrumentSelected(instrument.id)
                         expanded = false

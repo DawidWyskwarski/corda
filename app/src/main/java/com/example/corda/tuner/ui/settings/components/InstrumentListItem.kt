@@ -15,10 +15,11 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.unit.dp
 import com.example.corda.R
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
 
 @Composable
 fun InstrumentListItem(
@@ -40,12 +41,16 @@ fun InstrumentListItem(
                 .padding(end = 8.dp),
         ) {
             Text(
-                text = instrument.name,
+                text = instrument.displayNameOnly(),
                 style = MaterialTheme.typography.titleMedium,
                 color = MaterialTheme.colorScheme.onSurface,
             )
             Text(
-                text = stringResource(R.string.instrument_strings_label, instrument.musicNotesCount),
+                text = pluralStringResource(
+                    R.plurals.instrument_string_label,
+                    instrument.musicNotesCount.toInt(),
+                    instrument.musicNotesCount.toInt()
+                ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

@@ -9,6 +9,7 @@ import androidx.compose.animation.slideInHorizontally
 import androidx.compose.animation.slideOutHorizontally
 import androidx.compose.animation.togetherWith
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,6 +30,7 @@ import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.ListItemDefaults
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
@@ -41,6 +43,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
@@ -52,16 +55,17 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
 import com.example.corda.core.tuner.TuningMode
 import com.example.corda.tuner.data.local.entities.Instrument
-import com.example.corda.tuner.data.local.models.TuningDetails
 import com.example.corda.core.ui.components.DeleteItemDialog
 import com.example.corda.core.ui.components.FABMenu
 import com.example.corda.core.ui.components.FABMenuItem
 import com.example.corda.core.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.core.ui.components.NavigateBackButton
 import com.example.corda.core.ui.components.UserInfo
+import com.example.corda.core.ui.state.UiState
 import com.example.corda.tuner.ui.settings.components.InstrumentFilterChipGroup
 import com.example.corda.tuner.ui.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.tuner.ui.settings.components.TuningListItem
+import com.example.corda.tuner.ui.settings.data.TuningListItem
 
 /**
  * Screen for the tuner settings.
@@ -172,17 +176,17 @@ fun TunerSettingsScreen(
                 when (mode) {
                     TuningMode.STANDARD -> {
 
-                        val filteredTunings by viewModel.filteredTunings.collectAsStateWithLifecycle()
+                        val tuningsUiState by viewModel.tuningsUiState.collectAsStateWithLifecycle()
                         val selectedTuningId by viewModel.selectedTuningId.collectAsStateWithLifecycle()
                         val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
                         val filterInstrumentId by viewModel.filterInstrumentId.collectAsStateWithLifecycle()
 
                         StandardModeContent(
-                            filteredTunings = filteredTunings,
+                            tuningsUiState = tuningsUiState,
                             selectedTuningId = selectedTuningId,
                             searchQuery = searchQuery,
                             instruments = instruments,
-                            filterInstrument = filterInstrumentId,
+                            filterInstrumentId = filterInstrumentId,
                             onSelectTuning = viewModel::setSelectedTuning,
                             onSelectFilterInstrumentId = viewModel::setFilterInstrument,
                             onSearchQueryChange = viewModel::setSearchQuery,
@@ -192,6 +196,14 @@ fun TunerSettingsScreen(
                     }
 
                     TuningMode.CHROMATIC -> ChromaticModeContent()
+                    else -> {
+                        Box(
+                            modifier = Modifier.fillMaxWidth(),
+                            contentAlignment = Alignment.Center,
+                        ) {
+                            LoadingIndicator()
+                        }
+                    }
                 }
             }
         }
@@ -212,18 +224,18 @@ fun TunerSettingsScreen(
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun StandardModeContent(
-    filteredTunings: List<TuningDetails>,
+    tuningsUiState: UiState<List<TuningListItem>>,
     selectedTuningId: Int?,
+    instruments: List<Instrument>?,
+    filterInstrumentId: Int?,
     searchQuery: String,
-    instruments: List<Instrument>,
-    filterInstrument: Int?,
     onSelectTuning: (Int) -> Unit,
     onSelectFilterInstrumentId: (Int) -> Unit,
     onSearchQueryChange: (String) -> Unit,
     onEditTuning: (Int) -> Unit,
     onDeleteTuning: (Int) -> Unit,
 ) {
-    var pendingTuningToDelete by remember { mutableStateOf<TuningDetails?>(null) }
+    var pendingTuningToDelete by remember { mutableStateOf<TuningListItem?>(null) }
     val focusManager = LocalFocusManager.current
 
     Column(
@@ -267,46 +279,72 @@ private fun StandardModeContent(
             ),
         )
 
-        InstrumentFilterChipGroup(
-            instruments = instruments,
-            selectedId = filterInstrument,
-            onInstrumentSelected = { onSelectFilterInstrumentId(it) },
-            modifier = Modifier
-                .padding(vertical = 8.dp)
-        )
-
-        if (filteredTunings.isEmpty()) {
-            UserInfo(
-                mainText = stringResource(R.string.no_tunings),
-                supportingText = "Tap + to add the one you want",
+        instruments?.let {
+            InstrumentFilterChipGroup(
+                instruments = it,
+                selectedId = filterInstrumentId,
+                onInstrumentSelected = { id -> onSelectFilterInstrumentId(id) },
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .padding(vertical = 8.dp)
             )
-        } else {
-            LazyColumn(
-                modifier = Modifier
-                    .weight(1f)
-                    .selectableGroup(),
-                verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
-            ) {
-                itemsIndexed(
-                    items = filteredTunings,
-                    key = { _, tuning -> tuning.tuningId },
-                ) { index, tuning ->
-                    TuningListItem(
-                        tuning = tuning,
-                        shapes = ListItemDefaults.segmentedShapes(
-                            index = index,
-                            count = filteredTunings.size,
-                        ),
-                        isSelected = tuning.tuningId == selectedTuningId,
-                        onClick = { onSelectTuning(tuning.tuningId) },
-                        onEdit = { onEditTuning(tuning.tuningId) },
-                        onDelete = { pendingTuningToDelete = tuning },
+        }
+
+        when (tuningsUiState) {
+            is UiState.Loading -> {
+                Box (
+                    contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                ) {
+                    LoadingIndicator() //TODO: Replace with a shimmer effect
+                }
+            }
+            is UiState.Error -> {
+                UserInfo(
+                    mainText = "Oops, something went wrong",
+                    supportingText = stringResource(tuningsUiState.errorRes),
+                    modifier = Modifier
+                        .fillMaxSize(),
+                )
+            }
+            is UiState.Loaded -> {
+                val tunings by remember(tuningsUiState) { mutableStateOf(tuningsUiState.data) }
+
+                if (tunings.isEmpty()) {
+                    UserInfo(
+                        mainText = stringResource(R.string.no_tunings),
+                        supportingText = "Tap + to add the one you want",
+                        modifier = Modifier
+                            .fillMaxSize(),
                     )
+                } else {
+                    LazyColumn(
+                        modifier = Modifier
+                            .weight(1f)
+                            .selectableGroup(),
+                        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                    ) {
+                        itemsIndexed(
+                            items = tunings,
+                            key = { _, tuning -> tuning.tuningId },
+                        ) { index, tuning ->
+
+                            TuningListItem(
+                                tuning = tuning,
+                                shapes = ListItemDefaults.segmentedShapes(
+                                    index = index,
+                                    count = tunings.size,
+                                ),
+                                isSelected = tuning.tuningId == selectedTuningId,
+                                onClick = { onSelectTuning(tuning.tuningId) },
+                                onEdit = { onEditTuning(tuning.tuningId) },
+                                onDelete = { pendingTuningToDelete = tuning },
+                            )
+                        }
+                    }
                 }
             }
         }
+
+
     }
 
     pendingTuningToDelete?.let { tuning ->

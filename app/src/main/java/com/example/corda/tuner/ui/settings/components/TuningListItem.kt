@@ -31,8 +31,8 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
-import com.example.corda.tuner.data.local.models.TuningDetails
 import com.example.corda.tuner.ui.components.annotateMusicNotes
+import com.example.corda.tuner.ui.settings.data.TuningListItem
 
 /**
  * A single row in the tunings list.
@@ -48,7 +48,7 @@ import com.example.corda.tuner.ui.components.annotateMusicNotes
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TuningListItem(
-    tuning: TuningDetails,
+    tuning: TuningListItem,
     shapes: ListItemShapes,
     isSelected: Boolean,
     onClick: () -> Unit,
@@ -57,8 +57,8 @@ fun TuningListItem(
     modifier: Modifier = Modifier,
 ) {
     val bodyStyle = MaterialTheme.typography.bodyMedium
-    val notesPreview = remember(tuning.musicNotes, bodyStyle) {
-        annotateMusicNotes(tuning.musicNotes, bodyStyle)
+    val notesPreview = remember(tuning.notes, bodyStyle) {
+        annotateMusicNotes(tuning.notes, bodyStyle)
     }
 
     var isMenuVisible by remember { mutableStateOf(false) }
@@ -144,7 +144,6 @@ fun TuningListItem(
             TuningDropdownMenu(
                 tuningName = tuning.tuningName,
                 offset = menuOffset,
-                isMenuVisible = true,
                 onDismiss = { isMenuVisible = false },
                 onEdit = {
                     isMenuVisible = false

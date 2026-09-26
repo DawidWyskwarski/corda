@@ -11,8 +11,8 @@ import androidx.compose.ui.Modifier
 @Composable
 fun UserInfo(
     mainText: String,
-    supportingText: String = "",
     modifier: Modifier = Modifier,
+    supportingText: String = "",
 ) {
     Column(
         modifier = modifier,

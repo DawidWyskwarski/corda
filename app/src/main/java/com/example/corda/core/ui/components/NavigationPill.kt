@@ -1,6 +1,5 @@
 package com.example.corda.core.ui.components
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -30,9 +29,9 @@ import androidx.lifecycle.compose.dropUnlessResumed
 @Composable
 fun NavigationPill(
     text: String,
-    supportingText: String = "",
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    supportingText: String = ""
 ) {
     Surface(
         modifier = modifier,

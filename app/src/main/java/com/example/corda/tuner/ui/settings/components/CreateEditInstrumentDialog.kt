@@ -18,7 +18,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import com.example.corda.R
+import com.example.corda.tuner.data.local.entities.INSTRUMENT_MUSIC_NOTES_COUNT_BRACKET
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
 
 /**
  * Dialog for creating a new [Instrument] or editing an existing one.
@@ -37,17 +39,17 @@ fun CreateEditInstrumentDialog(
 ) {
     val isEditing = instrument != null
 
-    var name by rememberSaveable(instrument?.id) {
-        mutableStateOf(instrument?.name.orEmpty())
+    var name by rememberSaveable {
+        mutableStateOf(instrument?.customName.orEmpty())
     }
     // Held as text so partial and out-of-range input stays visible while typing.
-    var notesCountInput by rememberSaveable(instrument?.id) {
+    var notesCountInput by rememberSaveable {
         mutableStateOf(instrument?.musicNotesCount?.toString().orEmpty())
     }
 
     val notesCount = notesCountInput.toByteOrNull()
-    val isCountValid = notesCount != null && notesCount in 2..24
-    val isFormValid = name.isNotBlank() && isCountValid
+    val isCountValid = notesCount != null && notesCount in INSTRUMENT_MUSIC_NOTES_COUNT_BRACKET
+    val isFormValid = ( name.isNotBlank() || instrument?.defaultName != null ) && isCountValid
 
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -71,6 +73,11 @@ fun CreateEditInstrumentDialog(
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
+                    placeholder = {
+                        Text(
+                            text = instrument?.displayNameOnly() ?: stringResource(R.string.instrument_name_hint)
+                        )
+                    }
                 )
 
                 OutlinedTextField(
@@ -110,23 +117,20 @@ fun CreateEditInstrumentDialog(
         confirmButton = {
             TextButton(
                 onClick = {
-                    notesCount?.let {
-                        if (isEditing)
-                        {
-                            onSave(
-                                instrument.copy(
-                                    name = name.trim(),
-                                    musicNotesCount = it
-                                )
+                    if (isEditing) {
+                        onSave(
+                            instrument.copy(
+                                customName = name.trim(),
+                                musicNotesCount = notesCount!!
                             )
-                        } else {
-                            onSave(
-                                Instrument(
-                                    name = name.trim(),
-                                    musicNotesCount = it
-                                )
+                        )
+                    } else {
+                        onSave(
+                            Instrument(
+                                customName = name.trim(),
+                                musicNotesCount = notesCount!!
                             )
-                        }
+                        )
                     }
                 },
                 enabled = isFormValid,

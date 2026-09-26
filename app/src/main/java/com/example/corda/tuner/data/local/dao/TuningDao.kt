@@ -9,6 +9,7 @@ import androidx.room.Update
 import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.Tuning
 import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
+import com.example.corda.tuner.data.local.models.CurrentTuning
 import com.example.corda.tuner.data.local.models.TuningDetails
 import kotlinx.coroutines.flow.Flow
 
@@ -55,8 +56,8 @@ interface TuningDao {
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
             Instrument.instrument_id,
-            Instrument.instrument_name AS instrument_name,
-            Tuning.last_used
+            Instrument.instrument_custom_name AS instrument_custom_name,
+            Instrument.instrument_default_name AS instrument_default_name
         FROM Tuning
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         ORDER BY Tuning.last_used DESC
@@ -69,8 +70,8 @@ interface TuningDao {
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
             Instrument.instrument_id,
-            Instrument.instrument_name AS instrument_name,
-            Tuning.last_used
+            Instrument.instrument_custom_name AS instrument_custom_name,
+            Instrument.instrument_default_name AS instrument_default_name
         FROM Tuning
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         WHERE Tuning.tuning_id = :tuningId
@@ -82,15 +83,14 @@ interface TuningDao {
         SELECT 
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
-            Instrument.instrument_id,
-            Instrument.instrument_name AS instrument_name,
-            Tuning.last_used
+            Instrument.instrument_custom_name AS instrument_custom_name,
+            Instrument.instrument_default_name AS instrument_default_name  
         FROM Tuning
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         ORDER BY Tuning.last_used DESC
         LIMIT 1
     """)
-    fun getMostRecentTuning(): Flow<TuningDetails?>
+    fun getMostRecentTuning(): Flow<CurrentTuning?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertTuningSoundCrossRef(tuningSoundCrossRef: TuningSoundCrossRef)

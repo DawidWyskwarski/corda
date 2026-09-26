@@ -3,16 +3,20 @@ package com.example.corda.tuner.ui.main.screen
 import android.annotation.SuppressLint
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.corda.R
 import com.example.corda.core.datastore.TunerDataStoreManager
 import com.example.corda.core.tuner.TuningMode
+import com.example.corda.core.ui.state.UiState
 import com.example.corda.tuner.domain.audio.PitchDetector
 import com.example.corda.tuner.domain.audio.TonePlayer
 import com.example.corda.tuner.domain.pitch.PitchHelpers
 import com.example.corda.tuner.domain.pitch.PitchSmoother
 import com.example.corda.tuner.domain.pitch.frequency
-import com.example.corda.tuner.data.local.entities.MusicNote
-import com.example.corda.tuner.data.local.models.TuningDetails
+import com.example.corda.tuner.data.local.models.CurrentTuning
 import com.example.corda.tuner.data.repository.TunerRepository
+import com.example.corda.tuner.ui.helpers.resolveInstrumentName
+import com.example.corda.tuner.ui.main.data.TuningTarget
+import com.example.corda.tuner.ui.main.data.TunerReading
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
@@ -23,18 +27,12 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.flatMapLatest
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 import kotlin.math.abs
-
-data class TunerState(
-    val note: MusicNote? = null,
-    val frequency: Float? = null,
-    val noteIndex: Int? = null,
-    val centsOff: Float? = null,
-)
 
 @HiltViewModel
 class MainTunerViewModel @Inject constructor(
@@ -49,53 +47,48 @@ class MainTunerViewModel @Inject constructor(
     private var pitchCollectionJob: Job? = null
     private var inTuneFrameCount = 0
 
-    val tuningMode: StateFlow<TuningMode> = tunerDataStoreManager.tunerMode
-        .stateIn(
-            scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = TuningMode.STANDARD
-        )
-
     private val _isEarModeEnabled = MutableStateFlow(false)
     val isEarModeEnabled: StateFlow<Boolean> = _isEarModeEnabled.asStateFlow()
 
     @OptIn(ExperimentalCoroutinesApi::class)
-    val selectedTuning: StateFlow<TuningDetails?> = tuningMode
+    val tuningTargetState: StateFlow<UiState<TuningTarget>> = tunerDataStoreManager.tunerMode
         .flatMapLatest { mode ->
-            when (mode) {
-                TuningMode.CHROMATIC -> flow {
-                    emit(
-                        TuningDetails(
-                            tuningId = -1,
-                            tuningName = "Chromatic",
-                            instrumentId = -1,
-                            instrumentName = "",
-                            musicNotes = repository.getAllSounds(),
-                            lastUsed = 1L,
+            when ( mode ) {
+                TuningMode.STANDARD -> repository.getMostRecentTuning()
+                    .map { it?.toLoaded() ?: UiState.Error(R.string.no_tunings) } //TODO: change res id later
+
+                TuningMode.CHROMATIC -> flow { emit(
+                    UiState.Loaded<TuningTarget>(
+                        TuningTarget.Chromatic(
+                            repository.getAllSounds()
                         )
                     )
-                }
-                TuningMode.STANDARD -> repository.getMostRecentTuning()
+                ) }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = null,
+            initialValue = UiState.Loading
         )
 
     private val baseFrequency: StateFlow<Int> = tunerDataStoreManager.baseFrequency
         .stateIn(
             scope = viewModelScope,
-            started = SharingStarted.WhileSubscribed(5_000),
+            started = SharingStarted.Eagerly,
             initialValue = 440
         )
 
     private val frequencies: StateFlow<List<Float>> = combine(
-        selectedTuning,
+        tuningTargetState,
         baseFrequency
-    ) { tuning, baseHz ->
-        tuning?.musicNotes?.map { it.frequency(baseHz) } ?: emptyList()
+    ) { state, baseHz ->
+        when (state) {
+            is UiState.Loaded -> {
+                state.data.notes.map { it.frequency(baseHz) }
+            }
+            else -> emptyList()
+        }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
@@ -108,8 +101,8 @@ class MainTunerViewModel @Inject constructor(
     private val _tunedIndices = MutableStateFlow(emptySet<Int>())
     val tunedIndices: StateFlow<Set<Int>> = _tunedIndices.asStateFlow()
 
-    private val _tunerState = MutableStateFlow(TunerState())
-    val tunerState: StateFlow<TunerState> = _tunerState.asStateFlow()
+    private val _tunerReading = MutableStateFlow(TunerReading())
+    val tunerReading: StateFlow<TunerReading> = _tunerReading.asStateFlow()
 
     fun toggleEarMode() {
         val enabled = !_isEarModeEnabled.value
@@ -120,6 +113,7 @@ class MainTunerViewModel @Inject constructor(
 
         if (enabled) {
             stopListening()
+            _tunedIndices.value = emptySet()
         }
     }
 
@@ -165,13 +159,15 @@ class MainTunerViewModel @Inject constructor(
         pitchDetector.stop()
         pitchSmoother.reset()
         inTuneFrameCount = 0
-        _tunerState.value = TunerState()
+        _tunerReading.value = TunerReading()
     }
 
     private fun updateUiFromPitch(frequency: Float?) {
+        val loaded = (tuningTargetState.value as? UiState.Loaded)?.data ?: return
+
         val targets = frequencies.value
         if (frequency == null || targets.isEmpty()) {
-            _tunerState.value = TunerState()
+            _tunerReading.value = TunerReading()
             inTuneFrameCount = 0
             return
         }
@@ -183,14 +179,15 @@ class MainTunerViewModel @Inject constructor(
             PitchHelpers.findClosestNoteIndex(frequency, targets)
         }
 
-        val bestNote = selectedTuning.value?.musicNotes?.getOrNull(bestNoteIndex)
+        val bestNote = loaded.notes.getOrNull(bestNoteIndex) ?: return
+
         val centsOff = PitchHelpers.centsFromTarget(frequency, targets[bestNoteIndex])
 
-        if (bestNote == _tunerState.value.note) {
+        if (bestNote == _tunerReading.value.note) {
             checkAndMarkTuned(bestNoteIndex, centsOff)
         }
 
-        _tunerState.value = TunerState(
+        _tunerReading.value = TunerReading(
             note = bestNote,
             frequency = frequency,
             noteIndex = bestNoteIndex,
@@ -228,3 +225,11 @@ class MainTunerViewModel @Inject constructor(
         const val IN_TUNE_FRAMES_REQUIRED = 64
     }
 }
+
+private fun CurrentTuning.toLoaded() = UiState.Loaded<TuningTarget>(
+    TuningTarget.Standard(
+        tuningName = tuningName,
+        instrumentName = resolveInstrumentName(instrumentCustomName, instrumentDefaultName),
+        notes = notes,
+    )
+)

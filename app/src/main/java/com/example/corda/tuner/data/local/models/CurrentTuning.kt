@@ -6,27 +6,21 @@ import androidx.room.Relation
 import com.example.corda.tuner.data.local.entities.DefaultInstrumentName
 import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
-import com.example.corda.tuner.data.local.entities.Instrument
-import com.example.corda.tuner.data.local.entities.Tuning
-
 
 /**
- * A class containing aggregated data for a [Tuning]. Primary model used in the UI layer.
+ * This class represents info about currently used tuning.
+ * Used in a Main Tuner Screen
  *
- * @param tuningId [Tuning.id]
- * @param tuningName [Tuning.name]
- * @param instrumentId [Instrument.id]
- * @param instrumentCustomName [Instrument.customName]
- * @param instrumentDefaultName [Instrument.defaultName]
- * @param musicNotes [TuningSoundCrossRef] joined with [MusicNote]
+ * @param tuningName Name of the tuning
+ * @param instrumentCustomName User's name of the instrument
+ * @param instrumentDefaultName Type of build in instrument
+ * @param notes List of notes used in the tuning
  */
-data class TuningDetails (
+data class CurrentTuning(
     @ColumnInfo(name = "tuning_id")
     val tuningId: Int,
     @ColumnInfo(name = "tuning_name")
     val tuningName: String,
-    @ColumnInfo(name = "instrument_id")
-    val instrumentId: Int,
     @ColumnInfo(name = "instrument_custom_name")
     val instrumentCustomName: String?,
     @ColumnInfo(name = "instrument_default_name")
@@ -40,5 +34,5 @@ data class TuningDetails (
             entityColumn = "music_note_id",
         )
     )
-    val musicNotes: List<MusicNote>,
+    val notes: List<MusicNote>,
 )

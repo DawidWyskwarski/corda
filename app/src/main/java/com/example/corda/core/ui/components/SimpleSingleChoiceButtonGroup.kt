@@ -24,7 +24,7 @@ import androidx.compose.ui.semantics.semantics
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T> SimpleSingleChoiceButtonGroup(
-    selectedItem: T,
+    selectedItem: T?,
     onItemSelected: (T) -> Unit,
     items: List<T>,
     modifier: Modifier = Modifier,

@@ -10,7 +10,9 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LoadingIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.SheetValue
@@ -31,12 +33,13 @@ import com.example.corda.core.ui.components.DeleteItemDialog
 import com.example.corda.core.ui.components.UserInfo
 import com.example.corda.core.ui.system.TransparentNavigationBarEffect
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
 
 @SuppressLint("LocalContextResourcesRead")
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun InstrumentManagementBottomSheet(
-    instruments: List<Instrument>,
+    instruments: List<Instrument>?,
     doesInstrumentHaveTunings: (Int) -> Boolean,
     onCreateInstrument: (Instrument) -> Unit,
     onUpdateInstrument: (Instrument) -> Unit,
@@ -65,7 +68,8 @@ fun InstrumentManagementBottomSheet(
         TransparentNavigationBarEffect()
 
         // Wrap the bottom sheet content to ensure LocalContext is localized inside the popup.
-        CompositionLocalProvider(LocalContext provides localizedContext) {
+        CompositionLocalProvider(LocalContext provides localizedContext) { //TODO: I need to find out if the settings are written correctly. If so I will need to create custom context aware composables or
+
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -77,7 +81,9 @@ fun InstrumentManagementBottomSheet(
                     style = MaterialTheme.typography.titleLargeEmphasized,
                 )
 
-                if (instruments.isEmpty()) {
+                if (instruments == null) {
+                    LoadingIndicator() //TODO: Add shimmer effect
+                } else if (instruments.isEmpty()) {
                     UserInfo(
                         mainText = stringResource(R.string.instrument_list_empty),
                         supportingText = stringResource(R.string.instrument_list_empty_supporting),
@@ -162,7 +168,7 @@ fun InstrumentManagementBottomSheet(
         DeleteItemDialog(
             titleRes = R.string.instrument_delete_title,
             messageRes = R.string.instrument_delete_message,
-            itemName = instrument.name,
+            itemName = instrument.displayNameOnly(),
             onDelete = {
                 onDeleteInstrument(instrument.id)
                 pendingInstrumentToDelete = null
