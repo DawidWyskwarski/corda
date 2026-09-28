@@ -29,8 +29,8 @@ fun SettingsLanguageDropdown(
 ) {
     val options = remember {
         listOf(
-            LANGUAGE_EN to R.string.language_english,
-            LANGUAGE_PL to R.string.language_polish,
+            LANGUAGE_EN to R.string.settings_localisation_language_english_option,
+            LANGUAGE_PL to R.string.settings_localisation_language_polish_option,
         )
     }
     var expanded by remember { mutableStateOf(false) }
@@ -47,7 +47,7 @@ fun SettingsLanguageDropdown(
             value = selectedLabel,
             onValueChange = {},
             readOnly = true,
-            label = { Text(stringResource(R.string.language)) },
+            label = { Text(stringResource(R.string.settings_localisation_language_label)) },
             trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             modifier = Modifier

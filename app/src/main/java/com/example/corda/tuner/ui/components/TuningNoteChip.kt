@@ -45,7 +45,7 @@ fun TuningNoteChip(
             {
                 Icon(
                     imageVector = Icons.Rounded.Check,
-                    contentDescription = stringResource(R.string.tuned),
+                    contentDescription = stringResource(R.string.tuner_main_tuned_note_description),
                     modifier = Modifier.size(18.dp),
                     tint = MaterialTheme.colorScheme.primary,
                 )

@@ -35,15 +35,15 @@ fun Instrument.displayNameOnly(): String = resolveInstrumentName(customName, def
 
 @Composable
 fun Instrument.displayNameWithNoteCount(): String =
-    "${displayNameOnly()} (${pluralStringResource(R.plurals.instrument_string_label, musicNotesCount.toInt(), musicNotesCount.toInt())})"
+    "${displayNameOnly()} (${pluralStringResource(R.plurals.tuner_instrument_string_count, musicNotesCount.toInt(), musicNotesCount.toInt())})"
 
 fun resolveInstrumentName(customName: String?, defaultName: DefaultInstrumentName?): InstrumentName {
     return customName?.let { InstrumentName.Custom(it) }
         ?: defaultName?.let {
 
             val id = when (it) {
-                GUITAR -> R.string.guitar_instrument
-                BASS -> R.string.bass_instrument
+                GUITAR -> R.string.tuner_instrument_builtin_guitar_name
+                BASS -> R.string.tuner_instrument_builtin_bass_name
             }
 
             InstrumentName.BuildIn(id)

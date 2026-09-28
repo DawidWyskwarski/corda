@@ -12,8 +12,9 @@ import com.example.corda.R
 /**
  * Confirmation dialog for a destructive action.
  *
- * @param titleRes title naming what is being deleted, e.g. `R.string.tuning_delete_title`
- * @param messageRes body text taking the item name as its single format argument
+ * @param titleRes title naming what is being deleted, e.g. `R.string.tuner_tuning_delete_title`
+ * @param messageRes body text taking the item name as its single format argument, e.g. the
+ * shared `R.string.core_delete_confirmation_message`
  * @param itemName name substituted into [messageRes]
  */
 @Composable
@@ -31,12 +32,12 @@ fun DeleteItemDialog(
         text = { Text(stringResource(messageRes, itemName)) },
         confirmButton = {
             TextButton(onClick = onDelete) {
-                Text(stringResource(R.string.action_delete))
+                Text(stringResource(R.string.core_action_delete))
             }
         },
         dismissButton = {
             TextButton(onClick = onDismiss) {
-                Text(stringResource(R.string.action_cancel))
+                Text(stringResource(R.string.core_action_cancel))
             }
         },
         modifier = modifier

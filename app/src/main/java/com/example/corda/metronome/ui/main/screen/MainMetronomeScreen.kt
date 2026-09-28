@@ -99,10 +99,10 @@ private fun InactiveMetronomeScreen(
             CenterAlignedTopAppBar(
                 title = {
                     NavigationPill(
-                        text = stringResource(R.string.metronome_beats_label, state.beatsPerBar),
+                        text = stringResource(R.string.metronome_main_beats_count_label, state.beatsPerBar),
                         supportingText = when {
                             state.mutingEnabled -> stringResource(
-                                R.string.metronome_pill_muting_label,
+                                R.string.metronome_main_muting_pill_label,
                                 state.playBars,
                                 state.muteBars,
                             )
@@ -115,7 +115,7 @@ private fun InactiveMetronomeScreen(
                     IconButton(onClick = openDrawer) {
                         Icon(
                             imageVector = Icons.Rounded.Menu,
-                            contentDescription = stringResource(R.string.open_drawer),
+                            contentDescription = stringResource(R.string.core_nav_open_drawer_description),
                         )
                     }
                 },
@@ -154,7 +154,7 @@ private fun InactiveMetronomeScreen(
                     contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        text = stringResource(R.string.metronome_start),
+                        text = stringResource(R.string.metronome_main_start_action),
                         color = circleContentColor,
                         fontWeight = FontWeight.Bold,
                         fontSize = 28.sp,
@@ -282,7 +282,7 @@ private fun ActiveMetronomeScreen(
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
                         text = stringResource(
-                            R.string.metronome_active_muting_label,
+                            R.string.metronome_main_muting_active_label,
                             state.playBars,
                             state.muteBars,
                         ),

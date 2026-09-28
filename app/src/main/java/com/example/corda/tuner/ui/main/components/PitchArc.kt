@@ -120,10 +120,10 @@ fun PitchArc(
                 modifier = Modifier
                     .align(Alignment.Center)
                     .padding(top=64.dp),
-                text = if (centsOff == null) stringResource(R.string.play_something)
-                else if (centsOff < -5f) stringResource(R.string.tune_higher)
-                else if (centsOff > 5f) stringResource(R.string.tune_lower)
-                else stringResource(R.string.perfect),
+                text = if (centsOff == null) stringResource(R.string.tuner_main_pitch_play_something)
+                else if (centsOff < -5f) stringResource(R.string.tuner_main_pitch_tune_higher)
+                else if (centsOff > 5f) stringResource(R.string.tuner_main_pitch_tune_lower)
+                else stringResource(R.string.tuner_main_pitch_perfect),
                 style = MaterialTheme.typography.titleLarge,
             )
         }

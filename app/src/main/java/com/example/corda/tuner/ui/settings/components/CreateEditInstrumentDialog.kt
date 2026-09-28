@@ -57,7 +57,7 @@ fun CreateEditInstrumentDialog(
         title = {
             Text(
                 text = stringResource(
-                    if (isEditing) R.string.instrument_edit_title else R.string.instrument_new
+                    if (isEditing) R.string.tuner_instrument_edit_title else R.string.tuner_instrument_add_action
                 )
             )
         },
@@ -68,14 +68,14 @@ fun CreateEditInstrumentDialog(
                     onValueChange = { name = it },
                     label = {
                         Text(
-                            text = stringResource(R.string.instrument_name_hint)
+                            text = stringResource(R.string.tuner_instrument_name_hint)
                         )
                     },
                     singleLine = true,
                     modifier = Modifier.fillMaxWidth(),
                     placeholder = {
                         Text(
-                            text = instrument?.displayNameOnly() ?: stringResource(R.string.instrument_name_hint)
+                            text = instrument?.displayNameOnly() ?: stringResource(R.string.tuner_instrument_name_hint)
                         )
                     }
                 )
@@ -85,7 +85,7 @@ fun CreateEditInstrumentDialog(
                     onValueChange = { notesCountInput = it },
                     label = {
                         Text(
-                            text = stringResource(R.string.instrument_string_count_hint)
+                            text = stringResource(R.string.tuner_instrument_string_count_hint)
                         )
                     },
                     placeholder = { Text("2-24") },
@@ -96,14 +96,14 @@ fun CreateEditInstrumentDialog(
                         !canEditNotesCount -> {
                             {
                                 Text(
-                                    stringResource(R.string.instrument_string_count_locked)
+                                    stringResource(R.string.tuner_instrument_string_count_locked_message)
                                 )
                             }
                         }
                         notesCountInput.isNotEmpty() && !isCountValid -> {
                             {
                                 Text(
-                                    stringResource(R.string.instrument_string_count_error)
+                                    stringResource(R.string.tuner_instrument_string_count_error)
                                 )
                             }
                         }
@@ -137,7 +137,7 @@ fun CreateEditInstrumentDialog(
             ) {
                 Text(
                     text = stringResource(
-                        if (isEditing) R.string.action_save else R.string.action_create
+                        if (isEditing) R.string.core_action_save else R.string.core_action_create
                     )
                 )
             }
@@ -145,7 +145,7 @@ fun CreateEditInstrumentDialog(
         dismissButton = {
             TextButton(onClick = onDismiss) {
                 Text(
-                    text = stringResource(R.string.action_cancel)
+                    text = stringResource(R.string.core_action_cancel)
                 )
             }
         },

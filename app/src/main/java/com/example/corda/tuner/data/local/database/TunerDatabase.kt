@@ -17,7 +17,7 @@ import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
         MusicNote::class,
         TuningSoundCrossRef::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = false,
 )
 abstract class TunerDatabase : RoomDatabase() {

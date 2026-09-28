@@ -1,102 +1,136 @@
 <resources>
-    <!-- General -->
-    <string name="app_name">Corda</string>
+	<!-- GENERAL / CORE -->
 
-    <!-- Descriptions / labels -->
-    <string name="open_drawer">Otwórz menu</string>
-    <string name="disable_ear_mode">Wyłącz tryb ćwiczenia słuchu</string>
-    <string name="enable_ear_mode">Włącz tryb ćwiczenia słuchu</string>
-    <string name="error">Błąd</string>
+	<!-- App -->
+	<string name="app_name">Corda</string>
 
-    <!-- FAB Menu -->
-    <string name="tools">Narzędzia</string>
-    <string name="toggle_menu">Przełącz menu</string>
-    <string name="close_menu">Zamknij menu</string>
-    <string name="expanded">Rozwinięte</string>
-    <string name="collapsed">Zwinięte</string>
+	<!-- Common actions -->
+	<string name="core_action_add">Dodaj</string>
+	<string name="core_action_cancel">Anuluj</string>
+	<string name="core_action_create">Utwórz</string>
+	<string name="core_action_delete">Usuń</string>
+	<string name="core_action_edit">Edytuj</string>
+	<string name="core_action_save">Zapisz</string>
+	<string name="core_action_back">Wstecz</string>
 
-    <!-- Settings -->
-    <string name="clear_search">Wyczyść wyszukiwania</string>
+	<!-- Navigation drawer -->
+	<string name="core_nav_open_drawer_description">Otwórz menu</string>
+	<string name="core_nav_drawer_tools_header">Narzędzia</string>
 
-    <string name="settings_display">Wyświetlanie</string>
-    <string name="dark_mode">Tryb nocny</string>
+	<!-- FAB menu -->
+	<string name="core_fab_menu_toggle_description">Przełącz menu</string>
+	<string name="core_fab_menu_close_description">Zamknij menu</string>
+	<string name="core_fab_menu_expanded_description">Rozwinięte</string>
+	<string name="core_fab_menu_collapsed_description">Zwinięte</string>
 
-    <string name="settings_calibration">Kalibracja</string>
-    <string name="base_frequency">Bazowa częstotliwość (Hz)</string>
-    <string name="frequency_error">Wybierz liczbę pomiędzy 1 a 1000</string>
+	<!-- Common dialogs -->
+	<string name="core_delete_confirmation_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
 
-    <string name="settings_localisation">Lokalizacja</string>
-    <string name="language">Język</string>
-    <string name="language_english">English</string>
-    <string name="language_polish">Polski</string>
+	<!-- Common states -->
+	<string name="core_state_loading">Wczytywanie…</string>
+	<string name="core_error_label">Błąd</string>
+	<string name="core_error_generic_title">Ups, coś poszło nie tak.</string>
 
-    <!-- Inspiration -->
-    <string name="action_cancel">Anuluj</string>
-    <string name="action_delete">Usuń</string>
 
-    <!-- Metronome -->
-    <string name="metronome_settings">Ustawienia metronomu</string>
-    <string name="metronome_start">START</string>
-    <string name="metronome_beats_in_a_bar">Uderzeń w takcie</string>
-    <string name="metronome_muting_options">Opcje wyciszania</string>
-    <string name="metronome_play">Graj</string>
-    <string name="metronome_mute">Wycisz</string>
-    <string name="metronome_beats_label">%1$d uderzeń</string>
-    <string name="metronome_pill_muting_label">Graj %1$d Wycisz %2$d</string>
-    <string name="metronome_active_muting_label">Graj %1$d takt wycisz %2$d</string>
+	<!-- TUNER -->
 
-    <!-- Add/edit tuning screen -->
-    <string name="add_tuning_title">Dodaj strój</string>
-    <string name="edit_tuning_title">Edytuj strój</string>
-    <string name="action_add">Dodaj</string>
-    <string name="tuning_name_hint">Nazwa stroju</string>
-    <string name="tuning_instrument_label">Instrument</string>
-    <string name="tuned">Nastrojony</string>
+	<string name="tuner_title">Stroik</string>
 
-    <!-- Tuner instrument management -->
-    <string name="instrument_management_title">Instrumenty</string>
-    <string name="instrument_new">Nowy instrument</string>
-    <string name="instrument_edit_title">Edytuj instrument</string>
-    <string name="instrument_delete_title">Usuń instrument</string>
-    <string name="instrument_delete_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
-    <string name="instrument_name_hint">Nazwa</string>
-    <string name="instrument_string_count_hint">Liczba strun</string>
-    <string name="instrument_string_count_error">Musi być między 2 a 24</string>
-    <string name="instrument_string_count_locked">Zablokowane, gdy stroje używają tego instrumentu</string>
-    <plurals name="instrument_string_label">
-        <item quantity="one">%1$d Struna</item>
-        <item quantity="few">%1$d Struny</item>
-        <item quantity="many">%1$d Strun</item>
-    </plurals>
-    <string name="instrument_list_empty">Brak instrumentów</string>
-    <string name="instrument_list_empty_supporting">Utwórz instrument, aby dodawać stroje</string>
-    <string name="action_save">Zapisz</string>
-    <string name="action_create">Utwórz</string>
+		<!-- Main screen -->
+		<string name="tuner_main_chromatic_mode_label">Tryb chromatyczny</string>
+		<string name="tuner_main_ear_mode_enable_description">Włącz tryb ćwiczenia słuchu</string>
+		<string name="tuner_main_ear_mode_disable_description">Wyłącz tryb ćwiczenia słuchu</string>
+		<string name="tuner_main_tuned_note_description">Nastrojony</string>
+		<string name="tuner_main_ear_mode_play_note_description">Odtwórz dźwięk</string>
+		<string name="tuner_main_ear_mode_stop_note_description">Zatrzymaj odtwarzanie</string>
+		<string name="tuner_main_go_to_settings">Ustawienia</string>
 
-    <!-- Tuner -->
-    <string name="chromatic_mode">Tryb chromatyczny</string>
-    <string name="tuner_settings">Ustawienia stroika</string>
-    <string name="manage_instruments">Zarządzaj instrumentami</string>
-    <string name="tuner_mode">Tryb</string>
-    <string name="tunings">Stroje</string>
-    <string name="search_tunings">Wyszukaj stroje</string>
-    <string name="no_tunings">Nie znaleziono strojów.</string>
-    <string name="tuning_delete_title">Usuń strój</string>
-    <string name="tuning_delete_message">Na pewno chcesz usunąć \"%1$s\"? Tej operacji nie można cofnąć.</string>
-    <string name="chromatic_description">Tryb chromatyczny automatycznie wykrywa nutę.</string>
-    <string name="dont_select_tuning">Nie ma potrzeby wybierać stroju.</string>
-    <string name="new_custom_tuning">Nowy strój</string>
-    <string name="instrument_delete_blocked_has_tunings">Nie można usunąc instrumentu z przydielonymi strojami.</string>
-    <string name="tuner">Stroik</string>
-    <string name="metronome">Metronom</string>
-    <string name="settings">Ustawienia</string>
-    <string name="play_something">Zagraj coś</string>
-    <string name="tune_higher">Wyżej</string>
-    <string name="tune_lower">Niżej</string>
-    <string name="perfect">Idealnie</string>
+		<!-- Main screen / pitch feedback -->
+		<string name="tuner_main_pitch_play_something">Zagraj coś</string>
+		<string name="tuner_main_pitch_tune_higher">Wyżej</string>
+		<string name="tuner_main_pitch_tune_lower">Niżej</string>
+		<string name="tuner_main_pitch_perfect">Idealnie</string>
 
-    <!-- Build in Instruments -->
-    <string name="guitar_instrument">Gitara</string>
-    <string name="bass_instrument">Bas</string>
+		<!-- Settings screen -->
+		<string name="tuner_settings_title">Ustawienia stroika</string>
+		<string name="tuner_settings_mode_label">Tryb</string>
+		<string name="tuner_settings_mode_standard_option">Standardowy</string>
+		<string name="tuner_settings_mode_chromatic_option">Chromatyczny</string>
+		<string name="tuner_settings_fab_new_tuning_label">Nowy strój</string>
+		<string name="tuner_settings_fab_manage_instruments_label">Zarządzaj instrumentami</string>
+		<string name="tuner_settings_tunings_header">Stroje</string>
+		<string name="tuner_settings_search_placeholder">Wyszukaj stroje</string>
+		<string name="tuner_settings_search_clear_description">Wyczyść wyszukiwania</string>
+		<string name="tuner_settings_tunings_empty_message">Nie znaleziono strojów.</string>
+		<string name="tuner_settings_tunings_empty_supporting">Stuknij +, aby dodać wybrany strój.</string>
+		<string name="tuner_settings_tuning_selected_description">Wybrany</string>
+		<string name="tuner_settings_chromatic_info_title">Tryb chromatyczny automatycznie wykrywa nutę.</string>
+		<string name="tuner_settings_chromatic_info_supporting">Nie ma potrzeby wybierać stroju.</string>
 
+		<!-- Tuning add / edit / delete -->
+		<string name="tuner_tuning_add_title">Dodaj strój</string>
+		<string name="tuner_tuning_edit_title">Edytuj strój</string>
+		<string name="tuner_tuning_name_hint">Nazwa stroju</string>
+		<string name="tuner_tuning_instrument_label">Instrument</string>
+		<string name="tuner_tuning_delete_title">Usuń strój</string>
+
+		<!-- Instrument management -->
+		<string name="tuner_instrument_management_title">Instrumenty</string>
+		<string name="tuner_instrument_add_action">Nowy instrument</string>
+		<string name="tuner_instrument_edit_title">Edytuj instrument</string>
+		<string name="tuner_instrument_delete_title">Usuń instrument</string>
+		<string name="tuner_instrument_delete_blocked_message">Nie można usunąć instrumentu z przydzielonymi strojami.</string>
+		<string name="tuner_instrument_name_hint">Nazwa</string>
+		<string name="tuner_instrument_string_count_hint">Liczba strun</string>
+		<string name="tuner_instrument_string_count_error">Musi być między 2 a 24</string>
+		<string name="tuner_instrument_string_count_locked_message">Zablokowane, gdy stroje używają tego instrumentu.</string>
+		<plurals name="tuner_instrument_string_count">
+			<item quantity="one">%1$d Struna</item>
+			<item quantity="few">%1$d Struny</item>
+			<item quantity="many">%1$d Strun</item>
+		</plurals>
+		<string name="tuner_instrument_list_empty_title">Brak instrumentów</string>
+		<string name="tuner_instrument_list_empty_supporting">Utwórz jeden, aby dodawać stroje.</string>
+
+		<!-- Built-in instruments -->
+		<string name="tuner_instrument_builtin_guitar_name">Gitara</string>
+		<string name="tuner_instrument_builtin_bass_name">Bas</string>
+
+
+	<!-- METRONOME -->
+
+	<string name="metronome_title">Metronom</string>
+
+		<!-- Main screen -->
+		<string name="metronome_main_start_action">START</string>
+		<string name="metronome_main_beats_count_label">%1$d uderzeń</string>
+		<string name="metronome_main_muting_pill_label">Graj %1$d Wycisz %2$d</string>
+		<string name="metronome_main_muting_active_label">Graj %1$d takt wycisz %2$d</string>
+
+		<!-- Settings screen -->
+		<string name="metronome_settings_title">Ustawienia metronomu</string>
+		<string name="metronome_settings_beats_per_bar_label">Uderzeń w takcie</string>
+		<string name="metronome_settings_muting_options_label">Opcje wyciszania</string>
+		<string name="metronome_settings_muting_play_label">Graj</string>
+		<string name="metronome_settings_muting_mute_label">Wycisz</string>
+
+
+	<!-- SETTINGS -->
+
+	<string name="settings_title">Ustawienia</string>
+
+		<!-- Display section -->
+		<string name="settings_display_header">Wyświetlanie</string>
+		<string name="settings_display_dark_mode_label">Tryb nocny</string>
+
+		<!-- Calibration section -->
+		<string name="settings_calibration_header">Kalibracja</string>
+		<string name="settings_calibration_base_frequency_label">Bazowa częstotliwość (Hz)</string>
+		<string name="settings_calibration_frequency_error_message">Wybierz liczbę pomiędzy 1 a 1000</string>
+
+		<!-- Localisation section -->
+		<string name="settings_localisation_header">Lokalizacja</string>
+		<string name="settings_localisation_language_label">Język</string>
+		<string name="settings_localisation_language_english_option">English</string>
+		<string name="settings_localisation_language_polish_option">Polski</string>
 </resources>

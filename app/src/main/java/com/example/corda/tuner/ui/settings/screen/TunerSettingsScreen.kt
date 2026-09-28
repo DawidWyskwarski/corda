@@ -95,14 +95,14 @@ fun TunerSettingsScreen(
         listOf(
             FABMenuItem(
                 Icons.AutoMirrored.Rounded.QueueMusic,
-                R.string.new_custom_tuning
+                R.string.tuner_settings_fab_new_tuning_label
             ) {
                 isFabMenuOpen = false
                 onAddTuning()
             },
             FABMenuItem(
                 Icons.Rounded.Piano,
-                R.string.manage_instruments
+                R.string.tuner_settings_fab_manage_instruments_label
             ) {
                 isFabMenuOpen = false
                 isInstrumentSheetOpen = true
@@ -124,7 +124,7 @@ fun TunerSettingsScreen(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.tuner_settings)) },
+                title = { Text(stringResource(R.string.tuner_settings_title)) },
                 navigationIcon = { NavigateBackButton(onClick = onBack) }
             )
         },
@@ -149,7 +149,7 @@ fun TunerSettingsScreen(
                 .padding(horizontal = 16.dp),
         ) {
             Text(
-                text = stringResource(R.string.tuner_mode),
+                text = stringResource(R.string.tuner_settings_mode_label),
                 style = MaterialTheme.typography.titleSmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )
@@ -159,6 +159,12 @@ fun TunerSettingsScreen(
                 items = modes,
                 onItemSelected = { viewModel.setTuningMode(it) },
                 modifier = Modifier.fillMaxWidth(),
+                itemLabel = { mode ->
+                    when (mode) {
+                        TuningMode.STANDARD -> stringResource(R.string.tuner_settings_mode_standard_option)
+                        TuningMode.CHROMATIC -> stringResource(R.string.tuner_settings_mode_chromatic_option)
+                    }
+                },
             )
 
             AnimatedContent(
@@ -244,7 +250,7 @@ private fun StandardModeContent(
     ) {
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
-            text = stringResource(R.string.tunings),
+            text = stringResource(R.string.tuner_settings_tunings_header),
             style = MaterialTheme.typography.titleSmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -253,7 +259,7 @@ private fun StandardModeContent(
             value = searchQuery,
             onValueChange = onSearchQueryChange,
             modifier = Modifier.fillMaxWidth(),
-            placeholder = { Text(stringResource(R.string.search_tunings)) },
+            placeholder = { Text(stringResource(R.string.tuner_settings_search_placeholder)) },
             leadingIcon = {
                 Icon(Icons.Rounded.Search, contentDescription = null)
             },
@@ -262,7 +268,7 @@ private fun StandardModeContent(
                     IconButton(onClick = { onSearchQueryChange("") }) {
                         Icon(
                             Icons.Rounded.Close,
-                            contentDescription = stringResource(R.string.clear_search)
+                            contentDescription = stringResource(R.string.tuner_settings_search_clear_description)
                         )
                     }
                 }
@@ -299,7 +305,7 @@ private fun StandardModeContent(
             }
             is UiState.Error -> {
                 UserInfo(
-                    mainText = "Oops, something went wrong",
+                    mainText = stringResource(R.string.core_error_generic_title),
                     supportingText = stringResource(tuningsUiState.errorRes),
                     modifier = Modifier
                         .fillMaxSize(),
@@ -310,8 +316,8 @@ private fun StandardModeContent(
 
                 if (tunings.isEmpty()) {
                     UserInfo(
-                        mainText = stringResource(R.string.no_tunings),
-                        supportingText = "Tap + to add the one you want",
+                        mainText = stringResource(R.string.tuner_settings_tunings_empty_message),
+                        supportingText = stringResource(R.string.tuner_settings_tunings_empty_supporting),
                         modifier = Modifier
                             .fillMaxSize(),
                     )
@@ -349,8 +355,8 @@ private fun StandardModeContent(
 
     pendingTuningToDelete?.let { tuning ->
         DeleteItemDialog(
-            titleRes = R.string.tuning_delete_title,
-            messageRes = R.string.tuning_delete_message,
+            titleRes = R.string.tuner_tuning_delete_title,
+            messageRes = R.string.core_delete_confirmation_message,
             itemName = tuning.tuningName,
             onDelete = {
                 onDeleteTuning(tuning.tuningId)
@@ -364,8 +370,8 @@ private fun StandardModeContent(
 @Composable
 private fun ChromaticModeContent() {
     UserInfo(
-        mainText = stringResource(R.string.chromatic_description),
-        supportingText = stringResource(R.string.dont_select_tuning),
+        mainText = stringResource(R.string.tuner_settings_chromatic_info_title),
+        supportingText = stringResource(R.string.tuner_settings_chromatic_info_supporting),
         modifier = Modifier
             .fillMaxSize(),
     )

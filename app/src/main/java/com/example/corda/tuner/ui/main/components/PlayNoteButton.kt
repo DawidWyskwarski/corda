@@ -10,7 +10,9 @@ import androidx.compose.material3.FilledIconToggleButton
 import androidx.compose.material3.Icon
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 
 /**
  * Toggle control for starting / stopping chromatic reference tone playback in ear mode.
@@ -30,7 +32,11 @@ fun PlayNoteButton(
         Crossfade(targetState = isPlaying, label = "playStopIcon") { playing ->
             Icon(
                 imageVector = if (playing) Icons.Rounded.Pause else Icons.Rounded.PlayArrow,
-                contentDescription = if (playing) "Stop note" else "Play note",
+                contentDescription = if (playing) {
+                    stringResource(R.string.tuner_main_ear_mode_stop_note_description)
+                } else {
+                    stringResource(R.string.tuner_main_ear_mode_play_note_description)
+                },
                 modifier = Modifier.size(36.dp),
             )
         }

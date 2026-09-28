@@ -20,6 +20,9 @@ import androidx.compose.ui.semantics.semantics
  * @param selectedItem The currently selected item.
  * @param onItemSelected Callback to invoke when an item is selected.
  * @param items The list of items to display.
+ * @param itemLabel Resolves the localized, user-facing label for an item. Defaults to
+ * [Any.toString], which is only appropriate for values that are already localized (e.g. plain
+ * [String]s); enum-like items should supply a lambda that maps to a `stringResource`.
  */
 @OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
@@ -28,6 +31,7 @@ fun <T> SimpleSingleChoiceButtonGroup(
     onItemSelected: (T) -> Unit,
     items: List<T>,
     modifier: Modifier = Modifier,
+    itemLabel: @Composable (T) -> String = { it.toString() },
 ) {
     Row(
         modifier = modifier,
@@ -56,7 +60,7 @@ fun <T> SimpleSingleChoiceButtonGroup(
                 )
             ) {
                 Text(
-                    text = item.toString()
+                    text = itemLabel(item)
                 )
             }
         }

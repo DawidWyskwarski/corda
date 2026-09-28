@@ -1,107 +1,135 @@
 <resources>
-    <!-- General -->
-    <string name="app_name">Corda</string>
-    <string name="instrument_delete_blocked_has_tunings">You cannot delete an instrument while tunings are assigned to it.</string>
+	<!-- GENERAL / CORE -->
 
-    <!-- COMPONENTS -->
-    <string name="tuner">Tuner</string>
-    <string name="metronome">Metronome</string>
-    <string name="settings">Settings</string>
-    <string name="tools">Tools</string>
+	<!-- App -->
+	<string name="app_name">Corda</string>
 
-    <!-- FAB Menu -->
-    <string name="toggle_menu">Toggle menu</string>
-    <string name="close_menu">Close menu</string>
-    <string name="expanded">Expanded</string>
-    <string name="collapsed">Collapsed</string>
+	<!-- Common actions -->
+	<string name="core_action_add">Add</string>
+	<string name="core_action_cancel">Cancel</string>
+	<string name="core_action_create">Create</string>
+	<string name="core_action_delete">Delete</string>
+	<string name="core_action_edit">Edit</string>
+	<string name="core_action_save">Save</string>
+	<string name="core_action_back">Back</string>
+	
+	<!-- Navigation drawer -->
+	<string name="core_nav_open_drawer_description">Open menu</string>
+	<string name="core_nav_drawer_tools_header">Tools</string>
 
-    <!-- PitchArc -->
-    <string name="play_something">Play something</string>
-    <string name="tune_higher">Tune higher</string>
-    <string name="tune_lower">Tune lower</string>
-    <string name="perfect">Perfect</string>
+	<!-- FAB menu -->
+	<string name="core_fab_menu_toggle_description">Toggle menu</string>
+	<string name="core_fab_menu_close_description">Close menu</string>
+	<string name="core_fab_menu_expanded_description">Expanded</string>
+	<string name="core_fab_menu_collapsed_description">Collapsed</string>
 
-    <!-- Tuning list item -->
+	<!-- Common dialogs -->
+	<string name="core_delete_confirmation_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
 
-    <!-- SCREENS -->
-    <!-- Descriptions -->
-    <string name="open_drawer">Open drawer</string>
-    <string name="disable_ear_mode">Disable ear mode</string>
-    <string name="enable_ear_mode">Enable ear mode</string>
-    <string name="error">Error</string>
-    <string name="clear_search">Clear search</string>
+	<!-- Common states -->
+	<string name="core_state_loading">Loading…</string>
+	<string name="core_error_label">Error</string>
+	<string name="core_error_generic_title">Oops, something went wrong.</string>
 
-    <!-- Settings -->
-    <string name="settings_display">Display</string>
-    <string name="dark_mode">Dark mode</string>
 
-    <string name="settings_calibration">Calibration</string>
-    <string name="base_frequency">Base frequency (Hz)</string>
-    <string name="frequency_error">Choose a number between 0 and 1000</string>
+	<!-- TUNER -->
 
-    <string name="settings_localisation">Localisation</string>
-    <string name="language">Language</string>
-    <string name="language_english">English</string>
-    <string name="language_polish">Polski</string>
+	<string name="tuner_title">Tuner</string>
 
-    <!-- Inspiration -->
-    <string name="action_cancel">Cancel</string>
-    <string name="action_delete">Delete</string>
+		<!-- Main screen -->
+		<string name="tuner_main_chromatic_mode_label">Chromatic mode</string>
+		<string name="tuner_main_ear_mode_enable_description">Enable ear mode</string>
+		<string name="tuner_main_ear_mode_disable_description">Disable ear mode</string>
+		<string name="tuner_main_tuned_note_description">Tuned</string>
+		<string name="tuner_main_ear_mode_play_note_description">Play note</string>
+		<string name="tuner_main_ear_mode_stop_note_description">Stop playing</string>
+		<string name="tuner_main_go_to_settings">Settings</string>
 
-    <!-- Metronome -->
-    <string name="metronome_settings">Metronome settings</string>
-    <string name="metronome_start">START</string>
-    <string name="metronome_beats_in_a_bar">Beats in a Bar</string>
-    <string name="metronome_muting_options">Muting options</string>
-    <string name="metronome_play">Play</string>
-    <string name="metronome_mute">Mute</string>
-    <string name="metronome_beats_label">%1$d Beats</string>
-    <string name="metronome_pill_muting_label">Play %1$d Mute %2$d</string>
-    <string name="metronome_active_muting_label">Play %1$d bar mute %2$d</string>
+		<!-- Main screen / pitch feedback -->
+		<string name="tuner_main_pitch_play_something">Play something</string>
+		<string name="tuner_main_pitch_tune_higher">Tune higher</string>
+		<string name="tuner_main_pitch_tune_lower">Tune lower</string>
+		<string name="tuner_main_pitch_perfect">Perfect</string>
 
-    <!-- Add/edit tuning screen -->
-    <string name="add_tuning_title">Add tuning</string>
-    <string name="edit_tuning_title">Edit tuning</string>
-    <string name="action_add">Add</string>
-    <string name="tuning_name_hint">Tuning name</string>
-    <string name="tuning_instrument_label">Instrument</string>
-    <string name="tuned">Tuned</string>
+		<!-- Settings screen -->
+		<string name="tuner_settings_title">Tuner Settings</string>
+		<string name="tuner_settings_mode_label">Mode</string>
+		<string name="tuner_settings_mode_standard_option">Standard</string>
+		<string name="tuner_settings_mode_chromatic_option">Chromatic</string>
+		<string name="tuner_settings_fab_new_tuning_label">New tuning</string>
+		<string name="tuner_settings_fab_manage_instruments_label">Manage Instruments</string>
+		<string name="tuner_settings_tunings_header">Tunings</string>
+		<string name="tuner_settings_search_placeholder">Search tunings</string>
+		<string name="tuner_settings_search_clear_description">Clear search</string>
+		<string name="tuner_settings_tunings_empty_message">No tunings found.</string>
+		<string name="tuner_settings_tunings_empty_supporting">Tap + to add the one you want.</string>
+		<string name="tuner_settings_tuning_selected_description">Selected</string>
+		<string name="tuner_settings_chromatic_info_title">Chromatic mode detects the note automatically.</string>
+		<string name="tuner_settings_chromatic_info_supporting">No need to select a tuning.</string>
 
-    <!-- Tuner instrument management -->
-    <string name="instrument_management_title">Instruments</string>
-    <string name="instrument_new">New instrument</string>
-    <string name="instrument_edit_title">Edit instrument</string>
-    <string name="instrument_delete_title">Delete instrument</string>
-    <string name="instrument_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
-    <string name="instrument_name_hint">Name</string>
-    <string name="instrument_string_count_hint">Number of strings</string>
-    <string name="instrument_string_count_error">Must be between 2 and 24</string>
-    <string name="instrument_string_count_locked">Locked while tunings use this instrument</string>
-    <plurals name="instrument_string_label">
-        <item quantity="one">%1$d String</item>
-        <item quantity="other">%1$d Strings</item>
-    </plurals>
-    <string name="instrument_list_empty">No instruments yet</string>
-    <string name="instrument_list_empty_supporting">Create one to start adding tunings</string>
-    <string name="action_save">Save</string>
-    <string name="action_create">Create</string>
+		<!-- Tuning add / edit / delete -->
+		<string name="tuner_tuning_add_title">Add tuning</string>
+		<string name="tuner_tuning_edit_title">Edit tuning</string>
+		<string name="tuner_tuning_name_hint">Tuning name</string>
+		<string name="tuner_tuning_instrument_label">Instrument</string>
+		<string name="tuner_tuning_delete_title">Delete tuning</string>
 
-    <!-- Tuner -->
-    <string name="chromatic_mode">Chromatic mode</string>
+		<!-- Instrument management -->
+		<string name="tuner_instrument_management_title">Instruments</string>
+		<string name="tuner_instrument_add_action">New instrument</string>
+		<string name="tuner_instrument_edit_title">Edit instrument</string>
+		<string name="tuner_instrument_delete_title">Delete instrument</string>
+		<string name="tuner_instrument_delete_blocked_message">You cannot delete an instrument with assigned tunings.</string>
+		<string name="tuner_instrument_name_hint">Name</string>
+		<string name="tuner_instrument_string_count_hint">Number of strings</string>
+		<string name="tuner_instrument_string_count_error">Must be between 2 and 24</string>
+		<string name="tuner_instrument_string_count_locked_message">Locked while tunings use this instrument.</string>
+		<plurals name="tuner_instrument_string_count">
+			<item quantity="one">%1$d String</item>
+			<item quantity="other">%1$d Strings</item>
+		</plurals>
+		<string name="tuner_instrument_list_empty_title">No instruments yet</string>
+		<string name="tuner_instrument_list_empty_supporting">Create one to start adding tunings.</string>
 
-    <string name="tuner_settings">Tuner Settings</string>
-    <string name="new_custom_tuning">New custom tuning</string>
-    <string name="manage_instruments">Manage Instruments</string>
-    <string name="tuner_mode">Mode</string>
-    <string name="tunings">Tunings</string>
-    <string name="search_tunings">Search tunings</string>
-    <string name="no_tunings">No tunings found.</string>
-    <string name="tuning_delete_title">Delete tuning</string>
-    <string name="tuning_delete_message">Are you sure you want to delete \"%1$s\"? This action cannot be undone.</string>
-    <string name="chromatic_description">Chromatic mode detects the note automatically.</string>
-    <string name="dont_select_tuning">No need to select a tuning.</string>
+		<!-- Built-in instruments -->
+		<string name="tuner_instrument_builtin_guitar_name">Guitar</string>
+		<string name="tuner_instrument_builtin_bass_name">Bass</string>
 
-    <!-- Build in Instruments -->
-    <string name="guitar_instrument">Guitar</string>
-    <string name="bass_instrument">Bass</string>
+
+	<!-- METRONOME -->
+
+	<string name="metronome_title">Metronome</string>
+
+		<!-- Main screen -->
+		<string name="metronome_main_start_action">START</string>
+		<string name="metronome_main_beats_count_label">%1$d Beats</string>
+		<string name="metronome_main_muting_pill_label">Play %1$d Mute %2$d</string>
+		<string name="metronome_main_muting_active_label">Play %1$d bar mute %2$d</string>
+
+		<!-- Settings screen -->
+		<string name="metronome_settings_title">Metronome settings</string>
+		<string name="metronome_settings_beats_per_bar_label">Beats in a Bar</string>
+		<string name="metronome_settings_muting_options_label">Muting options</string>
+		<string name="metronome_settings_muting_play_label">Play</string>
+		<string name="metronome_settings_muting_mute_label">Mute</string>
+
+
+	<!-- SETTINGS -->
+
+	<string name="settings_title">Settings</string>
+
+		<!-- Display section -->
+		<string name="settings_display_header">Display</string>
+		<string name="settings_display_dark_mode_label">Dark mode</string>
+
+		<!-- Calibration section -->
+		<string name="settings_calibration_header">Calibration</string>
+		<string name="settings_calibration_base_frequency_label">Base frequency (Hz)</string>
+		<string name="settings_calibration_frequency_error_message">Choose a number between 0 and 1000</string>
+
+		<!-- Localisation section -->
+		<string name="settings_localisation_header">Localisation</string>
+		<string name="settings_localisation_language_label">Language</string>
+		<string name="settings_localisation_language_english_option">English</string>
+		<string name="settings_localisation_language_polish_option">Polski</string>
 </resources>

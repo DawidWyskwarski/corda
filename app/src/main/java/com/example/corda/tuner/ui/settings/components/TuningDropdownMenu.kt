@@ -18,10 +18,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import com.example.corda.R
 
 /**
  * Context menu for a single tuning, anchored at [offset] relative to the parent's top-start corner.
@@ -63,13 +65,13 @@ fun TuningDropdownMenu(
             )
 
             MenuItem(
-                text = "Edit",
+                text = stringResource(R.string.core_action_edit),
                 icon = Icons.Rounded.Edit,
                 onClick = onEdit,
             )
 
             MenuItem(
-                text = "Delete",
+                text = stringResource(R.string.core_action_delete),
                 icon = Icons.Rounded.Delete,
                 onClick = onDelete,
             )

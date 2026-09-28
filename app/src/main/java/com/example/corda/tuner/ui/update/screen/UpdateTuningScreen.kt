@@ -58,8 +58,8 @@ fun UpdateTuningScreen(
     }
 
     val isEditMode = viewModel.isEditMode
-    val title = if (isEditMode) stringResource(R.string.edit_tuning_title) else stringResource(R.string.add_tuning_title)
-    val actionLabel = if (isEditMode) stringResource(R.string.action_save) else stringResource(R.string.action_add)
+    val title = if (isEditMode) stringResource(R.string.tuner_tuning_edit_title) else stringResource(R.string.tuner_tuning_add_title)
+    val actionLabel = if (isEditMode) stringResource(R.string.core_action_save) else stringResource(R.string.core_action_add)
 
     Scaffold(
         modifier = modifier,
@@ -89,7 +89,7 @@ fun UpdateTuningScreen(
             OutlinedTextField(
                 value = tuningName,
                 onValueChange = { viewModel.setTuningName(it) },
-                label = { Text(stringResource(R.string.tuning_name_hint)) },
+                label = { Text(stringResource(R.string.tuner_tuning_name_hint)) },
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),
             )

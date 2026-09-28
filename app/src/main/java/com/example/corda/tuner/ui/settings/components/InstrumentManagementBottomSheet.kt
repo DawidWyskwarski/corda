@@ -77,7 +77,7 @@ fun InstrumentManagementBottomSheet(
                     .padding(bottom = 16.dp),
             ) {
                 Text(
-                    text = stringResource(R.string.instrument_management_title),
+                    text = stringResource(R.string.tuner_instrument_management_title),
                     style = MaterialTheme.typography.titleLargeEmphasized,
                 )
 
@@ -85,8 +85,8 @@ fun InstrumentManagementBottomSheet(
                     LoadingIndicator() //TODO: Add shimmer effect
                 } else if (instruments.isEmpty()) {
                     UserInfo(
-                        mainText = stringResource(R.string.instrument_list_empty),
-                        supportingText = stringResource(R.string.instrument_list_empty_supporting),
+                        mainText = stringResource(R.string.tuner_instrument_list_empty_title),
+                        supportingText = stringResource(R.string.tuner_instrument_list_empty_supporting),
                         modifier = Modifier
                             .fillMaxWidth()
                             .padding(vertical = 32.dp),
@@ -109,7 +109,7 @@ fun InstrumentManagementBottomSheet(
                                     if (doesInstrumentHaveTunings(instrument.id)) {
                                         Toast.makeText(
                                             localizedContext,
-                                            localizedContext.resources.getString(R.string.instrument_delete_blocked_has_tunings),
+                                            localizedContext.resources.getString(R.string.tuner_instrument_delete_blocked_message),
                                             Toast.LENGTH_SHORT,
                                         ).show()
                                     } else {
@@ -134,7 +134,7 @@ fun InstrumentManagementBottomSheet(
                         contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                     )
                 ) {
-                    Text(stringResource(R.string.instrument_new))
+                    Text(stringResource(R.string.tuner_instrument_add_action))
                 }
             }
         }
@@ -166,8 +166,8 @@ fun InstrumentManagementBottomSheet(
 
     pendingInstrumentToDelete?.let { instrument ->
         DeleteItemDialog(
-            titleRes = R.string.instrument_delete_title,
-            messageRes = R.string.instrument_delete_message,
+            titleRes = R.string.tuner_instrument_delete_title,
+            messageRes = R.string.core_delete_confirmation_message,
             itemName = instrument.displayNameOnly(),
             onDelete = {
                 onDeleteInstrument(instrument.id)

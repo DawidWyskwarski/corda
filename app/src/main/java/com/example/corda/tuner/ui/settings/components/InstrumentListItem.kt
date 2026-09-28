@@ -47,7 +47,7 @@ fun InstrumentListItem(
             )
             Text(
                 text = pluralStringResource(
-                    R.plurals.instrument_string_label,
+                    R.plurals.tuner_instrument_string_count,
                     instrument.musicNotesCount.toInt(),
                     instrument.musicNotesCount.toInt()
                 ),

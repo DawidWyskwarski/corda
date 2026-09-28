@@ -6,7 +6,9 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.dropUnlessResumed
+import com.example.corda.R
 
 /**
  * Common button for back navigation.
@@ -20,6 +22,9 @@ fun NavigateBackButton(
         onClick = dropUnlessResumed { onClick() },
         modifier = modifier
     ) {
-        Icon(Icons.AutoMirrored.Rounded.ArrowBack, contentDescription = null)
+        Icon(
+            imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
+            contentDescription = stringResource(R.string.core_action_back)
+        )
     }
 }

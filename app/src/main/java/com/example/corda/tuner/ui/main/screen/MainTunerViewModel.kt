@@ -55,7 +55,7 @@ class MainTunerViewModel @Inject constructor(
         .flatMapLatest { mode ->
             when ( mode ) {
                 TuningMode.STANDARD -> repository.getMostRecentTuning()
-                    .map { it?.toLoaded() ?: UiState.Error(R.string.no_tunings) } //TODO: change res id later
+                    .map { it?.toLoaded() ?: UiState.Error(R.string.tuner_settings_tunings_empty_message) } //TODO: change res id later
 
                 TuningMode.CHROMATIC -> flow { emit(
                     UiState.Loaded<TuningTarget>(

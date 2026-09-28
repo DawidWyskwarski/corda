@@ -43,7 +43,7 @@ fun InstrumentDropdown( // TODO: Make this more generic
             onValueChange = {},
             readOnly = true,
             enabled = enabled,
-            label = { Text(stringResource(R.string.tuning_instrument_label)) },
+            label = { Text(stringResource(R.string.tuner_tuning_instrument_label)) },
             trailingIcon = {
                 ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded && enabled)
             },

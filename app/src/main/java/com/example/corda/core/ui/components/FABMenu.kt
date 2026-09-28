@@ -84,10 +84,10 @@ fun FABMenu(
     }
     val focusRequester = remember { FocusRequester() }
 
-    val toggleMenuDescription = stringResource(R.string.toggle_menu)
-    val expandedDescription = stringResource(R.string.expanded)
-    val collapsedDescription = stringResource(R.string.collapsed)
-    val closeMenuDescription = stringResource(R.string.close_menu)
+    val toggleMenuDescription = stringResource(R.string.core_fab_menu_toggle_description)
+    val expandedDescription = stringResource(R.string.core_fab_menu_expanded_description)
+    val collapsedDescription = stringResource(R.string.core_fab_menu_collapsed_description)
+    val closeMenuDescription = stringResource(R.string.core_fab_menu_close_description)
 
     Box(
         modifier = modifier.fillMaxSize()

@@ -90,10 +90,10 @@ fun MainTunerScreen(
                 title = {
 
                     val (title, supportingText) = when (val state = tuningTargetState) {
-                        is UiState.Loading -> "Loading..." to ""
-                        is UiState.Error -> "Error" to stringResource(state.errorRes)
+                        is UiState.Loading -> stringResource(R.string.core_state_loading) to ""
+                        is UiState.Error -> stringResource(R.string.tuner_main_go_to_settings) to ""
                         is UiState.Loaded -> when (state.data) {
-                            is TuningTarget.Chromatic -> stringResource(R.string.chromatic_mode) to ""
+                            is TuningTarget.Chromatic -> stringResource(R.string.tuner_main_chromatic_mode_label) to ""
                             is TuningTarget.Standard -> state.data.tuningName to state.data.instrumentName.get()
                         }
                     }
@@ -106,7 +106,7 @@ fun MainTunerScreen(
                 },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
-                        Icon(Icons.Rounded.Menu, stringResource(R.string.open_drawer))
+                        Icon(Icons.Rounded.Menu, stringResource(R.string.core_nav_open_drawer_description))
                     }
                 },
                 actions = {
@@ -134,7 +134,7 @@ fun MainTunerScreen(
                 }
                 is UiState.Error -> {
                     UserInfo(
-                        mainText = "Oops, something went wrong",
+                        mainText = stringResource(R.string.core_error_generic_title),
                         supportingText = stringResource(state.errorRes),
                         modifier = Modifier.fillMaxSize(),
                     )

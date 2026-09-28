@@ -53,7 +53,7 @@ fun SettingsScreen(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.settings), fontWeight = FontWeight.SemiBold) },
+                title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.SemiBold) },
                 navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
         }
@@ -65,10 +65,10 @@ fun SettingsScreen(
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            SettingsSectionHeader(stringResource(R.string.settings_display))
+            SettingsSectionHeader(stringResource(R.string.settings_display_header))
 
             SettingsClickableItem(
-                title = stringResource(R.string.dark_mode),
+                title = stringResource(R.string.settings_display_dark_mode_label),
                 icon = Icons.Outlined.DarkMode,
                 trailingContent = {
                     Switch(
@@ -80,15 +80,15 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = dividerPadding)
 
-            SettingsSectionHeader(stringResource(R.string.settings_calibration))
+            SettingsSectionHeader(stringResource(R.string.settings_calibration_header))
 
             OutlinedTextField(
                 value = viewModel.frequencyInput,
                 onValueChange = { viewModel.updateFrequency(it) },
-                label = { Text(stringResource(R.string.base_frequency)) },
+                label = { Text(stringResource(R.string.settings_calibration_base_frequency_label)) },
                 isError = viewModel.isFrequencyError,
                 supportingText = {
-                    if (viewModel.isFrequencyError) Text(stringResource(R.string.frequency_error))
+                    if (viewModel.isFrequencyError) Text(stringResource(R.string.settings_calibration_frequency_error_message))
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
@@ -96,7 +96,7 @@ fun SettingsScreen(
                     if (viewModel.isFrequencyError) {
                         Icon(
                             Icons.Default.Error,
-                            stringResource(R.string.error),
+                            stringResource(R.string.core_error_label),
                             tint = MaterialTheme.colorScheme.error,
                         )
                     }
@@ -105,7 +105,7 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = dividerPadding)
 
-            SettingsSectionHeader(stringResource(R.string.settings_localisation))
+            SettingsSectionHeader(stringResource(R.string.settings_localisation_header))
 
             SettingsLanguageDropdown(
                 selectedLanguageTag = languageTag,

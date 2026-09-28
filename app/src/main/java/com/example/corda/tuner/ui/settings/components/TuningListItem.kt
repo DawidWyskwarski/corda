@@ -28,9 +28,11 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.DpOffset
+import com.example.corda.R
 import com.example.corda.tuner.ui.components.annotateMusicNotes
 import com.example.corda.tuner.ui.settings.data.TuningListItem
 
@@ -125,7 +127,7 @@ fun TuningListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.CheckCircle,
-                        contentDescription = "Selected",
+                        contentDescription = stringResource(R.string.tuner_settings_tuning_selected_description),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }

@@ -46,7 +46,7 @@ fun MetronomeSettingsScreen(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.metronome_settings)) },
+                title = { Text(stringResource(R.string.metronome_settings_title)) },
                 navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
         },
@@ -59,7 +59,7 @@ fun MetronomeSettingsScreen(
             Spacer(modifier = Modifier.height(6.dp))
 
             Text(
-                text = stringResource(R.string.metronome_beats_in_a_bar),
+                text = stringResource(R.string.metronome_settings_beats_per_bar_label),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
                 modifier = Modifier.padding(horizontal = 24.dp),
@@ -85,7 +85,7 @@ fun MetronomeSettingsScreen(
                 horizontalArrangement = Arrangement.SpaceBetween,
             ) {
                 Text(
-                    text = stringResource(R.string.metronome_muting_options),
+                    text = stringResource(R.string.metronome_settings_muting_options_label),
                     style = MaterialTheme.typography.bodyLarge,
                 )
                 Switch(
@@ -102,13 +102,13 @@ fun MetronomeSettingsScreen(
                 Column {
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp))
                     BarCountRow(
-                        label = stringResource(R.string.metronome_play),
+                        label = stringResource(R.string.metronome_settings_muting_play_label),
                         value = state.playBars,
                         onValueChange = viewModel::setPlayBars,
                     )
                     HorizontalDivider(modifier = Modifier.padding(horizontal = 24.dp))
                     BarCountRow(
-                        label = stringResource(R.string.metronome_mute),
+                        label = stringResource(R.string.metronome_settings_muting_mute_label),
                         value = state.muteBars,
                         onValueChange = viewModel::setMuteBars,
                     )

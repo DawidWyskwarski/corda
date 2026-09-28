@@ -30,8 +30,8 @@ fun EarModeToggleButton(
             Icon(
                 imageVector = if (it) Icons.AutoMirrored.Rounded.VolumeUp
                     else Icons.AutoMirrored.Rounded.VolumeOff,
-                contentDescription = if (it) stringResource(R.string.disable_ear_mode)
-                    else stringResource(R.string.enable_ear_mode),
+                contentDescription = if (it) stringResource(R.string.tuner_main_ear_mode_disable_description)
+                    else stringResource(R.string.tuner_main_ear_mode_enable_description),
             )
         }
     }

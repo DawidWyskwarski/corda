@@ -43,12 +43,12 @@ fun DrawerMenuContent(
         listOf(
             NavItem(
                 icon = Icons.Rounded.MusicNote,
-                labelRes = R.string.tuner,
+                labelRes = R.string.tuner_title,
                 screen = Screen.Tuner
             ),
             NavItem(
                 icon = Icons.Rounded.Speed,
-                labelRes = R.string.metronome,
+                labelRes = R.string.metronome_title,
                 screen = Screen.Metronome
             ),
         )
@@ -58,7 +58,7 @@ fun DrawerMenuContent(
         listOf(
             NavItem(
                 icon = Icons.Rounded.Settings,
-                labelRes = R.string.settings,
+                labelRes = R.string.settings_title,
                 screen = Screen.Settings
             )
         )
@@ -87,7 +87,7 @@ fun DrawerMenuContent(
 
             // TOOLS SECTION
             Text(
-                text = stringResource(R.string.tools),
+                text = stringResource(R.string.core_nav_drawer_tools_header),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
                 color = MaterialTheme.colorScheme.onBackground
