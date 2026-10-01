@@ -11,7 +11,6 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
@@ -31,7 +30,6 @@ import com.example.corda.metronome.ui.MetronomeViewModel
 import com.example.corda.metronome.ui.settings.components.BarCountRow
 import com.example.corda.metronome.ui.settings.components.BeatsInABarSelector
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MetronomeSettingsScreen(
     onBack: () -> Unit,

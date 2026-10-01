@@ -10,7 +10,6 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Error
 import androidx.compose.material.icons.outlined.DarkMode
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -37,7 +36,6 @@ import com.example.corda.settings.ui.components.SettingsSectionHeader
 private val screenPadding = 16.dp
 private val dividerPadding = Modifier.padding(vertical = 8.dp)
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
     onBack: () -> Unit,
@@ -45,7 +43,6 @@ fun SettingsScreen(
     viewModel: SettingsViewModel = hiltViewModel(),
 ) {
     val isDarkMode by viewModel.isDarkMode.collectAsStateWithLifecycle()
-    val languageTag by viewModel.language.collectAsStateWithLifecycle()
 
     Scaffold(
         modifier = modifier,
@@ -80,7 +77,10 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = dividerPadding)
 
-            SettingsSectionHeader(stringResource(R.string.settings_calibration_header))
+            SettingsSectionHeader(
+                title = stringResource(R.string.settings_calibration_header),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
 
             OutlinedTextField(
                 value = viewModel.frequencyInput,
@@ -105,12 +105,12 @@ fun SettingsScreen(
 
             HorizontalDivider(modifier = dividerPadding)
 
-            SettingsSectionHeader(stringResource(R.string.settings_localisation_header))
-
-            SettingsLanguageDropdown(
-                selectedLanguageTag = languageTag,
-                onLanguageSelected = { viewModel.setLanguage(it) },
+            SettingsSectionHeader(
+                title = stringResource(R.string.settings_localisation_header),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
             )
+
+            SettingsLanguageDropdown()
         }
     }
 }

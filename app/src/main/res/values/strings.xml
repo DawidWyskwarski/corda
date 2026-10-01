@@ -130,6 +130,5 @@
 		<!-- Localisation section -->
 		<string name="settings_localisation_header">Localisation</string>
 		<string name="settings_localisation_language_label">Language</string>
-		<string name="settings_localisation_language_english_option">English</string>
-		<string name="settings_localisation_language_polish_option">Polski</string>
+		<string name="settings_localisation_language_system_option">System</string>
 </resources>

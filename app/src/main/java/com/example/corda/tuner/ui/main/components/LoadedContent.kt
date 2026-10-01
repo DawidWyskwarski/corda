@@ -18,7 +18,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.corda.core.ui.state.UiState
 import com.example.corda.tuner.ui.components.NoteLabel
 import com.example.corda.tuner.ui.components.TuningSoundGrid
 import com.example.corda.tuner.ui.main.data.TunerReading

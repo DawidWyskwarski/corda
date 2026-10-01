@@ -3,7 +3,6 @@ package com.example.corda.core.ui.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.material3.ButtonGroupDefaults
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.ToggleButton
@@ -24,7 +23,6 @@ import androidx.compose.ui.semantics.semantics
  * [Any.toString], which is only appropriate for values that are already localized (e.g. plain
  * [String]s); enum-like items should supply a lambda that maps to a `stringResource`.
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun <T> SimpleSingleChoiceButtonGroup(
     selectedItem: T?,

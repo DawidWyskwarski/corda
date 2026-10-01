@@ -7,7 +7,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.corda.core.datastore.SettingsDataStoreManager
 import com.example.corda.core.datastore.TunerDataStoreManager
-import com.example.corda.core.ui.system.LANGUAGE_EN
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
@@ -25,11 +24,6 @@ class SettingsViewModel @Inject constructor(
         viewModelScope,
         SharingStarted.WhileSubscribed(5000),   // Active for 5 seconds after final subscriber disappears
         false,
-    )
-    val language = settingsDataStoreManager.language.stateIn(
-        viewModelScope,
-        SharingStarted.WhileSubscribed(5000),
-        LANGUAGE_EN,
     )
 
     var frequencyInput by mutableStateOf("")
@@ -60,5 +54,4 @@ class SettingsViewModel @Inject constructor(
     }
 
     fun toggleDarkMode(enabled: Boolean) = viewModelScope.launch { settingsDataStoreManager.saveDarkMode(enabled) }
-    fun setLanguage(lang: String) = viewModelScope.launch { settingsDataStoreManager.saveLanguage(lang) }
 }

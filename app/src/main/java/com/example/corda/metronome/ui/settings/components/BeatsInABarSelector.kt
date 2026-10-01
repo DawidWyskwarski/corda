@@ -1,6 +1,5 @@
 package com.example.corda.metronome.ui.settings.components
 
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.snapping.SnapLayoutInfoProvider
@@ -33,7 +32,6 @@ private const val BEATS = 12
 // To simulate infinite scroll
 private const val VIRTUAL_COUNT = BEATS * 1000
 
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
 fun BeatsInABarSelector(
     selectedBeats: Int,

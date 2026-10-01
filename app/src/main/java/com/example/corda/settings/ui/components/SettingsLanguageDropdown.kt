@@ -1,8 +1,8 @@
 package com.example.corda.settings.ui.components
 
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -16,27 +16,22 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.core.os.LocaleListCompat
 import com.example.corda.R
-import com.example.corda.core.ui.system.LANGUAGE_EN
-import com.example.corda.core.ui.system.LANGUAGE_PL
+import com.example.corda.settings.ui.data.Language
+import com.example.corda.settings.ui.data.SUPPORTED_LANGUAGES
+import com.example.corda.settings.ui.data.nativeDisplayName
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsLanguageDropdown(
-    selectedLanguageTag: String,
-    onLanguageSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    val options = remember {
-        listOf(
-            LANGUAGE_EN to R.string.settings_localisation_language_english_option,
-            LANGUAGE_PL to R.string.settings_localisation_language_polish_option,
-        )
-    }
     var expanded by remember { mutableStateOf(false) }
-    val selectedLabel = stringResource(
-        options.first { it.first == selectedLanguageTag }.second,
-    )
+
+    val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
+    val selected = SUPPORTED_LANGUAGES.firstOrNull { lang ->
+        lang.locale != null && lang.locale.language == currentLocale?.language
+    } ?: SUPPORTED_LANGUAGES.first()
 
     ExposedDropdownMenuBox(
         modifier = modifier,
@@ -44,11 +39,13 @@ fun SettingsLanguageDropdown(
         onExpandedChange = { expanded = !expanded },
     ) {
         OutlinedTextField(
-            value = selectedLabel,
+            value = languageLabel(selected),
             onValueChange = {},
             readOnly = true,
             label = { Text(stringResource(R.string.settings_localisation_language_label)) },
-            trailingIcon = { ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded) },
+            trailingIcon = {
+                ExposedDropdownMenuDefaults.TrailingIcon(expanded = expanded)
+            },
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             modifier = Modifier
                 .menuAnchor(
@@ -56,15 +53,20 @@ fun SettingsLanguageDropdown(
                 )
                 .fillMaxWidth(),
         )
+
         ExposedDropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
         ) {
-            options.forEach { (tag, labelRes) ->
+            SUPPORTED_LANGUAGES.forEach { language ->
                 DropdownMenuItem(
-                    text = { Text(stringResource(labelRes)) },
+                    text = { Text(text = languageLabel(language)) },
                     onClick = {
-                        onLanguageSelected(tag)
+                        AppCompatDelegate.setApplicationLocales(
+                            language.tag?.let(LocaleListCompat::forLanguageTags)
+                                ?: LocaleListCompat.getEmptyLocaleList()
+                        )
+
                         expanded = false
                     },
                     contentPadding = ExposedDropdownMenuDefaults.ItemContentPadding,
@@ -73,3 +75,8 @@ fun SettingsLanguageDropdown(
         }
     }
 }
+
+@Composable
+private fun languageLabel(language: Language): String =
+    language.locale?.nativeDisplayName()
+        ?: stringResource(R.string.settings_localisation_language_system_option)

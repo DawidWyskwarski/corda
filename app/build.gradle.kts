@@ -32,12 +32,18 @@ android {
             signingConfig = signingConfigs.getByName("debug")
         }
     }
+
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_11
         targetCompatibility = JavaVersion.VERSION_11
     }
+
     buildFeatures {
         compose = true
+    }
+
+    androidResources {
+        generateLocaleConfig = true
     }
 }
 
@@ -75,6 +81,10 @@ dependencies {
     // DataStore
     implementation(libs.androidx.datastore.preferences)
 
+    // AppCompat
+    implementation(libs.androidx.appcompat)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.junit)

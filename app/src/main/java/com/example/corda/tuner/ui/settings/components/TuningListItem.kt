@@ -12,7 +12,6 @@ import androidx.compose.foundation.interaction.PressInteraction
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.rounded.CheckCircle
-import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.ListItemShapes
@@ -47,7 +46,6 @@ import com.example.corda.tuner.ui.settings.data.TuningListItem
  *
  * Long-pressing the item shows a context menu at the press location offering [onEdit] and [onDelete].
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TuningListItem(
     tuning: TuningListItem,

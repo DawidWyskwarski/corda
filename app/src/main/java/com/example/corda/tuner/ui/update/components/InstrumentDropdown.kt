@@ -2,7 +2,6 @@ package com.example.corda.tuner.ui.update.components
 
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material3.DropdownMenuItem
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExposedDropdownMenu
 import androidx.compose.material3.ExposedDropdownMenuAnchorType
 import androidx.compose.material3.ExposedDropdownMenuBox
@@ -20,9 +19,7 @@ import com.example.corda.R
 import com.example.corda.tuner.data.local.entities.Instrument
 import com.example.corda.tuner.ui.helpers.displayNameOnly
 import com.example.corda.tuner.ui.helpers.displayNameWithNoteCount
-import kotlin.collections.forEach
 
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InstrumentDropdown( // TODO: Make this more generic
     instruments: List<Instrument>,

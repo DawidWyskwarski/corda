@@ -19,7 +19,6 @@ import androidx.compose.material3.SheetValue
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,9 +46,7 @@ fun InstrumentManagementBottomSheet(
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    // Capture the localized context here, inside ProvideAppLocale, so resources are correct.
-    // We use localizedContext.resources.getString() in dialogs instead of stringResource(), because AlertDialog creates a separate Android window that doesn't reliably inherit the Compose CompositionLocal overrides.
-    val localizedContext = LocalContext.current
+    val context = LocalContext.current
 
     val sheetState = rememberBottomSheetState(
         initialValue = SheetValue.Hidden,
@@ -67,77 +64,74 @@ fun InstrumentManagementBottomSheet(
     ) {
         TransparentNavigationBarEffect()
 
-        // Wrap the bottom sheet content to ensure LocalContext is localized inside the popup.
-        CompositionLocalProvider(LocalContext provides localizedContext) { //TODO: I need to find out if the settings are written correctly. If so I will need to create custom context aware composables or
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.tuner_instrument_management_title),
+                style = MaterialTheme.typography.titleLargeEmphasized,
+            )
 
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 16.dp)
-                    .padding(bottom = 16.dp),
-            ) {
-                Text(
-                    text = stringResource(R.string.tuner_instrument_management_title),
-                    style = MaterialTheme.typography.titleLargeEmphasized,
+            if (instruments == null) {
+                LoadingIndicator() //TODO: Add shimmer effect
+            } else if (instruments.isEmpty()) {
+                UserInfo(
+                    mainText = stringResource(R.string.tuner_instrument_list_empty_title),
+                    supportingText = stringResource(R.string.tuner_instrument_list_empty_supporting),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
                 )
-
-                if (instruments == null) {
-                    LoadingIndicator() //TODO: Add shimmer effect
-                } else if (instruments.isEmpty()) {
-                    UserInfo(
-                        mainText = stringResource(R.string.tuner_instrument_list_empty_title),
-                        supportingText = stringResource(R.string.tuner_instrument_list_empty_supporting),
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(vertical = 32.dp),
-                    )
-                } else {
-                    LazyColumn(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .weight(1f, fill = false)
-                            .padding(vertical = 12.dp)
-                    ) {
-                        items(
-                            items = instruments,
-                            key = { it.id },
-                        ) { instrument ->
-                            InstrumentListItem(
-                                instrument = instrument,
-                                onEdit = { pendingInstrumentToEdit = instrument },
-                                onDelete = {
-                                    if (doesInstrumentHaveTunings(instrument.id)) {
-                                        Toast.makeText(
-                                            localizedContext,
-                                            localizedContext.resources.getString(R.string.tuner_instrument_delete_blocked_message),
-                                            Toast.LENGTH_SHORT,
-                                        ).show()
-                                    } else {
-                                        pendingInstrumentToDelete = instrument
-                                    }
-                                },
-                            )
-                        }
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .padding(vertical = 12.dp)
+                ) {
+                    items(
+                        items = instruments,
+                        key = { it.id },
+                    ) { instrument ->
+                        InstrumentListItem(
+                            instrument = instrument,
+                            onEdit = { pendingInstrumentToEdit = instrument },
+                            onDelete = {
+                                if (doesInstrumentHaveTunings(instrument.id)) {
+                                    Toast.makeText(
+                                        context,
+                                        context.resources.getString(R.string.tuner_instrument_delete_blocked_message),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                } else {
+                                    pendingInstrumentToDelete = instrument
+                                }
+                            },
+                        )
                     }
                 }
+            }
 
-                HorizontalDivider(
-                    modifier = Modifier.padding(bottom = 12.dp),
+            HorizontalDivider(
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+
+            Button(
+                onClick = { showCreateInstrumentDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
                 )
-
-                Button(
-                    onClick = { showCreateInstrumentDialog = true },
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = MaterialTheme.colorScheme.secondaryContainer,
-                        contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    )
-                ) {
-                    Text(stringResource(R.string.tuner_instrument_add_action))
-                }
+            ) {
+                Text(stringResource(R.string.tuner_instrument_add_action))
             }
         }
+
     }
 
     if (showCreateInstrumentDialog) {

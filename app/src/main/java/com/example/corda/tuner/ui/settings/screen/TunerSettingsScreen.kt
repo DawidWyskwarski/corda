@@ -25,7 +25,6 @@ import androidx.compose.material.icons.automirrored.rounded.QueueMusic
 import androidx.compose.material.icons.rounded.Close
 import androidx.compose.material.icons.rounded.Piano
 import androidx.compose.material.icons.rounded.Search
-import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -54,14 +53,14 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.R
 import com.example.corda.core.tuner.TuningMode
-import com.example.corda.tuner.data.local.entities.Instrument
 import com.example.corda.core.ui.components.DeleteItemDialog
 import com.example.corda.core.ui.components.FABMenu
 import com.example.corda.core.ui.components.FABMenuItem
-import com.example.corda.core.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.core.ui.components.NavigateBackButton
+import com.example.corda.core.ui.components.SimpleSingleChoiceButtonGroup
 import com.example.corda.core.ui.components.UserInfo
 import com.example.corda.core.ui.state.UiState
+import com.example.corda.tuner.data.local.entities.Instrument
 import com.example.corda.tuner.ui.settings.components.InstrumentFilterChipGroup
 import com.example.corda.tuner.ui.settings.components.InstrumentManagementBottomSheet
 import com.example.corda.tuner.ui.settings.components.TuningListItem
@@ -76,7 +75,7 @@ import com.example.corda.tuner.ui.settings.data.TuningListItem
  * @param modifier applied to the screen's [Scaffold]
  * @param viewModel screen-specific ViewModel for search, filter, and instrument list
  */
-@OptIn(ExperimentalMaterial3ExpressiveApi::class, ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 fun TunerSettingsScreen(
     onBack: () -> Unit,
@@ -227,7 +226,7 @@ fun TunerSettingsScreen(
     }
 }
 
-@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@OptIn(ExperimentalMaterial3ExpressiveApi::class)
 @Composable
 private fun StandardModeContent(
     tuningsUiState: UiState<List<TuningListItem>>,
