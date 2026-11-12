@@ -1,0 +1,41 @@
+package com.example.corda.tuner.data.local.database
+
+import android.util.Log
+import androidx.room.RoomDatabase
+import androidx.sqlite.db.SupportSQLiteDatabase
+import jakarta.inject.Provider
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+
+class TunerDatabaseCallback(
+    private val databaseProvider: Provider<TunerDatabase>
+) : RoomDatabase.Callback() {
+
+    private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
+
+    override fun onCreate(db: SupportSQLiteDatabase) {
+        super.onCreate(db)
+        seed()
+    }
+
+    /**
+     * Room recreates the tables without calling [onCreate] when a destructive
+     * migration happens, so the seed has to be triggered here as well.
+     */
+    override fun onDestructiveMigration(db: SupportSQLiteDatabase) {
+        super.onDestructiveMigration(db)
+        seed()
+    }
+
+    private fun seed() {
+        applicationScope.launch {
+            try {
+                TunerDatabasePopulator(databaseProvider.get()).populate()
+            } catch (e: Exception) {
+                Log.e("TunerDb", "Seed failed", e)
+            }
+        }
+    }
+}

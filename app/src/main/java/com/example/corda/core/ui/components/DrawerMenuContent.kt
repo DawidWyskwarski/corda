@@ -1,0 +1,130 @@
+package com.example.corda.core.ui.components
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.MusicNote
+import androidx.compose.material.icons.rounded.Settings
+import androidx.compose.material.icons.rounded.Speed
+import androidx.compose.material3.DrawerDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalDrawerSheet
+import androidx.compose.material3.NavigationDrawerItem
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.compose.dropUnlessResumed
+import com.example.corda.R
+import com.example.corda.core.navigation.NavItem
+import com.example.corda.core.navigation.Screen
+
+/**
+ * Contents of the drawer menu
+ *
+ * @param currentScreen The currently selected screen. Used to highlight the corresponding item.
+ * @param onScreenSelected Callback to invoke when a screen is selected.
+ */
+@Composable
+fun DrawerMenuContent(
+    currentScreen: Screen,
+    onScreenSelected: (Screen) -> Unit,
+    modifier: Modifier = Modifier
+) {
+    val tools = remember {
+        listOf(
+            NavItem(
+                icon = Icons.Rounded.MusicNote,
+                labelRes = R.string.tuner_title,
+                screen = Screen.Tuner
+            ),
+            NavItem(
+                icon = Icons.Rounded.Speed,
+                labelRes = R.string.metronome_title,
+                screen = Screen.Metronome
+            ),
+        )
+    }
+
+    val utilities = remember {
+        listOf(
+            NavItem(
+                icon = Icons.Rounded.Settings,
+                labelRes = R.string.settings_title,
+                screen = Screen.Settings
+            )
+        )
+    }
+
+    ModalDrawerSheet(
+        modifier = modifier,
+        windowInsets = DrawerDefaults.windowInsets
+    ) {
+        Column(
+            modifier = Modifier
+                .padding(12.dp)
+                .verticalScroll(rememberScrollState())
+        ) {
+            // LOGO SECTION
+
+            // Change later to something more interesting
+            // Something with a logo for example
+            Spacer(Modifier.height(12.dp))
+            Text(
+                modifier = Modifier
+                    .padding(16.dp),
+                text = stringResource(R.string.app_name),
+                style = MaterialTheme.typography.headlineMedium
+            )
+
+            // TOOLS SECTION
+            Text(
+                text = stringResource(R.string.core_nav_drawer_tools_header),
+                style = MaterialTheme.typography.titleSmall,
+                modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
+                color = MaterialTheme.colorScheme.onBackground
+            )
+
+            tools.forEach { tool ->
+                NavigationDrawerItem(
+                    icon = {
+                        Icon(
+                            imageVector = tool.icon,
+                            contentDescription = null
+                        )
+                    },
+                    label = { Text(stringResource(tool.labelRes)) },
+                    selected = currentScreen == tool.screen,
+                    onClick = dropUnlessResumed { onScreenSelected(tool.screen) }
+                )
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(vertical = 8.dp)
+            )
+
+            // UTILITIES SECTION
+            utilities.forEach { utility ->
+                NavigationDrawerItem(
+                    icon = {
+                        Icon(
+                            imageVector = utility.icon,
+                            contentDescription = null
+                        )
+                    },
+                    label = { Text(stringResource(utility.labelRes)) },
+                    selected = currentScreen == utility.screen,
+                    onClick = dropUnlessResumed { onScreenSelected(utility.screen) }
+                )
+            }
+        }
+    }
+}

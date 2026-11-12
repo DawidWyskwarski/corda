@@ -1,0 +1,173 @@
+package com.example.corda.tuner.ui.settings.components
+
+import android.annotation.SuppressLint
+import android.widget.Toast
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExperimentalMaterial3ExpressiveApi
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.LoadingIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.SheetValue
+import androidx.compose.material3.Text
+import androidx.compose.material3.rememberBottomSheetState
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.dp
+import com.example.corda.R
+import com.example.corda.core.ui.components.DeleteItemDialog
+import com.example.corda.core.ui.components.UserInfo
+import com.example.corda.core.ui.system.TransparentNavigationBarEffect
+import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
+
+@SuppressLint("LocalContextResourcesRead")
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalMaterial3ExpressiveApi::class)
+@Composable
+fun InstrumentManagementBottomSheet(
+    instruments: List<Instrument>?,
+    doesInstrumentHaveTunings: (Int) -> Boolean,
+    onCreateInstrument: (Instrument) -> Unit,
+    onUpdateInstrument: (Instrument) -> Unit,
+    onDeleteInstrument: (Int) -> Unit,
+    onDismiss: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    val context = LocalContext.current
+
+    val sheetState = rememberBottomSheetState(
+        initialValue = SheetValue.Hidden,
+        enabledValues = setOf(SheetValue.Hidden, SheetValue.Expanded),
+    )
+
+    var pendingInstrumentToEdit by remember { mutableStateOf<Instrument?>(null) }
+    var pendingInstrumentToDelete by remember { mutableStateOf<Instrument?>(null) }
+    var showCreateInstrumentDialog by remember { mutableStateOf(false) }
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = sheetState,
+        modifier = modifier,
+    ) {
+        TransparentNavigationBarEffect()
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 16.dp)
+                .padding(bottom = 16.dp),
+        ) {
+            Text(
+                text = stringResource(R.string.tuner_instrument_management_title),
+                style = MaterialTheme.typography.titleLargeEmphasized,
+            )
+
+            if (instruments == null) {
+                LoadingIndicator() //TODO: Add shimmer effect
+            } else if (instruments.isEmpty()) {
+                UserInfo(
+                    mainText = stringResource(R.string.tuner_instrument_list_empty_title),
+                    supportingText = stringResource(R.string.tuner_instrument_list_empty_supporting),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(vertical = 32.dp),
+                )
+            } else {
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .weight(1f, fill = false)
+                        .padding(vertical = 12.dp)
+                ) {
+                    items(
+                        items = instruments,
+                        key = { it.id },
+                    ) { instrument ->
+                        InstrumentListItem(
+                            instrument = instrument,
+                            onEdit = { pendingInstrumentToEdit = instrument },
+                            onDelete = {
+                                if (doesInstrumentHaveTunings(instrument.id)) {
+                                    Toast.makeText(
+                                        context,
+                                        context.resources.getString(R.string.tuner_instrument_delete_blocked_message),
+                                        Toast.LENGTH_SHORT,
+                                    ).show()
+                                } else {
+                                    pendingInstrumentToDelete = instrument
+                                }
+                            },
+                        )
+                    }
+                }
+            }
+
+            HorizontalDivider(
+                modifier = Modifier.padding(bottom = 12.dp),
+            )
+
+            Button(
+                onClick = { showCreateInstrumentDialog = true },
+                modifier = Modifier
+                    .fillMaxWidth(),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = MaterialTheme.colorScheme.secondaryContainer,
+                    contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
+                )
+            ) {
+                Text(stringResource(R.string.tuner_instrument_add_action))
+            }
+        }
+
+    }
+
+    if (showCreateInstrumentDialog) {
+        CreateEditInstrumentDialog(
+            instrument = null,
+            canEditNotesCount = true,
+            onDismiss = { showCreateInstrumentDialog = false },
+            onSave = {
+                onCreateInstrument(it)
+                showCreateInstrumentDialog = false
+            },
+        )
+    }
+
+    pendingInstrumentToEdit?.let { instrument ->
+        CreateEditInstrumentDialog(
+            instrument = instrument,
+            canEditNotesCount = !doesInstrumentHaveTunings(instrument.id),
+            onDismiss = { pendingInstrumentToEdit = null },
+            onSave = {
+                onUpdateInstrument(it)
+                pendingInstrumentToEdit = null
+            },
+        )
+    }
+
+    pendingInstrumentToDelete?.let { instrument ->
+        DeleteItemDialog(
+            titleRes = R.string.tuner_instrument_delete_title,
+            messageRes = R.string.core_delete_confirmation_message,
+            itemName = instrument.displayNameOnly(),
+            onDelete = {
+                onDeleteInstrument(instrument.id)
+                pendingInstrumentToDelete = null
+            },
+            onDismiss = { pendingInstrumentToDelete = null }
+        )
+    }
+}

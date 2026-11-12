@@ -1,5 +1,8 @@
 package com.example.corda.ui.theme
 
+import com.example.corda.core.ui.system.LANGUAGE_EN
+import com.example.corda.core.ui.system.LANGUAGE_PL
+import com.example.corda.core.ui.system.normalizeLanguageTag
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

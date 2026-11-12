@@ -1,0 +1,67 @@
+package com.example.corda.tuner.ui.settings.components
+
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.rounded.Delete
+import androidx.compose.material.icons.rounded.Edit
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.unit.dp
+import com.example.corda.R
+import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.ui.helpers.displayNameOnly
+
+@Composable
+fun InstrumentListItem(
+    instrument: Instrument,
+    onEdit: () -> Unit,
+    onDelete: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .padding(end = 8.dp),
+        ) {
+            Text(
+                text = instrument.displayNameOnly(),
+                style = MaterialTheme.typography.titleMedium,
+                color = MaterialTheme.colorScheme.onSurface,
+            )
+            Text(
+                text = pluralStringResource(
+                    R.plurals.tuner_instrument_string_count,
+                    instrument.musicNotesCount.toInt(),
+                    instrument.musicNotesCount.toInt()
+                ),
+                style = MaterialTheme.typography.bodyMedium,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+        Row {
+            IconButton(onClick = onEdit) {
+                Icon(Icons.Rounded.Edit, contentDescription = null)
+            }
+            IconButton(onClick = onDelete) {
+                Icon(Icons.Rounded.Delete, contentDescription = null)
+            }
+        }
+    }
+}

@@ -1,0 +1,116 @@
+package com.example.corda.settings.ui.screen
+
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Error
+import androidx.compose.material.icons.outlined.DarkMode
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Switch
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBar
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.unit.dp
+import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.corda.R
+import com.example.corda.core.ui.components.NavigateBackButton
+import com.example.corda.settings.ui.components.SettingsClickableItem
+import com.example.corda.settings.ui.components.SettingsLanguageDropdown
+import com.example.corda.settings.ui.components.SettingsSectionHeader
+
+private val screenPadding = 16.dp
+private val dividerPadding = Modifier.padding(vertical = 8.dp)
+
+@Composable
+fun SettingsScreen(
+    onBack: () -> Unit,
+    modifier: Modifier = Modifier,
+    viewModel: SettingsViewModel = hiltViewModel(),
+) {
+    val isDarkMode by viewModel.isDarkMode.collectAsStateWithLifecycle()
+
+    Scaffold(
+        modifier = modifier,
+        containerColor = MaterialTheme.colorScheme.background,
+        contentColor = MaterialTheme.colorScheme.onBackground,
+        topBar = {
+            TopAppBar(
+                title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.SemiBold) },
+                navigationIcon = { NavigateBackButton(onClick = onBack) },
+            )
+        }
+    ) { innerPadding ->
+        Column(
+            modifier = Modifier
+                .padding(innerPadding)
+                .padding(horizontal = screenPadding)
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
+        ) {
+            SettingsSectionHeader(stringResource(R.string.settings_display_header))
+
+            SettingsClickableItem(
+                title = stringResource(R.string.settings_display_dark_mode_label),
+                icon = Icons.Outlined.DarkMode,
+                trailingContent = {
+                    Switch(
+                        checked = isDarkMode,
+                        onCheckedChange = { viewModel.toggleDarkMode(it) }
+                    )
+                }
+            )
+
+            HorizontalDivider(modifier = dividerPadding)
+
+            SettingsSectionHeader(
+                title = stringResource(R.string.settings_calibration_header),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+
+            OutlinedTextField(
+                value = viewModel.frequencyInput,
+                onValueChange = { viewModel.updateFrequency(it) },
+                label = { Text(stringResource(R.string.settings_calibration_base_frequency_label)) },
+                isError = viewModel.isFrequencyError,
+                supportingText = {
+                    if (viewModel.isFrequencyError) Text(stringResource(R.string.settings_calibration_frequency_error_message))
+                },
+                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+                modifier = Modifier.fillMaxWidth(),
+                trailingIcon = {
+                    if (viewModel.isFrequencyError) {
+                        Icon(
+                            Icons.Default.Error,
+                            stringResource(R.string.core_error_label),
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                    }
+                },
+            )
+
+            HorizontalDivider(modifier = dividerPadding)
+
+            SettingsSectionHeader(
+                title = stringResource(R.string.settings_localisation_header),
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+            )
+
+            SettingsLanguageDropdown()
+        }
+    }
+}
