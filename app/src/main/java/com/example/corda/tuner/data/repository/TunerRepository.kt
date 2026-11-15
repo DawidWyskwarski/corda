@@ -11,7 +11,7 @@ interface TunerRepository {
 
     suspend fun getAllSounds(): List<MusicNote>
     fun getInstrumentsFlow(): Flow<List<Instrument>>
-    suspend fun insertInstrument(instrument: Instrument): Result<Long>
+    suspend fun insertInstrument(instrument: Instrument): Result<Unit>
     suspend fun updateInstrument(instrument: Instrument): Result<Unit>
     suspend fun deleteInstrument(instrumentId: Int): Result<Unit>
     fun getAllTunings(): Flow<List<TuningDetails>>

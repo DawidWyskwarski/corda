@@ -11,18 +11,27 @@ import com.example.corda.tuner.data.local.models.TuningDetails
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class TunerRepositoryImpl @Inject constructor(
+class TunerRepositoryImpl(
     private val musicNoteDao: MusicNoteDao,
     private val instrumentDao: InstrumentDao,
     private val tuningDao: TuningDao,
+    private val currentTimeMillis: () -> Long,
 ) : TunerRepository {
+
+    @Inject
+    constructor(
+        musicNoteDao: MusicNoteDao,
+        instrumentDao: InstrumentDao,
+        tuningDao: TuningDao,
+    ) : this(musicNoteDao, instrumentDao, tuningDao, { System.currentTimeMillis() })
+
     // === Sounds ===
     override suspend fun getAllSounds(): List<MusicNote> = musicNoteDao.getAllNotes()
 
     // === Instruments ===
     override fun getInstrumentsFlow(): Flow<List<Instrument>> = instrumentDao.getInstruments()
 
-    override suspend fun insertInstrument(instrument: Instrument): Result<Long> = runCatching {
+    override suspend fun insertInstrument(instrument: Instrument): Result<Unit> = runCatching {
         instrumentDao.insertInstrument(instrument)
     }
 
@@ -46,7 +55,7 @@ class TunerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateTuningLastUsed(tuningId: Int): Result<Unit> = runCatching {
-        tuningDao.updateTuningLastUsed(tuningId, System.currentTimeMillis())
+        tuningDao.updateTuningLastUsed(tuningId, currentTimeMillis())
     }
 
     override suspend fun updateTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> = runCatching {
