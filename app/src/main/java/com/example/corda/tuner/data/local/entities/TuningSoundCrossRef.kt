@@ -3,6 +3,7 @@ package com.example.corda.tuner.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -27,6 +28,10 @@ import androidx.room.PrimaryKey
             parentColumns = ["midi_number"],
             childColumns = ["music_note_id"],
         ),
+    ],
+    indices = [
+        Index("tuning_id"),
+        Index("music_note_id"),
     ],
 )
 data class TuningSoundCrossRef(
