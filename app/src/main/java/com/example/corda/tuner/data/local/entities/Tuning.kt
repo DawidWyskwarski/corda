@@ -3,6 +3,7 @@ package com.example.corda.tuner.data.local.entities
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.ForeignKey
+import androidx.room.Index
 import androidx.room.PrimaryKey
 
 /**
@@ -19,8 +20,11 @@ import androidx.room.PrimaryKey
             entity = Instrument::class,
             parentColumns = ["instrument_id"],
             childColumns = ["instrument_id"],
+            // Shouldn't happen
+            onDelete = ForeignKey.CASCADE,
         ),
     ],
+    indices = [Index("instrument_id")],
 )
 data class Tuning(
     @PrimaryKey(autoGenerate = true)

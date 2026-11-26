@@ -23,7 +23,6 @@ fun SettingsClickableItem(
         overlineContent = null,
         supportingContent = null,
         colors = ListItemDefaults.colors(),
-        elevation = ListItemDefaults.elevation(ListItemDefaults.Elevation),
         content = { Text(title, fontSize = 16.sp) },
     )
 }

@@ -8,13 +8,20 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.text.BasicTextField
-import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.text.input.InputTransformation
+import androidx.compose.foundation.text.input.KeyboardActionHandler
+import androidx.compose.foundation.text.input.TextFieldDecorator
+import androidx.compose.foundation.text.input.TextFieldLineLimits
+import androidx.compose.foundation.text.input.byValue
+import androidx.compose.foundation.text.input.rememberTextFieldState
+import androidx.compose.foundation.text.input.setTextAndPlaceCursorAtEnd
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Slider
 import androidx.compose.material3.SliderDefaults
 import androidx.compose.material3.Text
+import androidx.compose.material3.rememberSliderState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -38,18 +45,23 @@ import com.example.corda.metronome.ui.MetronomeViewModel
 
 @Composable
 fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifier) {
-    val primaryColor = MaterialTheme.colorScheme.primary
-    val containerColor = MaterialTheme.colorScheme.primaryContainer
-    val onBackground = MaterialTheme.colorScheme.onBackground
-
     var isEditing by remember { mutableStateOf(false) }
-    var bpmText by remember { mutableStateOf(bpm.toString()) }
     var hasFocused by remember { mutableStateOf(false) }
+    val bpmTextFieldState = rememberTextFieldState(bpm.toString())
     val focusRequester = remember { FocusRequester() }
+    val bpmRange = MetronomeViewModel.BPM_MIN.toFloat()..MetronomeViewModel.BPM_MAX.toFloat()
+    val sliderState =
+        rememberSliderState(
+            value = bpm.toFloat(),
+            trackRange = bpmRange,
+        )
+    sliderState.value = bpm.toFloat()
 
     // Keep text in sync with external BPM changes (e.g. slider) while not editing
     LaunchedEffect(bpm) {
-        if (!isEditing) bpmText = bpm.toString()
+        if (!isEditing) {
+            bpmTextFieldState.setTextAndPlaceCursorAtEnd(bpm.toString())
+        }
     }
 
     // Autofocus the field when editing begins
@@ -58,11 +70,14 @@ fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifi
     }
 
     fun commit() {
-        val parsed = bpmText.toIntOrNull()
-            ?.coerceIn(MetronomeViewModel.BPM_MIN, MetronomeViewModel.BPM_MAX)
-            ?: bpm
+        val parsed =
+            bpmTextFieldState.text
+                .toString()
+                .toIntOrNull()
+                ?.coerceIn(MetronomeViewModel.BPM_MIN, MetronomeViewModel.BPM_MAX)
+                ?: bpm
         onBpmChange(parsed)
-        bpmText = parsed.toString()
+        bpmTextFieldState.setTextAndPlaceCursorAtEnd(parsed.toString())
         isEditing = false
         hasFocused = false
     }
@@ -76,29 +91,39 @@ fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifi
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 BasicTextField(
-                    value = bpmText,
-                    onValueChange = { bpmText = it.filter { c -> c.isDigit() }.take(3) },
-                    singleLine = true,
-                    keyboardOptions = KeyboardOptions(
+                    state = bpmTextFieldState,
+                    inputTransformation =
+                    InputTransformation.byValue { _, proposed ->
+                        proposed.filter { it.isDigit() }.take(3)
+                    },
+                    lineLimits = TextFieldLineLimits.SingleLine,
+                    keyboardOptions =
+                    KeyboardOptions(
                         keyboardType = KeyboardType.Number,
                         imeAction = ImeAction.Done,
                     ),
-                    keyboardActions = KeyboardActions(onDone = { commit() }),
-                    textStyle = TextStyle(
+                    onKeyboardAction = KeyboardActionHandler { commit() },
+                    textStyle =
+                    TextStyle(
                         fontWeight = FontWeight.Bold,
                         fontSize = 28.sp,
-                        color = onBackground,
+                        color = MaterialTheme.colorScheme.onBackground,
                         textAlign = TextAlign.Center,
                     ),
-                    cursorBrush = SolidColor(primaryColor),
-                    decorationBox = { innerTextField ->
+                    cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+                    decorator =
+                    TextFieldDecorator { innerTextField ->
                         Column(horizontalAlignment = Alignment.CenterHorizontally) {
                             innerTextField()
                             Spacer(modifier = Modifier.height(2.dp))
-                            HorizontalDivider(color = primaryColor, thickness = 2.dp)
+                            HorizontalDivider(
+                                color = MaterialTheme.colorScheme.primary,
+                                thickness = 2.dp,
+                            )
                         }
                     },
-                    modifier = Modifier
+                    modifier =
+                    Modifier
                         .width(80.dp)
                         .focusRequester(focusRequester)
                         .onFocusChanged { focusState ->
@@ -113,7 +138,7 @@ fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifi
                     text = " BPM",
                     fontWeight = FontWeight.Bold,
                     fontSize = 28.sp,
-                    color = onBackground,
+                    color = MaterialTheme.colorScheme.onBackground,
                 )
             }
         } else {
@@ -121,23 +146,27 @@ fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifi
                 text = "$bpm BPM",
                 fontWeight = FontWeight.Bold,
                 fontSize = 28.sp,
-                color = onBackground,
-                modifier = Modifier.clickable {
-                    bpmText = bpm.toString()
+                color = MaterialTheme.colorScheme.onBackground,
+                modifier =
+                Modifier.clickable {
+                    bpmTextFieldState.setTextAndPlaceCursorAtEnd(bpm.toString())
                     isEditing = true
                 },
             )
         }
         Spacer(modifier = Modifier.height(8.dp))
         Slider(
-            value = bpm.toFloat(),
-            onValueChange = { onBpmChange(it.toInt()) },
-            valueRange = MetronomeViewModel.BPM_MIN.toFloat()..MetronomeViewModel.BPM_MAX.toFloat(),
+            state = sliderState,
+            onValueChange = {
+                sliderState.value = it
+                onBpmChange(it.toInt())
+            },
             modifier = Modifier.fillMaxWidth(),
-            colors = SliderDefaults.colors(
-                thumbColor = primaryColor,
-                activeTrackColor = primaryColor,
-                inactiveTrackColor = containerColor,
+            colors =
+            SliderDefaults.colors(
+                thumbColor = MaterialTheme.colorScheme.primary,
+                activeTrackColor = MaterialTheme.colorScheme.primary,
+                inactiveTrackColor = MaterialTheme.colorScheme.primaryContainer,
             ),
         )
     }
