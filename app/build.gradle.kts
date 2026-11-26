@@ -13,12 +13,14 @@ android {
     namespace = "com.example.corda"
     compileSdk {
         version = release(37)
+        compileSdkMinor = 2
     }
 
     defaultConfig {
         applicationId = "com.example.corda"
         minSdk = 24
-        targetSdk = 36
+        targetSdk = 37
+        compileSdkMinor = 2
         versionCode = 1
         versionName = "1.0"
 
