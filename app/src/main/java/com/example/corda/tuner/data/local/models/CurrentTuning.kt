@@ -32,7 +32,7 @@ data class CurrentTuning(
             value = TuningSoundCrossRef::class,
             parentColumn = "tuning_id",
             entityColumn = "music_note_id",
-        )
+        ),
     )
     val notes: List<MusicNote>,
 )

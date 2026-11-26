@@ -23,9 +23,7 @@ import com.example.corda.settings.ui.data.SUPPORTED_LANGUAGES
 import com.example.corda.settings.ui.data.nativeDisplayName
 
 @Composable
-fun SettingsLanguageDropdown(
-    modifier: Modifier = Modifier,
-) {
+fun SettingsLanguageDropdown(modifier: Modifier = Modifier) {
     var expanded by remember { mutableStateOf(false) }
 
     val currentLocale = AppCompatDelegate.getApplicationLocales()[0]
@@ -49,7 +47,7 @@ fun SettingsLanguageDropdown(
             colors = ExposedDropdownMenuDefaults.outlinedTextFieldColors(),
             modifier = Modifier
                 .menuAnchor(
-                    ExposedDropdownMenuAnchorType.PrimaryEditable
+                    ExposedDropdownMenuAnchorType.PrimaryEditable,
                 )
                 .fillMaxWidth(),
         )
@@ -64,7 +62,7 @@ fun SettingsLanguageDropdown(
                     onClick = {
                         AppCompatDelegate.setApplicationLocales(
                             language.tag?.let(LocaleListCompat::forLanguageTags)
-                                ?: LocaleListCompat.getEmptyLocaleList()
+                                ?: LocaleListCompat.getEmptyLocaleList(),
                         )
 
                         expanded = false
@@ -77,6 +75,5 @@ fun SettingsLanguageDropdown(
 }
 
 @Composable
-private fun languageLabel(language: Language): String =
-    language.locale?.nativeDisplayName()
-        ?: stringResource(R.string.settings_localisation_language_system_option)
+private fun languageLabel(language: Language): String = language.locale?.nativeDisplayName()
+    ?: stringResource(R.string.settings_localisation_language_system_option)

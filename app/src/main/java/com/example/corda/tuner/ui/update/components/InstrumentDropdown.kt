@@ -55,7 +55,7 @@ fun InstrumentDropdown( // TODO: Make this more generic
         ) {
             instruments.forEach { instrument ->
                 DropdownMenuItem(
-                    text = { Text( instrument.displayNameWithNoteCount() ) },
+                    text = { Text(instrument.displayNameWithNoteCount()) },
                     onClick = {
                         onInstrumentSelected(instrument.id)
                         expanded = false

@@ -30,7 +30,7 @@ android {
             isMinifyEnabled = false
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
-                "proguard-rules.pro"
+                "proguard-rules.pro",
             )
             signingConfig = signingConfigs.getByName("debug")
         }
@@ -51,7 +51,7 @@ android {
 }
 
 ktlint {
-    android = true
+    // Code style is configured via .editorconfig (ktlint_code_style = android_studio)
     ignoreFailures = false
 
     reporters {

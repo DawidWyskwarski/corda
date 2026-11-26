@@ -13,16 +13,13 @@ import androidx.compose.ui.text.withStyle
 import com.example.corda.tuner.data.local.entities.MusicNote
 
 @Composable
-fun NoteLabel(
-    musicNote: MusicNote?,
-    style: TextStyle,
-    modifier: Modifier = Modifier
-) {
+fun NoteLabel(musicNote: MusicNote?, style: TextStyle, modifier: Modifier = Modifier) {
     Text(
-        text = if (musicNote != null)
+        text = if (musicNote != null) {
             noteLabelAnnotation(musicNote.name, musicNote.octave, style)
-        else
-            AnnotatedString(""),
+        } else {
+            AnnotatedString("")
+        },
         modifier = modifier,
         style = style,
     )

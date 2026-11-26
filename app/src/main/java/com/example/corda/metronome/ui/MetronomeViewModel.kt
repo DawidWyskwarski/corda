@@ -4,6 +4,8 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.corda.metronome.domain.AudioPlayer
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.time.Duration.Companion.milliseconds
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -11,8 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.time.Duration.Companion.milliseconds
 
 data class MetronomeUiState(
     val bpm: Int = 130,
@@ -27,9 +27,7 @@ data class MetronomeUiState(
 )
 
 @HiltViewModel
-class MetronomeViewModel @Inject constructor(
-    private val audioPlayer: AudioPlayer,
-) : ViewModel() {
+class MetronomeViewModel @Inject constructor(private val audioPlayer: AudioPlayer) : ViewModel() {
 
     private val _state = MutableStateFlow(MetronomeUiState())
     val state: StateFlow<MetronomeUiState> = _state.asStateFlow()
@@ -91,7 +89,9 @@ class MetronomeViewModel @Inject constructor(
                 } else {
                     false
                 }
-                _state.update { it.copy(currentBeat = newBeat, isMuted = isMuted, beatTick = totalBeats) }
+                _state.update {
+                    it.copy(currentBeat = newBeat, isMuted = isMuted, beatTick = totalBeats)
+                }
                 if (!isMuted) {
                     audioPlayer.playBeat(isAccent = newBeat == 1)
                 }

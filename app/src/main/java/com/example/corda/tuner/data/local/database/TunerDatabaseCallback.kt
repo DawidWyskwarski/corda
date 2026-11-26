@@ -9,9 +9,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
 
-class TunerDatabaseCallback(
-    private val databaseProvider: Provider<TunerDatabase>
-) : RoomDatabase.Callback() {
+class TunerDatabaseCallback(private val databaseProvider: Provider<TunerDatabase>) :
+    RoomDatabase.Callback() {
 
     private val applicationScope = CoroutineScope(SupervisorJob() + Dispatchers.IO)
 

@@ -31,26 +31,26 @@ fun NavigationPill(
     text: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
-    supportingText: String = ""
+    supportingText: String = "",
 ) {
     Surface(
         modifier = modifier,
         onClick = dropUnlessResumed(block = onClick),
         shape = CircleShape,
-        color = MaterialTheme.colorScheme.primaryContainer
+        color = MaterialTheme.colorScheme.primaryContainer,
     ) {
         Row(
             modifier = Modifier
                 .padding(vertical = 6.dp, horizontal = 8.dp)
                 .defaultMinSize(minHeight = 40.dp),
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(
                 modifier = Modifier
                     .weight(1f, fill = false)
                     .padding(start = 24.dp, end = 8.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 // Main text
                 Text(
@@ -58,7 +58,7 @@ fun NavigationPill(
                     style = MaterialTheme.typography.titleMedium,
                     color = MaterialTheme.colorScheme.onPrimaryContainer,
                     maxLines = 1,
-                    overflow = TextOverflow.Ellipsis
+                    overflow = TextOverflow.Ellipsis,
                 )
                 // if there is a supporting text, display it
                 if (supportingText.isNotEmpty()) {
@@ -67,7 +67,7 @@ fun NavigationPill(
                         style = MaterialTheme.typography.labelSmall,
                         color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = 0.7f),
                         maxLines = 1,
-                        overflow = TextOverflow.Ellipsis
+                        overflow = TextOverflow.Ellipsis,
                     )
                 }
             }
@@ -76,7 +76,7 @@ fun NavigationPill(
             Icon(
                 imageVector = Icons.AutoMirrored.Rounded.KeyboardArrowRight,
                 contentDescription = null,
-                tint = MaterialTheme.colorScheme.onPrimaryContainer
+                tint = MaterialTheme.colorScheme.onPrimaryContainer,
             )
         }
     }

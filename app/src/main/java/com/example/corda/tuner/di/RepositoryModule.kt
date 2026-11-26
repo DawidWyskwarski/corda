@@ -14,7 +14,5 @@ abstract class RepositoryModule {
 
     @Binds
     @Singleton
-    abstract fun bindTunerRepository(
-        tunerRepositoryImpl: TunerRepositoryImpl
-    ): TunerRepository
+    abstract fun bindTunerRepository(tunerRepositoryImpl: TunerRepositoryImpl): TunerRepository
 }

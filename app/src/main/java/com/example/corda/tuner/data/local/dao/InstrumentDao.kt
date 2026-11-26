@@ -27,5 +27,4 @@ interface InstrumentDao {
 
     @Query("DELETE FROM Instrument WHERE instrument_id IN (:instrumentId)")
     suspend fun deleteInstrument(instrumentId: Int)
-
 }

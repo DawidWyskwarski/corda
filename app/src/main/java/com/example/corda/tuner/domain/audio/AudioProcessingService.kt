@@ -46,7 +46,7 @@ class AudioProcessingService : PitchDetector {
             val minBufferSize = AudioRecord.getMinBufferSize(
                 SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
-                AudioFormat.ENCODING_PCM_16BIT
+                AudioFormat.ENCODING_PCM_16BIT,
             )
             val recordBufferSize = maxOf(BUFFER_SIZE * 2, minBufferSize)
 
@@ -55,7 +55,7 @@ class AudioProcessingService : PitchDetector {
                 SAMPLE_RATE,
                 AudioFormat.CHANNEL_IN_MONO,
                 AudioFormat.ENCODING_PCM_16BIT,
-                recordBufferSize
+                recordBufferSize,
             )
 
             if (recorder.state != AudioRecord.STATE_INITIALIZED) {
@@ -73,7 +73,7 @@ class AudioProcessingService : PitchDetector {
             val pitchProcessor = PitchProcessor(
                 PitchEstimationAlgorithm.YIN,
                 SAMPLE_RATE.toFloat(),
-                BUFFER_SIZE
+                BUFFER_SIZE,
             ) { result, _ ->
                 val pitch = result.pitch
                 val probability = result.probability

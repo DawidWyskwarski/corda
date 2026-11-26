@@ -9,9 +9,9 @@ import androidx.room.PrimaryKey
  *
  * @param id Auto-generated primary key.
  * @param customName Name of the instrument given by the user.(e.g. "Guitar").
- * @param defaultName Enum representing a name of the default/seeded instrument. Used for translations.
+ * @param defaultName Enum for the default/seeded instrument name (used for translations).
  *  Set at seed time. Not mutable by user
- * @param musicNotesCount Number of music notes the instrument can tune to (e.g. 6 for Guitar).
+ * @param musicNotesCount Number of notes to tune (strings for guitar/bass/etc.).
  */
 @Entity
 data class Instrument(
@@ -23,12 +23,12 @@ data class Instrument(
     @ColumnInfo(name = "instrument_default_name")
     val defaultName: DefaultInstrumentName? = null,
     @ColumnInfo(name = "music_notes_count")
-    val musicNotesCount: Byte, // In the context of guitar, bass, etc. this represents the number of strings.
+    val musicNotesCount: Byte,
 )
 
 enum class DefaultInstrumentName {
     GUITAR,
-    BASS
+    BASS,
 }
 
 val INSTRUMENT_MUSIC_NOTES_COUNT_BRACKET = 2..24

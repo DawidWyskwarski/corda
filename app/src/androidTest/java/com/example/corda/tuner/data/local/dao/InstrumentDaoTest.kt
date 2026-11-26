@@ -41,7 +41,7 @@ class InstrumentDaoTest {
                 customName = "My Guitar",
                 defaultName = DefaultInstrumentName.GUITAR,
                 musicNotesCount = 6,
-            )
+            ),
         )
 
         dao.getInstruments().test {
@@ -63,7 +63,7 @@ class InstrumentDaoTest {
                 customName = "Original",
                 defaultName = DefaultInstrumentName.GUITAR,
                 musicNotesCount = 6,
-            )
+            ),
         )
         dao.insertInstrument(
             Instrument(
@@ -71,7 +71,7 @@ class InstrumentDaoTest {
                 customName = "Replaced",
                 defaultName = DefaultInstrumentName.BASS,
                 musicNotesCount = 4,
-            )
+            ),
         )
 
         dao.getInstruments().test {
@@ -92,7 +92,7 @@ class InstrumentDaoTest {
                 customName = "Before",
                 defaultName = DefaultInstrumentName.GUITAR,
                 musicNotesCount = 6,
-            )
+            ),
         ).toInt()
 
         dao.updateInstrument(
@@ -101,7 +101,7 @@ class InstrumentDaoTest {
                 customName = "After",
                 defaultName = DefaultInstrumentName.GUITAR,
                 musicNotesCount = 7,
-            )
+            ),
         )
 
         dao.getInstruments().test {
@@ -121,7 +121,7 @@ class InstrumentDaoTest {
                 customName = "Ghost",
                 defaultName = null,
                 musicNotesCount = 6,
-            )
+            ),
         )
 
         dao.getInstruments().test {
@@ -133,10 +133,10 @@ class InstrumentDaoTest {
     @Test
     fun deleteInstrument_removesOnlyTheTargetedRow() = runTest {
         val firstId = dao.insertInstrument(
-            Instrument(customName = "Keep", musicNotesCount = 6)
+            Instrument(customName = "Keep", musicNotesCount = 6),
         ).toInt()
         val secondId = dao.insertInstrument(
-            Instrument(customName = "Delete", musicNotesCount = 4)
+            Instrument(customName = "Delete", musicNotesCount = 4),
         ).toInt()
 
         dao.deleteInstrument(secondId)
@@ -153,7 +153,7 @@ class InstrumentDaoTest {
     @Test
     fun deleteInstrument_withUnknownId_doesNotThrow_andDoesNotAffectExistingRows() = runTest {
         val id = dao.insertInstrument(
-            Instrument(customName = "Keep", musicNotesCount = 6)
+            Instrument(customName = "Keep", musicNotesCount = 6),
         ).toInt()
 
         dao.deleteInstrument(999)

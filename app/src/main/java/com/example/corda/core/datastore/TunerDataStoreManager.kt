@@ -11,7 +11,8 @@ import kotlinx.coroutines.flow.map
 
 private val Context.dataStore by preferencesDataStore(name = "tuner")
 
-class TunerDataStoreManager(context: Context) { // TODO I think it would be better to divide it. Think of a good way to do that.
+// TODO I think it would be better to divide it. Think of a good way to do that.
+class TunerDataStoreManager(context: Context) {
 
     private val tunerDataStore = context.dataStore
 
@@ -25,6 +26,9 @@ class TunerDataStoreManager(context: Context) { // TODO I think it would be bett
     }
     val baseFrequency: Flow<Int> = tunerDataStore.data.map { it[Keys.BASE_FREQUENCY] ?: 440 }
 
-    suspend fun setTunerMode(tunerMode: TuningMode) = tunerDataStore.edit { it[Keys.MODE] = tunerMode.name }
+    suspend fun setTunerMode(tunerMode: TuningMode) = tunerDataStore.edit {
+        it[Keys.MODE] =
+            tunerMode.name
+    }
     suspend fun saveBaseFrequency(hz: Int) = tunerDataStore.edit { it[Keys.BASE_FREQUENCY] = hz }
 }

@@ -50,7 +50,7 @@ class MusicNoteDaoTest {
                 MusicNote(midiNum = 64, name = "E", octave = 4),
                 MusicNote(midiNum = 60, name = "C", octave = 4),
                 MusicNote(midiNum = 62, name = "D", octave = 4),
-            )
+            ),
         )
 
         assertThat(dao.getAllNotes().map { it.midiNum })

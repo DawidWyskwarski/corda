@@ -12,6 +12,7 @@ import com.example.corda.tuner.data.repository.TunerRepository
 import com.example.corda.tuner.ui.helpers.resolveInstrumentName
 import com.example.corda.tuner.ui.settings.data.TuningListItem
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -19,24 +20,29 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.combine
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class TunerSettingsViewModel @Inject constructor(
     private val repository: TunerRepository,
-    private val tunerDataStoreManager: TunerDataStoreManager
+    private val tunerDataStoreManager: TunerDataStoreManager,
 ) : ViewModel() {
 
     val selectedTuningMode: StateFlow<TuningMode?> = tunerDataStoreManager.tunerMode.stateIn(
-        scope = viewModelScope, started = SharingStarted.WhileSubscribed(5_000), initialValue = null
+        scope = viewModelScope,
+        started = SharingStarted.WhileSubscribed(5_000),
+        initialValue = null,
     )
 
     val instruments: StateFlow<List<Instrument>?> = repository.getInstrumentsFlow().stateIn(
-        scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = null
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null,
     )
 
     private val tunings: StateFlow<List<TuningDetails>?> = repository.getAllTunings().stateIn(
-        scope = viewModelScope, started = SharingStarted.Eagerly, initialValue = null
+        scope = viewModelScope,
+        started = SharingStarted.Eagerly,
+        initialValue = null,
     )
 
     private val _searchQuery = MutableStateFlow("")
@@ -51,29 +57,33 @@ class TunerSettingsViewModel @Inject constructor(
     val tuningsUiState: StateFlow<UiState<List<TuningListItem>>> = combine(
         tunings,
         _searchQuery,
-        _filterInstrumentId
+        _filterInstrumentId,
     ) { tunings, searchQuery, filterInstrumentId ->
         if (tunings == null) return@combine UiState.Loading
 
         UiState.Loaded(
             data = tunings.filter {
                 (filterInstrumentId == null || filterInstrumentId == it.instrumentId) &&
-                        (searchQuery.isEmpty() || it.tuningName.contains(
-                            searchQuery,
-                            ignoreCase = true
-                        ))
+                    (
+                        searchQuery.isEmpty() ||
+                            it.tuningName.contains(
+                                searchQuery,
+                                ignoreCase = true,
+                            )
+                        )
             }.map {
                 it.toTuningListItem()
-            }
+            },
         )
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = UiState.Loading
+        initialValue = UiState.Loading,
     )
 
     init {
-        viewModelScope.launch { //TODO: This will probably change when I move selected tuning to the DataStore
+        viewModelScope.launch {
+            // TODO: This will probably change when I move selected tuning to the DataStore
             tunings.collect { list ->
                 val current = _selectedTuningId.value
                 if (current == null || list?.none { it.tuningId == current } ?: false) {
@@ -114,11 +124,13 @@ class TunerSettingsViewModel @Inject constructor(
 
         if (trimmed.isNullOrBlank() ||
             musicNotesCount !in INSTRUMENT_MUSIC_NOTES_COUNT_BRACKET
-        ) return
+        ) {
+            return
+        }
 
         viewModelScope.launch {
             repository.insertInstrument(
-                instrument.copy(customName = trimmed)
+                instrument.copy(customName = trimmed),
             )
         }
     }
@@ -131,14 +143,16 @@ class TunerSettingsViewModel @Inject constructor(
 
         if ((instrument.defaultName == null && trimmed == null) ||
             musicNotesCount !in INSTRUMENT_MUSIC_NOTES_COUNT_BRACKET
-        ) return
+        ) {
+            return
+        }
 
         val stored = instruments.value?.firstOrNull { it.id == instrument.id } ?: return
         val safeCount = if (hasTunings(instrument.id)) stored.musicNotesCount else musicNotesCount
 
         viewModelScope.launch {
             repository.updateInstrument(
-                instrument.copy(customName = trimmed, musicNotesCount = safeCount)
+                instrument.copy(customName = trimmed, musicNotesCount = safeCount),
             )
         }
     }
@@ -155,9 +169,9 @@ class TunerSettingsViewModel @Inject constructor(
         }
     }
 
-    fun hasTunings(instrumentId: Int): Boolean {
-        return tunings.value?.any { it.instrumentId == instrumentId } ?: true
-    }
+    fun hasTunings(instrumentId: Int): Boolean = tunings.value?.any {
+        it.instrumentId == instrumentId
+    } ?: true
 
     // Tuning Operations
     fun deleteTuning(tuningId: Int) {
@@ -172,7 +186,8 @@ class TunerSettingsViewModel @Inject constructor(
         }
     }
 
-    fun markSelectedTuningAsUsed() { //TODO: I will probably move selected Tuning Id to the dataStore and this will end up in the MainTunerScreen
+    // TODO: Move selected tuning id to DataStore; then call this from MainTunerScreen.
+    fun markSelectedTuningAsUsed() {
         if (_selectedTuningId.value == null) return
 
         viewModelScope.launch {
@@ -190,5 +205,5 @@ private fun TuningDetails.toTuningListItem() = TuningListItem(
     tuningName = tuningName,
     instrumentId = instrumentId,
     _instrumentName = resolveInstrumentName(instrumentCustomName, instrumentDefaultName),
-    notes = musicNotes
+    notes = musicNotes,
 )

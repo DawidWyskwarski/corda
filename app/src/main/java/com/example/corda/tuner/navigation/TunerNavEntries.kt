@@ -4,9 +4,9 @@ import androidx.hilt.lifecycle.viewmodel.compose.hiltViewModel
 import androidx.navigation3.runtime.EntryProviderScope
 import com.example.corda.core.navigation.Screen
 import com.example.corda.tuner.ui.main.screen.MainTunerScreen
+import com.example.corda.tuner.ui.settings.screen.TunerSettingsScreen
 import com.example.corda.tuner.ui.update.screen.UpdateTuningScreen
 import com.example.corda.tuner.ui.update.screen.UpdateTuningViewModel
-import com.example.corda.tuner.ui.settings.screen.TunerSettingsScreen
 
 fun EntryProviderScope<Screen>.tunerEntries(
     openDrawer: () -> Unit,
@@ -33,7 +33,7 @@ fun EntryProviderScope<Screen>.tunerEntries(
                 key = screen.tuningId.toString(),
             ) { factory ->
                 factory.create(screen.tuningId)
-            }
+            },
         )
     }
 }

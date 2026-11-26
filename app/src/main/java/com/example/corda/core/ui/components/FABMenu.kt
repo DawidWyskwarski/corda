@@ -72,7 +72,7 @@ fun FABMenu(
     isExpanded: Boolean,
     onExpandedChange: (Boolean) -> Unit,
     items: List<FABMenuItem>,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val listState = rememberLazyListState()
     val fabVisible by remember {
@@ -88,7 +88,7 @@ fun FABMenu(
     val closeMenuDescription = stringResource(R.string.core_fab_menu_close_description)
 
     Box(
-        modifier = modifier.fillMaxSize()
+        modifier = modifier.fillMaxSize(),
     ) {
         if (isExpanded) {
             Box(
@@ -96,7 +96,7 @@ fun FABMenu(
                     .fillMaxSize()
                     .pointerInput(Unit) {
                         detectTapGestures { onExpandedChange(false) }
-                    }
+                    },
             )
         }
 
@@ -107,15 +107,15 @@ fun FABMenu(
             button = {
                 TooltipBox(
                     positionProvider =
-                        TooltipDefaults.rememberTooltipPositionProvider(
-                            if (isExpanded) {
-                                TooltipAnchorPosition.Start
-                            } else {
-                                TooltipAnchorPosition.Above
-                            }
-                        ),
+                    TooltipDefaults.rememberTooltipPositionProvider(
+                        if (isExpanded) {
+                            TooltipAnchorPosition.Start
+                        } else {
+                            TooltipAnchorPosition.Above
+                        },
+                    ),
                     tooltip = { PlainTooltip { Text(toggleMenuDescription) } },
-                    state = rememberTooltipState()
+                    state = rememberTooltipState(),
                 ) {
                     ToggleFloatingActionButton(
                         modifier = Modifier
@@ -149,7 +149,7 @@ fun FABMenu(
                         )
                     }
                 }
-            }
+            },
         ) {
             items.forEachIndexed { i, item ->
                 FloatingActionButtonMenuItem(
@@ -166,7 +166,7 @@ fun FABMenu(
                                                 onExpandedChange(false)
                                                 true
                                             },
-                                        )
+                                        ),
                                     )
                             }
                         }
@@ -177,8 +177,10 @@ fun FABMenu(
                                     // FAB menu button.
                                     if (
                                         it.type == KeyEventType.KeyDown &&
-                                        (it.key == Key.DirectionUp ||
-                                                (it.isShiftPressed && it.key == Key.Tab))
+                                        (
+                                            it.key == Key.DirectionUp ||
+                                                (it.isShiftPressed && it.key == Key.Tab)
+                                            )
                                     ) {
                                         focusRequester.requestFocus()
                                         return@onKeyEvent true
@@ -187,7 +189,7 @@ fun FABMenu(
                                 }
                             } else {
                                 Modifier
-                            }
+                            },
                         ),
                     onClick = dropUnlessResumed(block = item.onClick),
                     icon = { Icon(item.icon, contentDescription = null) },

@@ -56,7 +56,7 @@ class TuningDaoTest {
             customName = customName,
             defaultName = defaultName,
             musicNotesCount = musicNotesCount,
-        )
+        ),
     ).toInt()
 
     private suspend fun seedNotes(vararg notes: MusicNote = arrayOf(noteC4, noteE4, noteG4)) {
@@ -80,7 +80,7 @@ class TuningDaoTest {
     fun insertTuning_returnsGeneratedId_andRowIsPersisted() = runTest {
         val instrumentId = insertInstrument()
         val tuningId = tuningDao.insertTuning(
-            Tuning(name = "Standard", instrumentId = instrumentId, lastUsed = 100L)
+            Tuning(name = "Standard", instrumentId = instrumentId, lastUsed = 100L),
         ).toInt()
 
         val details = tuningDao.getTuningDetails(tuningId)
@@ -97,7 +97,7 @@ class TuningDaoTest {
     fun insertTuning_withUnknownInstrumentId_throwsConstraintException() = runTest {
         try {
             tuningDao.insertTuning(
-                Tuning(name = "Orphan", instrumentId = 999, lastUsed = 0L)
+                Tuning(name = "Orphan", instrumentId = 999, lastUsed = 0L),
             )
             throw AssertionError("Expected SQLiteConstraintException")
         } catch (e: SQLiteConstraintException) {
@@ -121,7 +121,7 @@ class TuningDaoTest {
                 name = "After",
                 instrumentId = instrumentId,
                 lastUsed = 20L,
-            )
+            ),
         )
 
         val details = tuningDao.getTuningDetails(tuningId)!!
@@ -153,10 +153,10 @@ class TuningDaoTest {
     fun updateTuningLastUsed_updatesTimestamp_andAffectsOrdering() = runTest {
         val instrumentId = insertInstrument()
         val olderId = tuningDao.insertTuning(
-            Tuning(name = "Older", instrumentId = instrumentId, lastUsed = 100L)
+            Tuning(name = "Older", instrumentId = instrumentId, lastUsed = 100L),
         ).toInt()
         val newerId = tuningDao.insertTuning(
-            Tuning(name = "Newer", instrumentId = instrumentId, lastUsed = 200L)
+            Tuning(name = "Newer", instrumentId = instrumentId, lastUsed = 200L),
         ).toInt()
 
         tuningDao.getTunings().test {
@@ -229,13 +229,13 @@ class TuningDaoTest {
             musicNotesCount = 4,
         )
         val first = tuningDao.insertTuning(
-            Tuning(name = "First", instrumentId = guitarId, lastUsed = 10L)
+            Tuning(name = "First", instrumentId = guitarId, lastUsed = 10L),
         ).toInt()
         val second = tuningDao.insertTuning(
-            Tuning(name = "Second", instrumentId = bassId, lastUsed = 30L)
+            Tuning(name = "Second", instrumentId = bassId, lastUsed = 30L),
         ).toInt()
         val third = tuningDao.insertTuning(
-            Tuning(name = "Third", instrumentId = guitarId, lastUsed = 20L)
+            Tuning(name = "Third", instrumentId = guitarId, lastUsed = 20L),
         ).toInt()
 
         tuningDao.getTunings().test {
@@ -260,10 +260,10 @@ class TuningDaoTest {
 
         val instrumentId = insertInstrument()
         tuningDao.insertTuning(
-            Tuning(name = "Low", instrumentId = instrumentId, lastUsed = 1L)
+            Tuning(name = "Low", instrumentId = instrumentId, lastUsed = 1L),
         )
         val highId = tuningDao.insertTuning(
-            Tuning(name = "High", instrumentId = instrumentId, lastUsed = 99L)
+            Tuning(name = "High", instrumentId = instrumentId, lastUsed = 99L),
         ).toInt()
 
         tuningDao.getMostRecentTuning().test {

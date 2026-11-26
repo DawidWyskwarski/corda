@@ -10,12 +10,12 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.corda.core.datastore.SettingsDataStoreManager
-import com.example.corda.core.ui.theme.CordaTheme
 import com.example.corda.core.ui.system.applyWindowTheme
+import com.example.corda.core.ui.theme.CordaTheme
 import dagger.hilt.android.AndroidEntryPoint
+import javax.inject.Inject
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.runBlocking
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : AppCompatActivity() {
@@ -30,7 +30,9 @@ class MainActivity : AppCompatActivity() {
         applyWindowTheme(this, initialDark)
 
         setContent {
-            val isDark by settingsDataStoreManager.isDarkMode.collectAsStateWithLifecycle(initialValue = initialDark)
+            val isDark by settingsDataStoreManager.isDarkMode.collectAsStateWithLifecycle(
+                initialValue = initialDark,
+            )
 
             DisposableEffect(isDark) {
                 enableEdgeToEdge(
@@ -43,7 +45,7 @@ class MainActivity : AppCompatActivity() {
                         SystemBarStyle.dark(Color.TRANSPARENT)
                     } else {
                         SystemBarStyle.light(Color.TRANSPARENT, Color.TRANSPARENT)
-                    }
+                    },
                 )
                 onDispose {}
             }

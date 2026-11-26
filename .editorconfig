@@ -1,0 +1,18 @@
+root = true
+
+[*.{kt,kts}]
+ktlint_code_style = android_studio
+indent_size = 4
+indent_style = space
+insert_final_newline = true
+max_line_length = 100
+
+# Alphabetical imports (Android Studio Kotlin style)
+ij_kotlin_imports_layout = *
+
+# Trailing commas are off in stock android_studio; this project uses them
+ij_kotlin_allow_trailing_comma = true
+ij_kotlin_allow_trailing_comma_on_call_site = true
+
+# Compose: allow PascalCase for @Composable functions
+ktlint_function_naming_ignore_when_annotated_with = Composable

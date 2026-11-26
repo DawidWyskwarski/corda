@@ -10,8 +10,4 @@ import androidx.compose.ui.graphics.vector.ImageVector
  * @param labelRes The resource ID for the label to display for this destination.
  * @param screen The screen that corresponds to this destination.
  */
-data class NavItem(
-    val icon: ImageVector,
-    @param:StringRes val labelRes: Int,
-    val screen: Screen
-)
+data class NavItem(val icon: ImageVector, @param:StringRes val labelRes: Int, val screen: Screen)

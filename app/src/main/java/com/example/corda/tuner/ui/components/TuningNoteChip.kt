@@ -23,7 +23,7 @@ fun TuningNoteChip(
     isSelected: Boolean,
     onClick: () -> Unit,
     isTuned: Boolean,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     // TODO might be a good idea to also add some stronger indicator that the note was tuned
     //  Something like colored outline on the chip or something

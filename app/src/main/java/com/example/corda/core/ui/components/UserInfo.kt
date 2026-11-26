@@ -9,15 +9,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 
 @Composable
-fun UserInfo(
-    mainText: String,
-    modifier: Modifier = Modifier,
-    supportingText: String = "",
-) {
+fun UserInfo(mainText: String, modifier: Modifier = Modifier, supportingText: String = "") {
     Column(
         modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
+        verticalArrangement = Arrangement.Center,
     ) {
         Text(
             text = mainText,
@@ -26,7 +22,7 @@ fun UserInfo(
         Text(
             text = supportingText,
             style = MaterialTheme.typography.bodySmall,
-            color = MaterialTheme.colorScheme.onSurfaceVariant
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
 }

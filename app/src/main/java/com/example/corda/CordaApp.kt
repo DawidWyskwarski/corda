@@ -13,8 +13,8 @@ import androidx.navigation3.runtime.rememberSaveableStateHolderNavEntryDecorator
 import androidx.navigation3.ui.NavDisplay
 import com.example.corda.core.ui.components.DrawerMenuContent
 import com.example.corda.metronome.navigation.metronomeEntries
-import com.example.corda.tuner.navigation.tunerEntries
 import com.example.corda.settings.navigation.settingsEntry
+import com.example.corda.tuner.navigation.tunerEntries
 
 /**
  * `CordaApp` - the root UI component of the app
@@ -22,16 +22,14 @@ import com.example.corda.settings.navigation.settingsEntry
  * Mainly orchestrates the navigation between screens and the drawer menu.
  */
 @Composable
-fun CordaApp(
-    modifier: Modifier = Modifier,
-) {
+fun CordaApp(modifier: Modifier = Modifier) {
     val appState = rememberCordaAppState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(MaterialTheme.colorScheme.background)
-    ){
+            .background(MaterialTheme.colorScheme.background),
+    ) {
         ModalNavigationDrawer(
             modifier = modifier,
             drawerState = appState.drawerState,
@@ -42,32 +40,32 @@ fun CordaApp(
             drawerContent = {
                 DrawerMenuContent(
                     currentScreen = appState.currentScreen,
-                    onScreenSelected = appState::navigateTo
+                    onScreenSelected = appState::navigateTo,
                 )
-            }
+            },
         ) {
             NavDisplay(
                 backStack = appState.backStack,
                 onBack = appState::navigateBack,
                 entryDecorators = listOf(
                     rememberSaveableStateHolderNavEntryDecorator(),
-                    rememberViewModelStoreNavEntryDecorator()
+                    rememberViewModelStoreNavEntryDecorator(),
                 ),
                 entryProvider = entryProvider {
                     tunerEntries(
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
-                        navigateBack = appState::navigateBack
+                        navigateBack = appState::navigateBack,
                     )
                     metronomeEntries(
                         openDrawer = appState::openDrawer,
                         navigateTo = appState::navigateTo,
-                        navigateBack = appState::navigateBack
+                        navigateBack = appState::navigateBack,
                     )
                     settingsEntry(
-                        navigateBack = appState::navigateBack
+                        navigateBack = appState::navigateBack,
                     )
-                }
+                },
             )
         }
     }

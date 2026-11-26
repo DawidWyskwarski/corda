@@ -1,8 +1,8 @@
 package com.example.corda.core.datastore.di
 
 import android.content.Context
-import com.example.corda.core.datastore.TunerDataStoreManager
 import com.example.corda.core.datastore.SettingsDataStoreManager
+import com.example.corda.core.datastore.TunerDataStoreManager
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,8 +16,9 @@ object DataStoreManagerModule {
 
     @Provides
     @Singleton
-    fun provideSettingsDataStoreManager(@ApplicationContext context: Context): SettingsDataStoreManager =
-        SettingsDataStoreManager(context)
+    fun provideSettingsDataStoreManager(
+        @ApplicationContext context: Context,
+    ): SettingsDataStoreManager = SettingsDataStoreManager(context)
 
     @Provides
     @Singleton

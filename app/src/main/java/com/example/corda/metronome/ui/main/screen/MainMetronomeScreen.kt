@@ -97,7 +97,10 @@ private fun InactiveMetronomeScreen(
             CenterAlignedTopAppBar(
                 title = {
                     NavigationPill(
-                        text = stringResource(R.string.metronome_main_beats_count_label, state.beatsPerBar),
+                        text = stringResource(
+                            R.string.metronome_main_beats_count_label,
+                            state.beatsPerBar,
+                        ),
                         supportingText = when {
                             state.mutingEnabled -> stringResource(
                                 R.string.metronome_main_muting_pill_label,
@@ -106,14 +109,16 @@ private fun InactiveMetronomeScreen(
                             )
                             else -> ""
                         },
-                        onClick = openSettings
+                        onClick = openSettings,
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
                         Icon(
                             imageVector = Icons.Rounded.Menu,
-                            contentDescription = stringResource(R.string.core_nav_open_drawer_description),
+                            contentDescription = stringResource(
+                                R.string.core_nav_open_drawer_description,
+                            ),
                         )
                     }
                 },
@@ -122,7 +127,7 @@ private fun InactiveMetronomeScreen(
                     scrolledContainerColor = Color.Unspecified,
                     navigationIconContentColor = Color.Unspecified,
                     titleContentColor = Color.Unspecified,
-                    actionIconContentColor = Color.Unspecified
+                    actionIconContentColor = Color.Unspecified,
                 ),
             )
         },
@@ -173,10 +178,7 @@ private fun InactiveMetronomeScreen(
 }
 
 @Composable
-private fun ActiveMetronomeScreen(
-    state: MetronomeUiState,
-    onToggle: () -> Unit,
-) {
+private fun ActiveMetronomeScreen(state: MetronomeUiState, onToggle: () -> Unit) {
     val backgroundColor = MaterialTheme.colorScheme.primaryContainer
     val circleColor = MaterialTheme.colorScheme.primary
     val circleBeatColor = MaterialTheme.colorScheme.onPrimary
@@ -189,7 +191,11 @@ private fun ActiveMetronomeScreen(
     val ringScales = remember { Array(3) { Animatable(1f) } }
     val ringAlphas = remember { Array(3) { Animatable(0f) } }
     // Round-robin index to allow the animations to play concurrently
-    val ringSlot = remember { object { var index = 0 } }
+    val ringSlot = remember {
+        object {
+            var index = 0
+        }
+    }
     val animScope = rememberCoroutineScope()
 
     LaunchedEffect(state.beatTick) {
@@ -199,7 +205,8 @@ private fun ActiveMetronomeScreen(
         if (isAccent) {
             val i = ringSlot.index % 3
             ringSlot.index++
-            val ringDuration = (60_000 / state.bpm).coerceIn(150, 1200) // 60000, so the animation is as long as the beat
+            // 60000 ms so the animation lasts as long as the beat
+            val ringDuration = (60_000 / state.bpm).coerceIn(150, 1200)
 
             // Animations launched concurrently
             animScope.launch {
@@ -207,7 +214,12 @@ private fun ActiveMetronomeScreen(
                 ringAlphas[i].snapTo(0.5f)
 
                 // "Ripples" change in size and fade concurrent
-                launch { ringScales[i].animateTo(1.65f, tween(ringDuration, easing = LinearOutSlowInEasing)) }
+                launch {
+                    ringScales[i].animateTo(
+                        1.65f,
+                        tween(ringDuration, easing = LinearOutSlowInEasing),
+                    )
+                }
                 ringAlphas[i].animateTo(0f, tween(ringDuration))
             }
         }

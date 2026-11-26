@@ -36,7 +36,7 @@ class UpdateTuningViewModel @AssistedInject constructor(
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = emptyList()
+            initialValue = emptyList(),
         )
 
     private val _allNotes = MutableStateFlow<List<MusicNote>>(emptyList())
@@ -45,16 +45,16 @@ class UpdateTuningViewModel @AssistedInject constructor(
     private val _tuningName = MutableStateFlow("")
     val tuningName: StateFlow<String> = _tuningName.asStateFlow()
 
-    private val _selectedInstrumentId = MutableStateFlow<Int?>(null)
+    private val selectedInstrumentId = MutableStateFlow<Int?>(null)
     val selectedInstrument: StateFlow<Instrument?> = combine(
-        _selectedInstrumentId,
-        instruments
+        selectedInstrumentId,
+        instruments,
     ) { instrumentId, instruments ->
         instruments.firstOrNull { it.id == instrumentId }
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = null
+        initialValue = null,
     )
 
     private val _stringMusicNotes = MutableStateFlow<List<MusicNote>>(emptyList())
@@ -65,14 +65,14 @@ class UpdateTuningViewModel @AssistedInject constructor(
 
     val isSaveEnabled: StateFlow<Boolean> = combine(
         _tuningName,
-        _selectedInstrumentId,
+        selectedInstrumentId,
         _stringMusicNotes,
     ) { name, instrumentId, musicNotes ->
         name.isNotBlank() && instrumentId != null && musicNotes.isNotEmpty()
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.WhileSubscribed(5_000),
-        initialValue = false
+        initialValue = false,
     )
 
     private val _saved = MutableStateFlow(false)
@@ -91,7 +91,7 @@ class UpdateTuningViewModel @AssistedInject constructor(
     private suspend fun loadEditedTuning(id: Int) {
         val tuning = repository.getTuning(id) ?: return
 
-        _selectedInstrumentId.value = tuning.instrumentId
+        selectedInstrumentId.value = tuning.instrumentId
         _tuningName.value = tuning.tuningName
 
         _stringMusicNotes.value = tuning.musicNotes
@@ -102,14 +102,15 @@ class UpdateTuningViewModel @AssistedInject constructor(
     }
 
     fun selectInstrument(instrumentId: Int) {
-        if (isEditMode || _selectedInstrumentId.value == instrumentId) return
+        if (isEditMode || selectedInstrumentId.value == instrumentId) return
 
         _selectedStringIndex.value = null
 
-        val stringCount = instruments.value.firstOrNull { it.id == instrumentId }?.musicNotesCount ?: 0
+        val stringCount =
+            instruments.value.firstOrNull { it.id == instrumentId }?.musicNotesCount ?: 0
         initDefaultSounds(stringCount)
 
-        _selectedInstrumentId.value = instrumentId
+        selectedInstrumentId.value = instrumentId
     }
 
     private fun initDefaultSounds(count: Byte) {
@@ -131,13 +132,14 @@ class UpdateTuningViewModel @AssistedInject constructor(
         val notes = _stringMusicNotes.value
 
         if (index in notes.indices) {
-            _stringMusicNotes.value = notes.toMutableList().also { it[index] = _allNotes.value[musicNoteIndex] }
+            _stringMusicNotes.value =
+                notes.toMutableList().also { it[index] = _allNotes.value[musicNoteIndex] }
         }
     }
 
     fun saveTuning() {
         val name = _tuningName.value.trim()
-        val instrumentId = _selectedInstrumentId.value ?: return
+        val instrumentId = selectedInstrumentId.value ?: return
         val notes = _stringMusicNotes.value
 
         if (name.isBlank() || notes.isEmpty()) return
@@ -152,12 +154,12 @@ class UpdateTuningViewModel @AssistedInject constructor(
             val result = if (isEditMode) {
                 repository.updateTuning(
                     tuning = tuning,
-                    musicNotes = notes
+                    musicNotes = notes,
                 )
             } else {
                 repository.insertTuning(
                     tuning = tuning,
-                    musicNotes = notes
+                    musicNotes = notes,
                 )
             }
 

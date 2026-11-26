@@ -5,10 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Color
 
 @Immutable
-data class CordaExtraColors(
-    val tunerInTune: Color,
-    val tunerInTuneBright: Color,
-)
+data class CordaExtraColors(val tunerInTune: Color, val tunerInTuneBright: Color)
 
 val LocalCordaColors = staticCompositionLocalOf {
     CordaExtraColors(

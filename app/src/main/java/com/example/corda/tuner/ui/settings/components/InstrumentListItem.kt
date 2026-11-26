@@ -49,7 +49,7 @@ fun InstrumentListItem(
                 text = pluralStringResource(
                     R.plurals.tuner_instrument_string_count,
                     instrument.musicNotesCount.toInt(),
-                    instrument.musicNotesCount.toInt()
+                    instrument.musicNotesCount.toInt(),
                 ),
                 style = MaterialTheme.typography.bodyMedium,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,

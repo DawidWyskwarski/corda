@@ -29,10 +29,11 @@ import com.example.corda.R
  * Context menu for a single tuning, anchored at [offset] relative to the parent's top-start corner.
  *
  * The menu hangs off a zero-size [Box] rather than using [DropdownMenu]'s own `offset` parameter.
- * That parameter is an additive nudge on top of edge-anchored position candidates, all measured from
- * the anchor's top or bottom edge, so a full-size anchor would need a height correction that breaks
- * whenever the position provider falls back to a different candidate near a screen edge. Collapsing
- * the anchor to a point makes its top and bottom both equal the press position.
+ * That parameter is an additive nudge on top of edge-anchored position candidates,
+ * all measured from the anchor's top or bottom edge, so a full-size anchor would need
+ * a height correction that breaks whenever the position provider falls back to a
+ * different candidate near a screen edge. Collapsing the anchor to a point makes its
+ * top and bottom both equal the press position.
  */
 @Composable
 fun TuningDropdownMenu(
@@ -40,7 +41,7 @@ fun TuningDropdownMenu(
     offset: DpOffset,
     onDismiss: () -> Unit,
     onEdit: () -> Unit,
-    onDelete: () -> Unit
+    onDelete: () -> Unit,
 ) {
     Box(
         modifier = Modifier
@@ -80,11 +81,7 @@ fun TuningDropdownMenu(
 }
 
 @Composable
-private fun MenuItem(
-    text: String,
-    icon: ImageVector,
-    onClick: () -> Unit,
-) {
+private fun MenuItem(text: String, icon: ImageVector, onClick: () -> Unit) {
     DropdownMenuItem(
         modifier = Modifier.height(40.dp),
         text = {

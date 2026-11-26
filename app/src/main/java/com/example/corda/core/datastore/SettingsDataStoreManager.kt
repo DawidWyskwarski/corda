@@ -19,5 +19,8 @@ class SettingsDataStoreManager(context: Context) {
 
     val isDarkMode: Flow<Boolean> = settingsDataStore.data.map { it[Keys.DARK_MODE] ?: false }
 
-    suspend fun saveDarkMode(enabled: Boolean) = settingsDataStore.edit { it[Keys.DARK_MODE] = enabled }
+    suspend fun saveDarkMode(enabled: Boolean) = settingsDataStore.edit {
+        it[Keys.DARK_MODE] =
+            enabled
+    }
 }

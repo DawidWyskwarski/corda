@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.sp
 import kotlin.math.abs
 
 private const val BEATS = 12
+
 // To simulate infinite scroll
 private const val VIRTUAL_COUNT = BEATS * 1000
 
@@ -44,7 +45,7 @@ fun BeatsInABarSelector(
 
     val itemSizeDp = 56.dp
 
-    //Starting around the middle of the virtual list
+    // Starting around the middle of the virtual list
     val centerBase = VIRTUAL_COUNT / 2
     val initialIndex = centerBase + (selectedBeats - 1)
 
@@ -54,7 +55,7 @@ fun BeatsInABarSelector(
     val snapFlingBehavior = rememberSnapFlingBehavior(
         snapLayoutInfoProvider = remember(listState) {
             SnapLayoutInfoProvider(lazyListState = listState, snapPosition = SnapPosition.Center)
-        }
+        },
     )
 
     // Notify parent when scroll settles and find the visually centered item
@@ -69,7 +70,7 @@ fun BeatsInABarSelector(
                     val viewportCenter =
                         (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
 
-                    // For each visible item, calculating its absolute distance from the center of view and selecting the one with the lowest score
+                    // Pick the visible item closest to the viewport center.
                     val centeredItem = layoutInfo.visibleItemsInfo.minByOrNull {
                         abs(it.offset + it.size / 2 - viewportCenter)
                     }
@@ -87,7 +88,7 @@ fun BeatsInABarSelector(
         val viewportCenter =
             (layoutInfo.viewportStartOffset + layoutInfo.viewportEndOffset) / 2
 
-        // For each visible item, calculating its absolute distance from the center of view and selecting the one with the lowest score
+        // Pick the visible item closest to the viewport center.
         val currentCenteredItem = layoutInfo.visibleItemsInfo.minByOrNull {
             abs(it.offset + it.size / 2 - viewportCenter)
         }

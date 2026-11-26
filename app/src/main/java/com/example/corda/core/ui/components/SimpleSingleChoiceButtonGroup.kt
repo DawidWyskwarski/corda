@@ -39,26 +39,24 @@ fun <T> SimpleSingleChoiceButtonGroup(
             ToggleButton(
                 modifier = Modifier
                     .weight(1f)
-                    .semantics { role = Role.RadioButton }
-                ,
+                    .semantics { role = Role.RadioButton },
                 checked = item == selectedItem,
                 onCheckedChange = {
                     onItemSelected(item)
                 },
-                shapes =
-                    // Choose different shapes based on the index of the item
-                    when (index) {
-                        0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
-                        items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
-                        else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
-                    },
+                // Choose different shapes based on the index of the item
+                shapes = when (index) {
+                    0 -> ButtonGroupDefaults.connectedLeadingButtonShapes()
+                    items.lastIndex -> ButtonGroupDefaults.connectedTrailingButtonShapes()
+                    else -> ButtonGroupDefaults.connectedMiddleButtonShapes()
+                },
                 colors = ToggleButtonDefaults.colors(
                     checkedContainerColor = MaterialTheme.colorScheme.primaryContainer,
                     checkedContentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                )
+                ),
             ) {
                 Text(
-                    text = itemLabel(item)
+                    text = itemLabel(item),
                 )
             }
         }
