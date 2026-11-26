@@ -239,11 +239,7 @@ private val highContrastDarkColorScheme = darkColorScheme(
 )
 
 @Composable
-fun CordaTheme(
-    darkTheme: Boolean,
-    dynamicColor: Boolean = true,
-    content: @Composable () -> Unit
-) {
+fun CordaTheme(darkTheme: Boolean, dynamicColor: Boolean = true, content: @Composable () -> Unit) {
     val colorScheme = when {
         dynamicColor && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S -> {
             val context = LocalContext.current
@@ -253,24 +249,24 @@ fun CordaTheme(
         else -> lightScheme
     }
 
-  // These colors aren't part of the predefined themes, so we define them here
-  val cordaColors = if (darkTheme) {
-    CordaExtraColors(
-      tunerInTune = tunerInTuneDark,
-      tunerInTuneBright = tunerInTuneBrightDark,
-    )
-  } else {
-    CordaExtraColors(
-      tunerInTune = tunerInTuneLight,
-      tunerInTuneBright = tunerInTuneBrightLight,
-    )
-  }
+    // These colors aren't part of the predefined themes, so we define them here
+    val cordaColors = if (darkTheme) {
+        CordaExtraColors(
+            tunerInTune = tunerInTuneDark,
+            tunerInTuneBright = tunerInTuneBrightDark,
+        )
+    } else {
+        CordaExtraColors(
+            tunerInTune = tunerInTuneLight,
+            tunerInTuneBright = tunerInTuneBrightLight,
+        )
+    }
 
-  CompositionLocalProvider(LocalCordaColors provides cordaColors) {
-    MaterialTheme(
-      colorScheme = colorScheme,
-      typography = AppTypography,
-      content = content,
-    )
-  }
+    CompositionLocalProvider(LocalCordaColors provides cordaColors) {
+        MaterialTheme(
+            colorScheme = colorScheme,
+            typography = AppTypography,
+            content = content,
+        )
+    }
 }

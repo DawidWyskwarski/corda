@@ -5,12 +5,10 @@ import kotlin.math.abs
 import kotlin.math.log2
 import kotlin.math.pow
 
-fun MusicNote.frequency(baseFrequency: Int): Float {
-    return PitchHelpers.frequencyFromMidi(
-        this.midiNum,
-        baseFrequency = baseFrequency
-    )
-}
+fun MusicNote.frequency(baseFrequency: Int): Float = PitchHelpers.frequencyFromMidi(
+    this.midiNum,
+    baseFrequency = baseFrequency,
+)
 
 /**
  * Pitch-class math, MIDI/frequency conversion, and closest-note matching for the tuner.

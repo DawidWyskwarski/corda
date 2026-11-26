@@ -18,11 +18,7 @@ import com.example.corda.R
  * Toggle control for starting / stopping chromatic reference tone playback in ear mode.
  */
 @Composable
-fun PlayNoteButton(
-    isPlaying: Boolean,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun PlayNoteButton(isPlaying: Boolean, onClick: () -> Unit, modifier: Modifier = Modifier) {
     FilledIconToggleButton(
         checked = isPlaying,
         onCheckedChange = { onClick() },

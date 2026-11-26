@@ -37,19 +37,19 @@ import com.example.corda.core.navigation.Screen
 fun DrawerMenuContent(
     currentScreen: Screen,
     onScreenSelected: (Screen) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     val tools = remember {
         listOf(
             NavItem(
                 icon = Icons.Rounded.MusicNote,
                 labelRes = R.string.tuner_title,
-                screen = Screen.Tuner
+                screen = Screen.Tuner,
             ),
             NavItem(
                 icon = Icons.Rounded.Speed,
                 labelRes = R.string.metronome_title,
-                screen = Screen.Metronome
+                screen = Screen.Metronome,
             ),
         )
     }
@@ -59,19 +59,19 @@ fun DrawerMenuContent(
             NavItem(
                 icon = Icons.Rounded.Settings,
                 labelRes = R.string.settings_title,
-                screen = Screen.Settings
-            )
+                screen = Screen.Settings,
+            ),
         )
     }
 
     ModalDrawerSheet(
         modifier = modifier,
-        windowInsets = DrawerDefaults.windowInsets
+        windowInsets = DrawerDefaults.windowInsets,
     ) {
         Column(
             modifier = Modifier
                 .padding(12.dp)
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
         ) {
             // LOGO SECTION
 
@@ -82,7 +82,7 @@ fun DrawerMenuContent(
                 modifier = Modifier
                     .padding(16.dp),
                 text = stringResource(R.string.app_name),
-                style = MaterialTheme.typography.headlineMedium
+                style = MaterialTheme.typography.headlineMedium,
             )
 
             // TOOLS SECTION
@@ -90,7 +90,7 @@ fun DrawerMenuContent(
                 text = stringResource(R.string.core_nav_drawer_tools_header),
                 style = MaterialTheme.typography.titleSmall,
                 modifier = Modifier.padding(start = 16.dp, top = 16.dp, bottom = 8.dp),
-                color = MaterialTheme.colorScheme.onBackground
+                color = MaterialTheme.colorScheme.onBackground,
             )
 
             tools.forEach { tool ->
@@ -98,17 +98,17 @@ fun DrawerMenuContent(
                     icon = {
                         Icon(
                             imageVector = tool.icon,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     label = { Text(stringResource(tool.labelRes)) },
                     selected = currentScreen == tool.screen,
-                    onClick = dropUnlessResumed { onScreenSelected(tool.screen) }
+                    onClick = dropUnlessResumed { onScreenSelected(tool.screen) },
                 )
             }
 
             HorizontalDivider(
-                modifier = Modifier.padding(vertical = 8.dp)
+                modifier = Modifier.padding(vertical = 8.dp),
             )
 
             // UTILITIES SECTION
@@ -117,12 +117,12 @@ fun DrawerMenuContent(
                     icon = {
                         Icon(
                             imageVector = utility.icon,
-                            contentDescription = null
+                            contentDescription = null,
                         )
                     },
                     label = { Text(stringResource(utility.labelRes)) },
                     selected = currentScreen == utility.screen,
-                    onClick = dropUnlessResumed { onScreenSelected(utility.screen) }
+                    onClick = dropUnlessResumed { onScreenSelected(utility.screen) },
                 )
             }
         }

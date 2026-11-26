@@ -20,17 +20,24 @@ import kotlinx.serialization.Serializable
  *
  * Use `data class` if you want to pass parameters.
  */
-sealed class Screen: NavKey { //TODO rework this navigation thingy and separate it to proper modules, I will leave it for now but my next task will be to rework it
+// TODO: Rework navigation and split into proper modules.
+sealed class Screen : NavKey {
+
     @Serializable
-    data object Tuner: Screen()
+    data object Tuner : Screen()
+
     @Serializable
-    data object TunerSettings: Screen()
+    data object TunerSettings : Screen()
+
     @Serializable
-    data object Metronome: Screen()
+    data object Metronome : Screen()
+
     @Serializable
-    data object MetronomeSettings: Screen()
+    data object MetronomeSettings : Screen()
+
     @Serializable
-    data class AddEditTuning(val tuningId: Int? = null): Screen()
+    data class AddEditTuning(val tuningId: Int? = null) : Screen()
+
     @Serializable
-    data object Settings: Screen()
+    data object Settings : Screen()
 }

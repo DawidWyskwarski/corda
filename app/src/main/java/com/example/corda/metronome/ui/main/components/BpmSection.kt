@@ -37,11 +37,7 @@ import androidx.compose.ui.unit.sp
 import com.example.corda.metronome.ui.MetronomeViewModel
 
 @Composable
-fun BpmSection(
-    bpm: Int,
-    onBpmChange: (Int) -> Unit,
-    modifier: Modifier = Modifier,
-) {
+fun BpmSection(bpm: Int, onBpmChange: (Int) -> Unit, modifier: Modifier = Modifier) {
     val primaryColor = MaterialTheme.colorScheme.primary
     val containerColor = MaterialTheme.colorScheme.primaryContainer
     val onBackground = MaterialTheme.colorScheme.onBackground

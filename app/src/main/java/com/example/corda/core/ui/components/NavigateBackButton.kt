@@ -14,17 +14,14 @@ import com.example.corda.R
  * Common button for back navigation.
  */
 @Composable
-fun NavigateBackButton(
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier
-) {
+fun NavigateBackButton(onClick: () -> Unit, modifier: Modifier = Modifier) {
     IconButton(
         onClick = dropUnlessResumed { onClick() },
-        modifier = modifier
+        modifier = modifier,
     ) {
         Icon(
             imageVector = Icons.AutoMirrored.Rounded.ArrowBack,
-            contentDescription = stringResource(R.string.core_action_back)
+            contentDescription = stringResource(R.string.core_action_back),
         )
     }
 }

@@ -20,14 +20,14 @@ import androidx.room.PrimaryKey
             entity = Tuning::class,
             parentColumns = ["tuning_id"],
             childColumns = ["tuning_id"],
-            onDelete = ForeignKey.CASCADE
+            onDelete = ForeignKey.CASCADE,
         ),
         ForeignKey(
             entity = MusicNote::class,
             parentColumns = ["midi_number"],
-            childColumns = ["music_note_id"]
-        )
-    ]
+            childColumns = ["music_note_id"],
+        ),
+    ],
 )
 data class TuningSoundCrossRef(
     @PrimaryKey(autoGenerate = true)
@@ -35,5 +35,5 @@ data class TuningSoundCrossRef(
     @ColumnInfo(name = "tuning_id")
     val tuningId: Int,
     @ColumnInfo(name = "music_note_id")
-    val musicNoteId: Int
+    val musicNoteId: Int,
 )

@@ -4,11 +4,10 @@ import androidx.room.ColumnInfo
 import androidx.room.Junction
 import androidx.room.Relation
 import com.example.corda.tuner.data.local.entities.DefaultInstrumentName
-import com.example.corda.tuner.data.local.entities.MusicNote
-import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
 import com.example.corda.tuner.data.local.entities.Instrument
+import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.Tuning
-
+import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
 
 /**
  * A class containing aggregated data for a [Tuning]. Primary model used in the UI layer.
@@ -20,7 +19,7 @@ import com.example.corda.tuner.data.local.entities.Tuning
  * @param instrumentDefaultName [Instrument.defaultName]
  * @param musicNotes [TuningSoundCrossRef] joined with [MusicNote]
  */
-data class TuningDetails (
+data class TuningDetails(
     @ColumnInfo(name = "tuning_id")
     val tuningId: Int,
     @ColumnInfo(name = "tuning_name")
@@ -38,7 +37,7 @@ data class TuningDetails (
             value = TuningSoundCrossRef::class,
             parentColumn = "tuning_id",
             entityColumn = "music_note_id",
-        )
+        ),
     )
     val musicNotes: List<MusicNote>,
 )

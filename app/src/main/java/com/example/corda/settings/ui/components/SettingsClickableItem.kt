@@ -14,7 +14,7 @@ fun SettingsClickableItem(
     title: String,
     icon: ImageVector,
     trailingContent: @Composable () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     ListItem(
         modifier = modifier,

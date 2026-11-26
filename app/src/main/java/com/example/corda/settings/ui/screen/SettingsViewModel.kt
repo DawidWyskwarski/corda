@@ -8,21 +8,22 @@ import androidx.lifecycle.viewModelScope
 import com.example.corda.core.datastore.SettingsDataStoreManager
 import com.example.corda.core.datastore.TunerDataStoreManager
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @HiltViewModel
 class SettingsViewModel @Inject constructor(
     private val settingsDataStoreManager: SettingsDataStoreManager,
-    private val tunerDataStoreManager: TunerDataStoreManager
+    private val tunerDataStoreManager: TunerDataStoreManager,
 ) : ViewModel() {
 
     // StateIn turns Flow into StateFlow, with an always available value for the UI
     val isDarkMode = settingsDataStoreManager.isDarkMode.stateIn(
         viewModelScope,
-        SharingStarted.WhileSubscribed(5000),   // Active for 5 seconds after final subscriber disappears
+        // Active for 5 seconds after the final subscriber disappears
+        SharingStarted.WhileSubscribed(5000),
         false,
     )
 
@@ -32,7 +33,7 @@ class SettingsViewModel @Inject constructor(
     var isFrequencyError by mutableStateOf(false)
         private set
 
-    // Loading stored freq value to display in text field; done this way because we use an asynchronous operation
+    // Load stored frequency into the text field via an async collect.
     init {
         viewModelScope.launch {
             tunerDataStoreManager.baseFrequency.collect { hz ->
@@ -53,5 +54,7 @@ class SettingsViewModel @Inject constructor(
         }
     }
 
-    fun toggleDarkMode(enabled: Boolean) = viewModelScope.launch { settingsDataStoreManager.saveDarkMode(enabled) }
+    fun toggleDarkMode(enabled: Boolean) = viewModelScope.launch {
+        settingsDataStoreManager.saveDarkMode(enabled)
+    }
 }

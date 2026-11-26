@@ -20,17 +20,16 @@ object TunerDatabaseModule {
     @Singleton
     fun provideTunerDatabase(
         @ApplicationContext context: Context,
-        provider: Provider<TunerDatabase>
-    ): TunerDatabase {
-        return Room.databaseBuilder(
-            context = context,
-            klass = TunerDatabase::class.java,
-            name = "tuner_db"
-        ).addCallback(
-            TunerDatabaseCallback(provider)
-        ).fallbackToDestructiveMigration(dropAllTables = true)
+        provider: Provider<TunerDatabase>,
+    ): TunerDatabase = Room.databaseBuilder(
+        context = context,
+        klass = TunerDatabase::class.java,
+        name = "tuner_db",
+    ).addCallback(
+        TunerDatabaseCallback(provider),
+    ).fallbackToDestructiveMigration(dropAllTables = true)
         .build()
-    }
+
     @Provides
     fun provideSoundDao(db: TunerDatabase) = db.getMusicNoteDao()
 

@@ -8,8 +8,8 @@ import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.Tuning
 import com.example.corda.tuner.data.local.models.CurrentTuning
 import com.example.corda.tuner.data.local.models.TuningDetails
-import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
+import kotlinx.coroutines.flow.Flow
 
 class TunerRepositoryImpl(
     private val musicNoteDao: MusicNoteDao,
@@ -46,24 +46,26 @@ class TunerRepositoryImpl(
     // === Tunings ===
     override fun getAllTunings(): Flow<List<TuningDetails>> = tuningDao.getTunings()
 
-    override suspend fun getTuning(tuningId: Int): TuningDetails? = tuningDao.getTuningDetails(tuningId)
+    override suspend fun getTuning(tuningId: Int): TuningDetails? =
+        tuningDao.getTuningDetails(tuningId)
 
     override fun getMostRecentTuning(): Flow<CurrentTuning?> = tuningDao.getMostRecentTuning()
 
-    override suspend fun insertTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> = runCatching {
-        tuningDao.insertTuningWithSounds(tuning, musicNotes)
-    }
+    override suspend fun insertTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> =
+        runCatching {
+            tuningDao.insertTuningWithSounds(tuning, musicNotes)
+        }
 
     override suspend fun updateTuningLastUsed(tuningId: Int): Result<Unit> = runCatching {
         tuningDao.updateTuningLastUsed(tuningId, currentTimeMillis())
     }
 
-    override suspend fun updateTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> = runCatching {
-        tuningDao.updateTuning(tuning, musicNotes)
-    }
+    override suspend fun updateTuning(tuning: Tuning, musicNotes: List<MusicNote>): Result<Unit> =
+        runCatching {
+            tuningDao.updateTuning(tuning, musicNotes)
+        }
 
     override suspend fun deleteTuning(tuningId: Int): Result<Unit> = runCatching {
         tuningDao.deleteTuning(tuningId)
     }
-
 }

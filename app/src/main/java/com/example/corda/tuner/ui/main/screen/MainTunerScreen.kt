@@ -57,12 +57,12 @@ fun MainTunerScreen(
     var hasPermission by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.RECORD_AUDIO)
-                    == PackageManager.PERMISSION_GRANTED
+                == PackageManager.PERMISSION_GRANTED,
         )
     }
 
     val permissionLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
+        contract = ActivityResultContracts.RequestPermission(),
     ) { granted ->
         hasPermission = granted
     }
@@ -87,36 +87,43 @@ fun MainTunerScreen(
         topBar = {
             CenterAlignedTopAppBar(
                 title = {
-
                     val (title, supportingText) = when (val state = tuningTargetState) {
                         is UiState.Loading -> stringResource(R.string.core_state_loading) to ""
                         is UiState.Error -> stringResource(R.string.tuner_main_go_to_settings) to ""
                         is UiState.Loaded -> when (state.data) {
-                            is TuningTarget.Chromatic -> stringResource(R.string.tuner_main_chromatic_mode_label) to ""
-                            is TuningTarget.Standard -> state.data.tuningName to state.data.instrumentName.get()
+                            is TuningTarget.Chromatic -> stringResource(
+                                R.string.tuner_main_chromatic_mode_label,
+                            ) to
+                                ""
+                            is TuningTarget.Standard ->
+                                state.data.tuningName to
+                                    state.data.instrumentName.get()
                         }
                     }
 
                     NavigationPill(
                         text = title,
                         supportingText = supportingText,
-                        onClick = openSettings
+                        onClick = openSettings,
                     )
                 },
                 navigationIcon = {
                     IconButton(onClick = openDrawer) {
-                        Icon(Icons.Rounded.Menu, stringResource(R.string.core_nav_open_drawer_description))
+                        Icon(
+                            Icons.Rounded.Menu,
+                            stringResource(R.string.core_nav_open_drawer_description),
+                        )
                     }
                 },
                 actions = {
                     EarModeToggleButton(
                         isInEarMode = isEarModeEnabled,
                         onToggle = viewModel::toggleEarMode,
-                        isEnabled = tuningTargetState is UiState.Loaded
+                        isEnabled = tuningTargetState is UiState.Loaded,
                     )
-                }
+                },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -128,7 +135,7 @@ fun MainTunerScreen(
             when (val state = tuningTargetState) {
                 is UiState.Loading -> {
                     LoadingIndicator(
-                        Modifier.fillMaxHeight()
+                        Modifier.fillMaxHeight(),
                     )
                 }
                 is UiState.Error -> {

@@ -76,11 +76,13 @@ fun InstrumentManagementBottomSheet(
             )
 
             if (instruments == null) {
-                LoadingIndicator() //TODO: Add shimmer effect
+                LoadingIndicator() // TODO: Add shimmer effect
             } else if (instruments.isEmpty()) {
                 UserInfo(
                     mainText = stringResource(R.string.tuner_instrument_list_empty_title),
-                    supportingText = stringResource(R.string.tuner_instrument_list_empty_supporting),
+                    supportingText = stringResource(
+                        R.string.tuner_instrument_list_empty_supporting,
+                    ),
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(vertical = 32.dp),
@@ -90,7 +92,7 @@ fun InstrumentManagementBottomSheet(
                     modifier = Modifier
                         .fillMaxWidth()
                         .weight(1f, fill = false)
-                        .padding(vertical = 12.dp)
+                        .padding(vertical = 12.dp),
                 ) {
                     items(
                         items = instruments,
@@ -103,7 +105,9 @@ fun InstrumentManagementBottomSheet(
                                 if (doesInstrumentHaveTunings(instrument.id)) {
                                     Toast.makeText(
                                         context,
-                                        context.resources.getString(R.string.tuner_instrument_delete_blocked_message),
+                                        context.resources.getString(
+                                            R.string.tuner_instrument_delete_blocked_message,
+                                        ),
                                         Toast.LENGTH_SHORT,
                                     ).show()
                                 } else {
@@ -126,12 +130,11 @@ fun InstrumentManagementBottomSheet(
                 colors = ButtonDefaults.buttonColors(
                     containerColor = MaterialTheme.colorScheme.secondaryContainer,
                     contentColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                )
+                ),
             ) {
                 Text(stringResource(R.string.tuner_instrument_add_action))
             }
         }
-
     }
 
     if (showCreateInstrumentDialog) {
@@ -167,7 +170,7 @@ fun InstrumentManagementBottomSheet(
                 onDeleteInstrument(instrument.id)
                 pendingInstrumentToDelete = null
             },
-            onDismiss = { pendingInstrumentToDelete = null }
+            onDismiss = { pendingInstrumentToDelete = null },
         )
     }
 }

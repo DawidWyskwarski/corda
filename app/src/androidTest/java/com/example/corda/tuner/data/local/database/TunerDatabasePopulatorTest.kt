@@ -112,7 +112,7 @@ class TunerDatabasePopulatorTest {
     ) {
         val tuning = tuningsByInstrument.getValue(instrumentId)
             .single { it.tuningName == tuningName }
-    
+
         assertThat(tuning.musicNotes.map { it.midiNum })
             .containsExactlyElementsIn(expectedMidi)
     }

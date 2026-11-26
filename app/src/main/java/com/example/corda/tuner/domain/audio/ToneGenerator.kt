@@ -3,22 +3,20 @@ package com.example.corda.tuner.domain.audio
 import android.media.AudioAttributes
 import android.media.AudioFormat
 import android.media.AudioTrack
+import kotlin.math.PI
+import kotlin.math.roundToInt
+import kotlin.math.sin
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
-import kotlin.math.PI
-import kotlin.math.roundToInt
-import kotlin.math.sin
 
 /**
  * Streams a sine wave at a target frequency using [AudioTrack] in streaming mode.
  * [play] updates the frequency while already playing without restarting the coroutine.
  */
-class ToneGenerator(
-    private val sampleRate: Int = TUNER_SAMPLE_RATE,
-) : TonePlayer {
+class ToneGenerator(private val sampleRate: Int = TUNER_SAMPLE_RATE) : TonePlayer {
 
     private var audioTrack: AudioTrack? = null
     private var playbackJob: Job? = null

@@ -19,7 +19,7 @@ fun InstrumentFilterChipGroup(
     instruments: List<Instrument>,
     selectedId: Int?,
     onInstrumentSelected: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     LazyRow(
         modifier = modifier,
@@ -28,12 +28,12 @@ fun InstrumentFilterChipGroup(
     ) {
         items(
             items = instruments,
-            key = { it.id }
+            key = { it.id },
         ) {
             FilterChip(
                 selected = it.id == selectedId,
                 onClick = { onInstrumentSelected(it.id) },
-                label = { Text( it.displayNameWithNoteCount() ) },
+                label = { Text(it.displayNameWithNoteCount()) },
                 colors = FilterChipDefaults.filterChipColors(
                     selectedContainerColor = MaterialTheme.colorScheme.secondaryContainer,
                     selectedLabelColor = MaterialTheme.colorScheme.onSecondaryContainer,

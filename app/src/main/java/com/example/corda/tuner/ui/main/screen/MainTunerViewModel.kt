@@ -7,17 +7,19 @@ import com.example.corda.R
 import com.example.corda.core.datastore.TunerDataStoreManager
 import com.example.corda.core.tuner.TuningMode
 import com.example.corda.core.ui.state.UiState
+import com.example.corda.tuner.data.local.models.CurrentTuning
+import com.example.corda.tuner.data.repository.TunerRepository
 import com.example.corda.tuner.domain.audio.PitchDetector
 import com.example.corda.tuner.domain.audio.TonePlayer
 import com.example.corda.tuner.domain.pitch.PitchHelpers
 import com.example.corda.tuner.domain.pitch.PitchSmoother
 import com.example.corda.tuner.domain.pitch.frequency
-import com.example.corda.tuner.data.local.models.CurrentTuning
-import com.example.corda.tuner.data.repository.TunerRepository
 import com.example.corda.tuner.ui.helpers.resolveInstrumentName
-import com.example.corda.tuner.ui.main.data.TuningTarget
 import com.example.corda.tuner.ui.main.data.TunerReading
+import com.example.corda.tuner.ui.main.data.TuningTarget
 import dagger.hilt.android.lifecycle.HiltViewModel
+import javax.inject.Inject
+import kotlin.math.abs
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -31,8 +33,6 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.stateIn
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
-import javax.inject.Inject
-import kotlin.math.abs
 
 @HiltViewModel
 class MainTunerViewModel @Inject constructor(
@@ -53,35 +53,40 @@ class MainTunerViewModel @Inject constructor(
     @OptIn(ExperimentalCoroutinesApi::class)
     val tuningTargetState: StateFlow<UiState<TuningTarget>> = tunerDataStoreManager.tunerMode
         .flatMapLatest { mode ->
-            when ( mode ) {
+            when (mode) {
                 TuningMode.STANDARD -> repository.getMostRecentTuning()
-                    .map { it?.toLoaded() ?: UiState.Error(R.string.tuner_settings_tunings_empty_message) } //TODO: change res id later
+                    .map {
+                        it?.toLoaded()
+                            ?: UiState.Error(R.string.tuner_settings_tunings_empty_message)
+                    } // TODO: change res id later
 
-                TuningMode.CHROMATIC -> flow { emit(
-                    UiState.Loaded<TuningTarget>(
-                        TuningTarget.Chromatic(
-                            repository.getAllSounds()
-                        )
+                TuningMode.CHROMATIC -> flow {
+                    emit(
+                        UiState.Loaded<TuningTarget>(
+                            TuningTarget.Chromatic(
+                                repository.getAllSounds(),
+                            ),
+                        ),
                     )
-                ) }
+                }
             }
         }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.WhileSubscribed(5_000),
-            initialValue = UiState.Loading
+            initialValue = UiState.Loading,
         )
 
     private val baseFrequency: StateFlow<Int> = tunerDataStoreManager.baseFrequency
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Eagerly,
-            initialValue = 440
+            initialValue = 440,
         )
 
     private val frequencies: StateFlow<List<Float>> = combine(
         tuningTargetState,
-        baseFrequency
+        baseFrequency,
     ) { state, baseHz ->
         when (state) {
             is UiState.Loaded -> {
@@ -92,7 +97,7 @@ class MainTunerViewModel @Inject constructor(
     }.stateIn(
         scope = viewModelScope,
         started = SharingStarted.Eagerly,
-        initialValue = emptyList()
+        initialValue = emptyList(),
     )
 
     private val _currentlyClickedIndex = MutableStateFlow<Int?>(null)
@@ -191,14 +196,11 @@ class MainTunerViewModel @Inject constructor(
             note = bestNote,
             frequency = frequency,
             noteIndex = bestNoteIndex,
-            centsOff = centsOff
+            centsOff = centsOff,
         )
     }
 
-    private fun checkAndMarkTuned(
-        bestNoteIndex: Int,
-        centsOff: Float
-    ) {
+    private fun checkAndMarkTuned(bestNoteIndex: Int, centsOff: Float) {
         if (abs(centsOff) < IN_TUNE_THRESHOLD_CENTS) {
             inTuneFrameCount++
 
@@ -231,5 +233,5 @@ private fun CurrentTuning.toLoaded() = UiState.Loaded<TuningTarget>(
         tuningName = tuningName,
         instrumentName = resolveInstrumentName(instrumentCustomName, instrumentDefaultName),
         notes = notes,
-    )
+    ),
 )

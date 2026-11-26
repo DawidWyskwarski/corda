@@ -26,7 +26,9 @@ fun EarModeChromaticContent(
 ) {
     if (allNotes.isEmpty()) return
 
-    var isPlaying by remember { mutableStateOf(false) } // TODO this looks like a bad idea. Backend playback state and UI state may be misaligned.
+    var isPlaying by remember {
+        mutableStateOf(false)
+    } // TODO this looks like a bad idea. Backend playback state and UI state may be misaligned.
     var selectedIndex by remember { mutableIntStateOf(0) }
 
     Column(

@@ -23,10 +23,7 @@ import com.example.corda.core.ui.theme.LocalCordaColors
 import kotlin.math.abs
 
 @Composable
-fun PitchArc(
-    centsOff: Float?,
-    modifier: Modifier = Modifier,
-) {
+fun PitchArc(centsOff: Float?, modifier: Modifier = Modifier) {
     val cordaColors = LocalCordaColors.current
     val trackColor = MaterialTheme.colorScheme.primaryContainer
     val targetZoneColor = if (abs(centsOff ?: 6f) > 5) {
@@ -56,7 +53,6 @@ fun PitchArc(
                 .fillMaxWidth()
                 .aspectRatio(2f),
         ) {
-
             val strokeWidthPx = strokeWidth.toPx()
 
             val arcSize = Size(size.width - strokeWidthPx, size.width - strokeWidthPx)
@@ -119,11 +115,18 @@ fun PitchArc(
             Text(
                 modifier = Modifier
                     .align(Alignment.Center)
-                    .padding(top=64.dp),
-                text = if (centsOff == null) stringResource(R.string.tuner_main_pitch_play_something)
-                else if (centsOff < -5f) stringResource(R.string.tuner_main_pitch_tune_higher)
-                else if (centsOff > 5f) stringResource(R.string.tuner_main_pitch_tune_lower)
-                else stringResource(R.string.tuner_main_pitch_perfect),
+                    .padding(top = 64.dp),
+                text = if (centsOff ==
+                    null
+                ) {
+                    stringResource(R.string.tuner_main_pitch_play_something)
+                } else if (centsOff < -5f) {
+                    stringResource(R.string.tuner_main_pitch_tune_higher)
+                } else if (centsOff > 5f) {
+                    stringResource(R.string.tuner_main_pitch_tune_lower)
+                } else {
+                    stringResource(R.string.tuner_main_pitch_perfect)
+                },
                 style = MaterialTheme.typography.titleLarge,
             )
         }

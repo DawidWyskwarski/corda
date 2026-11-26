@@ -32,7 +32,7 @@ fun LoadedContent(
     currentlyClickedIndex: Int?,
     tunedIndices: Set<Int>,
     onItemClicked: (Int) -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     Column(
         modifier = modifier
@@ -41,11 +41,12 @@ fun LoadedContent(
     ) {
         AnimatedVisibility(
             visible = !isInEarMode,
-            enter = slideInVertically { -it } + expandVertically(expandFrom = Alignment.Top) + fadeIn(),
+            enter =
+            slideInVertically { -it } + expandVertically(expandFrom = Alignment.Top) + fadeIn(),
             exit = slideOutVertically { -it } + shrinkVertically() + fadeOut(),
         ) {
             Column(
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Text(
                     text = tunerReading.frequency?.let {
@@ -85,9 +86,10 @@ fun LoadedContent(
             }
             is TuningTarget.Chromatic -> {
                 if (isInEarMode) {
+                    // TODO: Split select vs play into separate callbacks.
                     EarModeChromaticContent(
                         allNotes = loadedTuningTarget.notes,
-                        onPlayToggle = onItemClicked, // TODO this needs to be changed. It might be better to have 2 functions one to select and other to play. To be investigated.
+                        onPlayToggle = onItemClicked,
                         modifier = Modifier
                             .weight(1f),
                     )

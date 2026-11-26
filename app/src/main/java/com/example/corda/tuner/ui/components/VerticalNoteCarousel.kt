@@ -23,7 +23,7 @@ import com.example.corda.tuner.data.local.entities.MusicNote
 private val ITEM_HEIGHT = 56.dp
 private const val VISIBLE_ITEMS = 5
 
-//TODO regenerate docs
+// TODO regenerate docs
 @Composable
 fun VerticalNoteCarousel(
     notes: List<MusicNote>,
@@ -38,7 +38,7 @@ fun VerticalNoteCarousel(
     LaunchedEffect(listState) {
         snapshotFlow { listState.firstVisibleItemIndex }
             .collect { index ->
-                onSoundSelected( index )
+                onSoundSelected(index)
             }
     }
 
@@ -49,21 +49,27 @@ fun VerticalNoteCarousel(
         modifier = modifier.height(ITEM_HEIGHT * VISIBLE_ITEMS),
     ) {
         itemsIndexed(
-            notes
+            notes,
         ) { index, sound ->
             val isSelected = index == listState.firstVisibleItemIndex
 
             Surface(
                 modifier = Modifier.height(ITEM_HEIGHT).fillMaxWidth(),
                 shape = RoundedCornerShape(16.dp),
-                color = if (isSelected) MaterialTheme.colorScheme.primaryContainer
-                else MaterialTheme.colorScheme.surface,
+                color = if (isSelected) {
+                    MaterialTheme.colorScheme.primaryContainer
+                } else {
+                    MaterialTheme.colorScheme.surface
+                },
             ) {
                 Box(contentAlignment = Alignment.Center) {
                     NoteLabel(
                         musicNote = sound,
-                        style = if (isSelected) MaterialTheme.typography.headlineMedium
-                        else MaterialTheme.typography.titleLarge,
+                        style = if (isSelected) {
+                            MaterialTheme.typography.headlineMedium
+                        } else {
+                            MaterialTheme.typography.titleLarge
+                        },
                     )
                 }
             }

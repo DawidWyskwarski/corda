@@ -29,7 +29,7 @@ interface TuningDao {
 
         musicNotes.forEach { sound ->
             insertTuningSoundCrossRef(
-                TuningSoundCrossRef(tuningId = tuning.id, musicNoteId = sound.midiNum)
+                TuningSoundCrossRef(tuningId = tuning.id, musicNoteId = sound.midiNum),
             )
         }
     }
@@ -42,7 +42,7 @@ interface TuningDao {
         val tuningId = insertTuning(tuning)
         musicNotes.forEach { sound ->
             insertTuningSoundCrossRef(
-                TuningSoundCrossRef(tuningId = tuningId.toInt(), musicNoteId = sound.midiNum)
+                TuningSoundCrossRef(tuningId = tuningId.toInt(), musicNoteId = sound.midiNum),
             )
         }
     }
@@ -51,7 +51,8 @@ interface TuningDao {
     suspend fun deleteTuning(tuningId: Int)
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT 
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
@@ -61,11 +62,13 @@ interface TuningDao {
         FROM Tuning
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         ORDER BY Tuning.last_used DESC
-    """)
+    """,
+    )
     fun getTunings(): Flow<List<TuningDetails>>
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT 
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
@@ -75,11 +78,13 @@ interface TuningDao {
         FROM Tuning
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         WHERE Tuning.tuning_id = :tuningId
-    """)
+    """,
+    )
     suspend fun getTuningDetails(tuningId: Int): TuningDetails?
 
     @Transaction
-    @Query("""
+    @Query(
+        """
         SELECT 
             Tuning.tuning_id,
             Tuning.tuning_name AS tuning_name,
@@ -89,7 +94,8 @@ interface TuningDao {
         INNER JOIN Instrument ON Tuning.instrument_id = Instrument.instrument_id
         ORDER BY Tuning.last_used DESC
         LIMIT 1
-    """)
+    """,
+    )
     fun getMostRecentTuning(): Flow<CurrentTuning?>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
@@ -97,5 +103,4 @@ interface TuningDao {
 
     @Query("DELETE FROM TuningSoundCrossRef WHERE tuning_id = :tuningId")
     suspend fun deleteCrossRefsForTuning(tuningId: Int)
-
 }

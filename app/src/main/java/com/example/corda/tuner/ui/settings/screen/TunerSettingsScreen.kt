@@ -94,18 +94,18 @@ fun TunerSettingsScreen(
         listOf(
             FABMenuItem(
                 Icons.AutoMirrored.Rounded.QueueMusic,
-                R.string.tuner_settings_fab_new_tuning_label
+                R.string.tuner_settings_fab_new_tuning_label,
             ) {
                 isFabMenuOpen = false
                 onAddTuning()
             },
             FABMenuItem(
                 Icons.Rounded.Piano,
-                R.string.tuner_settings_fab_manage_instruments_label
+                R.string.tuner_settings_fab_manage_instruments_label,
             ) {
                 isFabMenuOpen = false
                 isInstrumentSheetOpen = true
-            }
+            },
         )
     }
 
@@ -124,22 +124,22 @@ fun TunerSettingsScreen(
         topBar = {
             TopAppBar(
                 title = { Text(stringResource(R.string.tuner_settings_title)) },
-                navigationIcon = { NavigateBackButton(onClick = onBack) }
+                navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
         },
         floatingActionButton = {
             AnimatedVisibility(
                 visible = selectedMode == TuningMode.STANDARD,
                 enter = fadeIn(),
-                exit = fadeOut()
+                exit = fadeOut(),
             ) {
                 FABMenu(
                     isExpanded = isFabMenuOpen,
                     onExpandedChange = { isFabMenuOpen = it },
-                    items = fabMenuItems
+                    items = fabMenuItems,
                 )
             }
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
@@ -160,8 +160,12 @@ fun TunerSettingsScreen(
                 modifier = Modifier.fillMaxWidth(),
                 itemLabel = { mode ->
                     when (mode) {
-                        TuningMode.STANDARD -> stringResource(R.string.tuner_settings_mode_standard_option)
-                        TuningMode.CHROMATIC -> stringResource(R.string.tuner_settings_mode_chromatic_option)
+                        TuningMode.STANDARD -> stringResource(
+                            R.string.tuner_settings_mode_standard_option,
+                        )
+                        TuningMode.CHROMATIC -> stringResource(
+                            R.string.tuner_settings_mode_chromatic_option,
+                        )
                     }
                 },
             )
@@ -176,15 +180,17 @@ fun TunerSettingsScreen(
                         slideInHorizontally { it } togetherWith slideOutHorizontally { -it }
                     }
                 },
-                label = "Mode Animation"
+                label = "Mode Animation",
             ) { mode ->
                 when (mode) {
                     TuningMode.STANDARD -> {
-
-                        val tuningsUiState by viewModel.tuningsUiState.collectAsStateWithLifecycle()
-                        val selectedTuningId by viewModel.selectedTuningId.collectAsStateWithLifecycle()
+                        val tuningsUiState by
+                            viewModel.tuningsUiState.collectAsStateWithLifecycle()
+                        val selectedTuningId by
+                            viewModel.selectedTuningId.collectAsStateWithLifecycle()
                         val searchQuery by viewModel.searchQuery.collectAsStateWithLifecycle()
-                        val filterInstrumentId by viewModel.filterInstrumentId.collectAsStateWithLifecycle()
+                        val filterInstrumentId by
+                            viewModel.filterInstrumentId.collectAsStateWithLifecycle()
 
                         StandardModeContent(
                             tuningsUiState = tuningsUiState,
@@ -196,7 +202,7 @@ fun TunerSettingsScreen(
                             onSelectFilterInstrumentId = viewModel::setFilterInstrument,
                             onSearchQueryChange = viewModel::setSearchQuery,
                             onDeleteTuning = viewModel::deleteTuning,
-                            onEditTuning = onEditTuning
+                            onEditTuning = onEditTuning,
                         )
                     }
 
@@ -221,7 +227,7 @@ fun TunerSettingsScreen(
             onCreateInstrument = viewModel::createInstrument,
             onUpdateInstrument = viewModel::updateInstrument,
             onDeleteInstrument = viewModel::deleteInstrument,
-            onDismiss = { isInstrumentSheetOpen = false }
+            onDismiss = { isInstrumentSheetOpen = false },
         )
     }
 }
@@ -245,7 +251,7 @@ private fun StandardModeContent(
 
     Column(
         modifier = Modifier
-            .fillMaxSize()
+            .fillMaxSize(),
     ) {
         Text(
             modifier = Modifier.padding(vertical = 8.dp),
@@ -267,7 +273,9 @@ private fun StandardModeContent(
                     IconButton(onClick = { onSearchQueryChange("") }) {
                         Icon(
                             Icons.Rounded.Close,
-                            contentDescription = stringResource(R.string.tuner_settings_search_clear_description)
+                            contentDescription = stringResource(
+                                R.string.tuner_settings_search_clear_description,
+                            ),
                         )
                     }
                 }
@@ -290,16 +298,17 @@ private fun StandardModeContent(
                 selectedId = filterInstrumentId,
                 onInstrumentSelected = { id -> onSelectFilterInstrumentId(id) },
                 modifier = Modifier
-                    .padding(vertical = 8.dp)
+                    .padding(vertical = 8.dp),
             )
         }
 
         when (tuningsUiState) {
             is UiState.Loading -> {
-                Box (
-                    contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()
+                Box(
+                    contentAlignment = Alignment.Center,
+                    modifier = Modifier.fillMaxSize(),
                 ) {
-                    LoadingIndicator() //TODO: Replace with a shimmer effect
+                    LoadingIndicator() // TODO: Replace with a shimmer effect
                 }
             }
             is UiState.Error -> {
@@ -316,7 +325,9 @@ private fun StandardModeContent(
                 if (tunings.isEmpty()) {
                     UserInfo(
                         mainText = stringResource(R.string.tuner_settings_tunings_empty_message),
-                        supportingText = stringResource(R.string.tuner_settings_tunings_empty_supporting),
+                        supportingText = stringResource(
+                            R.string.tuner_settings_tunings_empty_supporting,
+                        ),
                         modifier = Modifier
                             .fillMaxSize(),
                     )
@@ -325,7 +336,7 @@ private fun StandardModeContent(
                         modifier = Modifier
                             .weight(1f)
                             .selectableGroup(),
-                        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap)
+                        verticalArrangement = Arrangement.spacedBy(ListItemDefaults.SegmentedGap),
                     ) {
                         itemsIndexed(
                             items = tunings,
@@ -348,8 +359,6 @@ private fun StandardModeContent(
                 }
             }
         }
-
-
     }
 
     pendingTuningToDelete?.let { tuning ->
@@ -361,7 +370,7 @@ private fun StandardModeContent(
                 onDeleteTuning(tuning.tuningId)
                 pendingTuningToDelete = null
             },
-            onDismiss = { pendingTuningToDelete = null }
+            onDismiss = { pendingTuningToDelete = null },
         )
     }
 }

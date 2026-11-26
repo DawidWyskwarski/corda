@@ -50,17 +50,19 @@ fun SettingsScreen(
         contentColor = MaterialTheme.colorScheme.onBackground,
         topBar = {
             TopAppBar(
-                title = { Text(stringResource(R.string.settings_title), fontWeight = FontWeight.SemiBold) },
+                title = {
+                    Text(stringResource(R.string.settings_title), fontWeight = FontWeight.SemiBold)
+                },
                 navigationIcon = { NavigateBackButton(onClick = onBack) },
             )
-        }
+        },
     ) { innerPadding ->
         Column(
             modifier = Modifier
                 .padding(innerPadding)
                 .padding(horizontal = screenPadding)
                 .fillMaxSize()
-                .verticalScroll(rememberScrollState())
+                .verticalScroll(rememberScrollState()),
         ) {
             SettingsSectionHeader(stringResource(R.string.settings_display_header))
 
@@ -70,25 +72,31 @@ fun SettingsScreen(
                 trailingContent = {
                     Switch(
                         checked = isDarkMode,
-                        onCheckedChange = { viewModel.toggleDarkMode(it) }
+                        onCheckedChange = { viewModel.toggleDarkMode(it) },
                     )
-                }
+                },
             )
 
             HorizontalDivider(modifier = dividerPadding)
 
             SettingsSectionHeader(
                 title = stringResource(R.string.settings_calibration_header),
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
             )
 
             OutlinedTextField(
                 value = viewModel.frequencyInput,
                 onValueChange = { viewModel.updateFrequency(it) },
-                label = { Text(stringResource(R.string.settings_calibration_base_frequency_label)) },
+                label = {
+                    Text(stringResource(R.string.settings_calibration_base_frequency_label))
+                },
                 isError = viewModel.isFrequencyError,
                 supportingText = {
-                    if (viewModel.isFrequencyError) Text(stringResource(R.string.settings_calibration_frequency_error_message))
+                    if (viewModel.isFrequencyError) {
+                        Text(
+                            stringResource(R.string.settings_calibration_frequency_error_message),
+                        )
+                    }
                 },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
                 modifier = Modifier.fillMaxWidth(),
@@ -107,7 +115,7 @@ fun SettingsScreen(
 
             SettingsSectionHeader(
                 title = stringResource(R.string.settings_localisation_header),
-                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp)
+                modifier = Modifier.padding(top = 16.dp, bottom = 8.dp),
             )
 
             SettingsLanguageDropdown()

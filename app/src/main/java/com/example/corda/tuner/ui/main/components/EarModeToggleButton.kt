@@ -16,22 +16,28 @@ fun EarModeToggleButton(
     isInEarMode: Boolean,
     isEnabled: Boolean,
     onToggle: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     IconToggleButton(
         checked = isInEarMode,
         onCheckedChange = { onToggle() },
         enabled = isEnabled,
-        modifier = modifier
+        modifier = modifier,
     ) {
         Crossfade(
             targetState = isInEarMode,
         ) {
             Icon(
-                imageVector = if (it) Icons.AutoMirrored.Rounded.VolumeUp
-                    else Icons.AutoMirrored.Rounded.VolumeOff,
-                contentDescription = if (it) stringResource(R.string.tuner_main_ear_mode_disable_description)
-                    else stringResource(R.string.tuner_main_ear_mode_enable_description),
+                imageVector = if (it) {
+                    Icons.AutoMirrored.Rounded.VolumeUp
+                } else {
+                    Icons.AutoMirrored.Rounded.VolumeOff
+                },
+                contentDescription = if (it) {
+                    stringResource(R.string.tuner_main_ear_mode_disable_description)
+                } else {
+                    stringResource(R.string.tuner_main_ear_mode_enable_description)
+                },
             )
         }
     }

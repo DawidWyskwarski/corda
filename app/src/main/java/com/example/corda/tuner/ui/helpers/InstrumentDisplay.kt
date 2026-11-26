@@ -34,19 +34,24 @@ sealed interface InstrumentName {
 fun Instrument.displayNameOnly(): String = resolveInstrumentName(customName, defaultName).get()
 
 @Composable
-fun Instrument.displayNameWithNoteCount(): String =
-    "${displayNameOnly()} (${pluralStringResource(R.plurals.tuner_instrument_string_count, musicNotesCount.toInt(), musicNotesCount.toInt())})"
+fun Instrument.displayNameWithNoteCount(): String = "${displayNameOnly()} (${pluralStringResource(
+    R.plurals.tuner_instrument_string_count,
+    musicNotesCount.toInt(),
+    musicNotesCount.toInt(),
+)})"
 
-fun resolveInstrumentName(customName: String?, defaultName: DefaultInstrumentName?): InstrumentName {
-    return customName?.let { InstrumentName.Custom(it) }
-        ?: defaultName?.let {
-
-            val id = when (it) {
-                GUITAR -> R.string.tuner_instrument_builtin_guitar_name
-                BASS -> R.string.tuner_instrument_builtin_bass_name
-            }
-
-            InstrumentName.BuildIn(id)
-        }
-        ?: InstrumentName.Default
+fun resolveInstrumentName(
+    customName: String?,
+    defaultName: DefaultInstrumentName?,
+): InstrumentName = customName?.let {
+    InstrumentName.Custom(it)
 }
+    ?: defaultName?.let {
+        val id = when (it) {
+            GUITAR -> R.string.tuner_instrument_builtin_guitar_name
+            BASS -> R.string.tuner_instrument_builtin_bass_name
+        }
+
+        InstrumentName.BuildIn(id)
+    }
+    ?: InstrumentName.Default

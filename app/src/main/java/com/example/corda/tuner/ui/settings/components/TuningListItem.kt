@@ -44,7 +44,7 @@ import com.example.corda.tuner.ui.settings.data.TuningListItem
  * - Supporting: note string preview (e.g. "D2 A2 D3 G3 B3 E4")
  * - Trailing  : animated check-circle when this tuning is selected
  *
- * Long-pressing the item shows a context menu at the press location offering [onEdit] and [onDelete].
+ * Long-pressing shows a context menu at the press location with [onEdit] and [onDelete].
  */
 @Composable
 fun TuningListItem(
@@ -92,7 +92,7 @@ fun TuningListItem(
                     MaterialTheme.colorScheme.secondaryContainer
                 } else {
                     MaterialTheme.colorScheme.surfaceContainer
-                }
+                },
             ),
             overlineContent = {
                 Text(
@@ -125,7 +125,9 @@ fun TuningListItem(
                 ) {
                     Icon(
                         imageVector = Icons.Rounded.CheckCircle,
-                        contentDescription = stringResource(R.string.tuner_settings_tuning_selected_description),
+                        contentDescription = stringResource(
+                            R.string.tuner_settings_tuning_selected_description,
+                        ),
                         tint = MaterialTheme.colorScheme.primary,
                     )
                 }
@@ -140,7 +142,7 @@ fun TuningListItem(
             )
         }
 
-        if ( isMenuVisible ) {
+        if (isMenuVisible) {
             TuningDropdownMenu(
                 tuningName = tuning.tuningName,
                 offset = menuOffset,
@@ -152,7 +154,7 @@ fun TuningListItem(
                 onDelete = {
                     isMenuVisible = false
                     onDelete()
-                }
+                },
             )
         }
     }

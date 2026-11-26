@@ -24,7 +24,7 @@ fun DeleteItemDialog(
     itemName: String,
     onDelete: () -> Unit,
     onDismiss: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
@@ -40,6 +40,6 @@ fun DeleteItemDialog(
                 Text(stringResource(R.string.core_action_cancel))
             }
         },
-        modifier = modifier
+        modifier = modifier,
     )
 }

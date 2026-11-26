@@ -16,10 +16,8 @@ import kotlinx.coroutines.launch
 fun rememberCordaAppState(
     drawerState: DrawerState = rememberDrawerState(DrawerValue.Closed),
     scope: CoroutineScope = rememberCoroutineScope(),
-): CordaAppState {
-    return remember(drawerState, scope) {
-        CordaAppState(drawerState, scope)
-    }
+): CordaAppState = remember(drawerState, scope) {
+    CordaAppState(drawerState, scope)
 }
 
 /**
@@ -29,10 +27,7 @@ fun rememberCordaAppState(
  * helpers so that [CordaApp] can focus on composing the UI tree.
  */
 @Stable
-class CordaAppState(
-    val drawerState: DrawerState,
-    private val scope: CoroutineScope,
-) {
+class CordaAppState(val drawerState: DrawerState, private val scope: CoroutineScope) {
     // The default screen could be set in settings and later read from shared preferences
     val backStack = mutableStateListOf<Screen>(Screen.Tuner)
 

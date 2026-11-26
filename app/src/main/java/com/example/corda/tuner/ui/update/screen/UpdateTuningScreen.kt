@@ -54,8 +54,20 @@ fun UpdateTuningScreen(
     }
 
     val isEditMode = viewModel.isEditMode
-    val title = if (isEditMode) stringResource(R.string.tuner_tuning_edit_title) else stringResource(R.string.tuner_tuning_add_title)
-    val actionLabel = if (isEditMode) stringResource(R.string.core_action_save) else stringResource(R.string.core_action_add)
+    val title = if (isEditMode) {
+        stringResource(
+            R.string.tuner_tuning_edit_title,
+        )
+    } else {
+        stringResource(R.string.tuner_tuning_add_title)
+    }
+    val actionLabel = if (isEditMode) {
+        stringResource(
+            R.string.core_action_save,
+        )
+    } else {
+        stringResource(R.string.core_action_add)
+    }
 
     Scaffold(
         modifier = modifier,
@@ -101,7 +113,7 @@ fun UpdateTuningScreen(
 
             if (stringMusicNotes.isNotEmpty()) {
                 TuningSoundGrid(
-                    //TODO rework this to be more generic (also to be able to take MusicNote?)
+                    // TODO rework this to be more generic (also to be able to take MusicNote?)
                     musicNotes = stringMusicNotes,
                     selectedIndex = selectedStringIndex,
                     onIndexSelected = { viewModel.selectString(it) },
@@ -133,4 +145,3 @@ fun UpdateTuningScreen(
         }
     }
 }
-

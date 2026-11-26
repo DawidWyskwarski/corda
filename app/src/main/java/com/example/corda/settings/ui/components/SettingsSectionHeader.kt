@@ -6,10 +6,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 
 @Composable
-fun SettingsSectionHeader(
-    title: String,
-    modifier: Modifier = Modifier
-) {
+fun SettingsSectionHeader(title: String, modifier: Modifier = Modifier) {
     Text(
         text = title,
         style = MaterialTheme.typography.labelLarge,

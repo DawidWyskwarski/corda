@@ -8,9 +8,7 @@ import com.example.corda.tuner.data.local.entities.MusicNote
 import com.example.corda.tuner.data.local.entities.Tuning
 import com.example.corda.tuner.data.local.entities.TuningSoundCrossRef
 
-class TunerDatabasePopulator (
-    private val db : TunerDatabase
-) {
+class TunerDatabasePopulator(private val db: TunerDatabase) {
 
     suspend fun populate() {
         db.withTransaction {
@@ -51,32 +49,52 @@ class TunerDatabasePopulator (
         val tuningDao = db.getTuningDao()
 
         val guitar6 = instrumentDao.insertInstrument(
-            Instrument( defaultName = DefaultInstrumentName.GUITAR, musicNotesCount = 6 ))
+            Instrument(defaultName = DefaultInstrumentName.GUITAR, musicNotesCount = 6),
+        )
         insert6StringGuitarTunings(tuningDao, guitar6)
 
         val guitar7 = instrumentDao.insertInstrument(
-            Instrument( defaultName = DefaultInstrumentName.GUITAR, musicNotesCount = 7 ))
+            Instrument(defaultName = DefaultInstrumentName.GUITAR, musicNotesCount = 7),
+        )
         insert7StringGuitarTunings(tuningDao, guitar7)
 
         val bass4 = instrumentDao.insertInstrument(
-            Instrument( defaultName = DefaultInstrumentName.BASS, musicNotesCount = 4 ))
+            Instrument(defaultName = DefaultInstrumentName.BASS, musicNotesCount = 4),
+        )
         insert4StringBassTunings(tuningDao, bass4)
 
         val bass5 = instrumentDao.insertInstrument(
-            Instrument( defaultName = DefaultInstrumentName.BASS, musicNotesCount = 5 ))
+            Instrument(defaultName = DefaultInstrumentName.BASS, musicNotesCount = 5),
+        )
         insert5StringBassTunings(tuningDao, bass5)
     }
 
     private suspend fun insert6StringGuitarTunings(tuningDao: TuningDao, guitar6: Long) {
-        insertTuningWithMidiNotes(tuningDao, "E Standard", guitar6, listOf(40, 45, 50, 55, 59, 64), 1L)
+        insertTuningWithMidiNotes(
+            tuningDao,
+            "E Standard",
+            guitar6,
+            listOf(40, 45, 50, 55, 59, 64),
+            1L,
+        )
         insertTuningWithMidiNotes(tuningDao, "Drop D", guitar6, listOf(38, 45, 50, 55, 59, 64))
         insertTuningWithMidiNotes(tuningDao, "D Standard", guitar6, listOf(38, 43, 48, 53, 57, 62))
     }
 
     private suspend fun insert7StringGuitarTunings(tuningDao: TuningDao, guitar7: Long) {
-        insertTuningWithMidiNotes(tuningDao, "B Standard", guitar7, listOf(35, 40, 45, 50, 55, 59, 64))
+        insertTuningWithMidiNotes(
+            tuningDao,
+            "B Standard",
+            guitar7,
+            listOf(35, 40, 45, 50, 55, 59, 64),
+        )
         insertTuningWithMidiNotes(tuningDao, "Drop A", guitar7, listOf(33, 40, 45, 50, 55, 59, 64))
-        insertTuningWithMidiNotes(tuningDao, "A Standard", guitar7, listOf(33, 38, 43, 48, 53, 57, 62))
+        insertTuningWithMidiNotes(
+            tuningDao,
+            "A Standard",
+            guitar7,
+            listOf(33, 38, 43, 48, 53, 57, 62),
+        )
     }
 
     private suspend fun insert4StringBassTunings(tuningDao: TuningDao, bass4: Long) {
@@ -94,14 +112,14 @@ class TunerDatabasePopulator (
         name: String,
         instrumentId: Long,
         midiNotes: List<Int>,
-        lastUsed: Long = 0L
+        lastUsed: Long = 0L,
     ) {
         val tuningId = tuningDao.insertTuning(
-            Tuning(name = name, instrumentId = instrumentId.toInt(), lastUsed = lastUsed)
+            Tuning(name = name, instrumentId = instrumentId.toInt(), lastUsed = lastUsed),
         )
         midiNotes.forEach { midi ->
             tuningDao.insertTuningSoundCrossRef(
-                TuningSoundCrossRef(tuningId = tuningId.toInt(), musicNoteId = midi)
+                TuningSoundCrossRef(tuningId = tuningId.toInt(), musicNoteId = midi),
             )
         }
     }
