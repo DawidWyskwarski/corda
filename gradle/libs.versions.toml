@@ -1,27 +1,27 @@
 [versions]
 # Build tooling
-agp = "9.4.0"
-kotlin = "2.4.20" # also drives the Compose + serialization compiler plugins; keep them in sync
+agp = "9.5.3"
+kotlin = "2.4.21" # also drives the Compose + serialization compiler plugins; keep them in sync
 ksp = "2.3.11"
 ktlint = "14.2.0"
 
 # AndroidX platform
-coreKtx = "1.19.0"
-lifecycle = "2.11.0"
+coreKtx = "1.19.1"
+lifecycle = "2.11.1"
 activityCompose = "1.13.0"
 
 # Compose
-composeBom = "2026.08.00"
-material3 = "1.5.0-alpha27" # BOM ships stable 1.4.0; we pin 1.5 alpha for Expressive APIs (ButtonGroup, FAB menu)
-nav3Core = "1.1.7"
+composeBom = "2026.11.01"
+material3 = "1.5.0"
+nav3Core = "1.2.2"
 
 # Kotlin libraries
 kotlinxCoroutines = "1.11.0"
-kotlinxSerialization = "1.11.0"
+kotlinxSerialization = "1.13.0"
 
 # Data / DI / audio
-room = "2.8.4"
-datastore = "1.2.1"
+room = "2.8.5"
+datastore = "1.3.0"
 hilt = "2.60.1"
 hiltNavigationCompose = "1.4.0"
 tarsos = "2.5"
